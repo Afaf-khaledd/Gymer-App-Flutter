@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light().copyWith(
           scaffoldBackgroundColor: ColorsManager.BGColor,
-          focusColor: ColorsManager.mainGoldColor,
-          primaryColor: ColorsManager.mainGoldColor
+          focusColor: ColorsManager.blackColor,
+          primaryColor: ColorsManager.blackColor
       ),
       home: const SplashScreen(),
     );
