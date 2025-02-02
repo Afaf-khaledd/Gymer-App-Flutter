@@ -11,7 +11,7 @@ class CustomBlackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(50.0),
+      padding: const EdgeInsets.only(right: 13.0,left: 13,bottom: 40,),
       child: SizedBox(
         width: double.infinity,
         height: 52,
