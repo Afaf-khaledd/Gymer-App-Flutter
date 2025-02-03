@@ -32,12 +32,7 @@ class _GenderScreenState extends State<GenderScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (BuildContext context) => FinalScreen()),
-            );
-          },
+          onPressed: () {},
           icon: Icon(Icons.arrow_back_ios_new, color: Color.fromRGBO(102, 102, 102, 1)),
         ),
         title: SvgPicture.asset(AssetsManager.thirdState),
@@ -46,7 +41,12 @@ class _GenderScreenState extends State<GenderScreen> {
         centerTitle: true,
         actions: [
           InkWell(
-            onTap: (){},
+            onTap: (){
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (BuildContext context) => FinalScreen()),
+              );
+            },
             child: Text(
               'Skip',
               style: GoogleFonts.leagueSpartan(

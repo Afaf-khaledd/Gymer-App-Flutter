@@ -18,7 +18,7 @@ class WeightScreen extends StatefulWidget {
 }
 
 class _WeightScreenState extends State<WeightScreen> {
-  double _weight = 70;
+  double _weight = 60;
   bool _isMetric = true;
 
   void _toggleWeightUnit(bool isMetric) {

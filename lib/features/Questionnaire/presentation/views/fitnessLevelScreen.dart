@@ -137,9 +137,9 @@ class _FitnessLevelScreenState extends State<FitnessLevelScreen> {
             ),
             SizedBox(height: 20,),
             CustomBlackButton(
-              label: 'Next',
+              label: 'Finish',
               onPressed: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (BuildContext context) => FinalScreen()),
                 );

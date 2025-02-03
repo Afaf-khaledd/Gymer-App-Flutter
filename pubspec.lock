@@ -94,6 +94,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
+  flutter_picker:
+    dependency: "direct main"
+    description:
+      name: flutter_picker
+      sha256: "2f94c6eefba8697b07e3cd008b75f06b4ba7053cb26d23ae0fcd5932b7dc75af"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
+  flutter_ruler_picker:
+    dependency: "direct main"
+    description:
+      name: flutter_ruler_picker
+      sha256: ce4069e6487a3cbc7bdbb18332977dd0ea99dd50c61a9162bc97f47bba182b99
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.6"
   flutter_svg:
     dependency: "direct main"
     description:

@@ -12,12 +12,7 @@ class FinalScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back_ios_new, color: Color.fromRGBO(102, 102, 102, 1)),
-        ),
+        automaticallyImplyLeading: false,
         title: SvgPicture.asset(AssetsManager.finalState,width: 280,),
         toolbarHeight: 100,
         backgroundColor: Colors.transparent,
@@ -37,8 +32,9 @@ class FinalScreen extends StatelessWidget {
                 "Consistency Is\nThe Key To Progress.\nDon't Give Up!",
                 textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(
-                  fontSize: 33,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                  color: Color.fromRGBO(49, 44, 40, 1),
                 ),
               ),
             ),
