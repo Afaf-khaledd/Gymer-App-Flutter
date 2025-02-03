@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gymer/features/Questionnaire/presentation/views/genderScreen.dart';
 import 'package:gymer/features/Questionnaire/presentation/views/onboardingQ.dart';
-import 'package:gymer/features/Splash/presentation/views/SplashScreen.dart';
 import 'package:simple_ruler_picker/simple_ruler_picker.dart';
 
 import '../../../../core/components/customBlackButton.dart';
 import '../../../../core/utils/assets.dart';
 import '../../../../core/utils/colors.dart';
 import 'WeightToggleButton.dart';
+import 'finalScreen.dart';
 
 class TargetWidthScreen extends StatefulWidget {
   const TargetWidthScreen({super.key});
@@ -57,7 +58,12 @@ class _TargetWidthScreenState extends State<TargetWidthScreen> {
             ),
             actions: [
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (BuildContext context) => FinalScreen()),
+                  );
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Text(
@@ -151,7 +157,7 @@ class _TargetWidthScreenState extends State<TargetWidthScreen> {
                       label: 'Next',
                       onPressed: () {
                         Navigator.pushReplacement(context, MaterialPageRoute(
-                          builder: (BuildContext context) => OnboardingQ(label: 'About You', number: '3', rightPadding: 20, labelSize: 50, nextScreen: SplashScreen(),),
+                          builder: (BuildContext context) => OnboardingQ(label: 'About You', number: '3', rightPadding: 20, labelSize: 50, nextScreen: GenderScreen(),),
                         ),
                         );
                       },

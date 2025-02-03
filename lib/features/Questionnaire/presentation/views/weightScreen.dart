@@ -8,15 +8,16 @@ import 'package:simple_ruler_picker/simple_ruler_picker.dart';
 import '../../../../core/components/customBlackButton.dart';
 import '../../../../core/utils/assets.dart';
 import 'WeightToggleButton.dart';
+import 'finalScreen.dart';
 
-class WidthScreen extends StatefulWidget {
-  const WidthScreen({super.key});
+class WeightScreen extends StatefulWidget {
+  const WeightScreen({super.key});
 
   @override
-  State<WidthScreen> createState() => _WidthScreenState();
+  State<WeightScreen> createState() => _WeightScreenState();
 }
 
-class _WidthScreenState extends State<WidthScreen> {
+class _WeightScreenState extends State<WeightScreen> {
   double _weight = 70;
   bool _isMetric = true;
 
@@ -56,7 +57,12 @@ class _WidthScreenState extends State<WidthScreen> {
             ),
             actions: [
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (BuildContext context) => FinalScreen()),
+                  );
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Text(

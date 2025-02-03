@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/utils/colors.dart';
-import 'package:gymer/features/Questionnaire/presentation/views/widthScreen.dart';
+import 'package:gymer/features/Questionnaire/presentation/views/weightScreen.dart';
 import 'package:simple_ruler_picker/simple_ruler_picker.dart';
 
 import '../../../../core/components/customBlackButton.dart';
 import '../../../../core/utils/assets.dart';
+import 'finalScreen.dart';
 
 class HeightScreen extends StatefulWidget {
   const HeightScreen({super.key});
@@ -19,11 +20,12 @@ class _HeightScreenState extends State<HeightScreen> {
   double _height = 170;
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            pinned: true,
+            pinned: false,
             backgroundColor: Colors.transparent,
             elevation: 0,
             expandedHeight: 30,
@@ -49,7 +51,12 @@ class _HeightScreenState extends State<HeightScreen> {
               Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (BuildContext context) => FinalScreen()),
+                    );
+                  },
                   child: Text(
                     'Skip',
                     style: GoogleFonts.leagueSpartan(
@@ -86,8 +93,8 @@ class _HeightScreenState extends State<HeightScreen> {
                     ),
                     const SizedBox(height: 30),
                     SizedBox(
-                      height: 400,
-                      width: 150,
+                      height: screenHeight*0.48,
+                      width: 170,
                       child: SimpleRulerPicker(
                         selectedColor: ColorsManager.goldColorO1,
                         labelColor: Colors.black45,
@@ -98,8 +105,8 @@ class _HeightScreenState extends State<HeightScreen> {
                         longLineHeight: 50,
                         shortLineHeight: 25,
                         scaleItemWidth: 25,
-                        scaleLabelSize: 30,
-                        scaleLabelWidth: 50,
+                        scaleLabelSize: 24,
+                       // scaleLabelWidth: 30,
                         lineColor: Colors.grey,
                         height: 400,
                         onValueChanged: (value) {
@@ -117,7 +124,7 @@ class _HeightScreenState extends State<HeightScreen> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (BuildContext context) => WidthScreen()),
+                          MaterialPageRoute(builder: (BuildContext context) => WeightScreen()),
                         );
                       },
                     ),

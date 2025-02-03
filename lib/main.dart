@@ -20,7 +20,6 @@ class MyApp extends StatelessWidget {
           focusColor: ColorsManager.blackColor,
           primaryColor: ColorsManager.blackColor
       ),
-      //home: const OnboardingQ(label: 'Fitness Analysis', number: '4', rightPadding: 40, labelSize: 40,),
       home: const OnboardingQ(label: 'Goal', number: '1', rightPadding: 0, labelSize: 50, nextScreen: GoalScreen(),),
     );
   }
