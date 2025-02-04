@@ -39,7 +39,9 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       backgroundColor: ColorsManager.BGColor,
       body: Column(
         children: [
-          Expanded(
+          Spacer(),
+          SizedBox(
+            height: 230,
             child: PageView.builder(
               controller: _pageController,
               itemCount: content.length,
@@ -79,13 +81,14 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
               (index) => buildPageIndicator(index == _currentIndex),
             ),
           ),
-          SizedBox(height: 20),
+          Spacer(),
           CustomBlackButton(
               label: 'Get Started',
               onPressed: () {
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(builder: (_) => const Placeholder()));
               }),
+          SizedBox(height: 10,),
         ],
       ),
     );

@@ -92,10 +92,10 @@ class _SecondSplashScreenState extends State<SecondSplashScreen>
               )),
           Expanded(
               flex: 5,
-              child: SvgPicture.asset(
+              child: Image.asset(
                 AssetsManager.splashImage,
                 fit: BoxFit.contain,
-              ))
+              ),)
         ],
       )),
     );
