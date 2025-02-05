@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gymer/core/utils/colors.dart';
 import 'package:gymer/features/Splash/presentation/views/SplashScreen.dart';
 
+
 void main() {
   runApp(const MyApp());
 }
