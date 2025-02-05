@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/components/customBlackButton.dart';
 import 'package:gymer/core/utils/assets.dart';
 import 'package:gymer/core/utils/colors.dart';
+import 'package:gymer/features/Authentication/presentation/views/loginScreen.dart';
 
 class OnBoardingPage extends StatefulWidget {
   const OnBoardingPage({super.key});
@@ -58,7 +59,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                     ),
                     SizedBox(height: 20),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 5),
                       child: Text(
                         content[index].title,
                         textAlign: TextAlign.center,
@@ -74,6 +75,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
               },
             ),
           ),
+          SizedBox(height: 5,),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
@@ -85,8 +87,8 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
           CustomBlackButton(
               label: 'Get Started',
               onPressed: () {
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (_) => const Placeholder()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const LoginScreen()));
               }),
           SizedBox(height: 10,),
         ],
@@ -98,8 +100,8 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 Widget buildPageIndicator(bool isActive) {
   return Container(
     margin: EdgeInsets.symmetric(horizontal: 4),
-    width: isActive ? 12 : 8,
-    height: 8,
+    width: isActive ? 20 : 18,
+    height: 4,
     decoration: BoxDecoration(
         color: isActive ? Colors.white : ColorsManager.blackColor,
         borderRadius: BorderRadius.circular(4)),
