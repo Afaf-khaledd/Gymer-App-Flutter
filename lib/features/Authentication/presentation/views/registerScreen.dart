@@ -5,6 +5,8 @@ import 'package:gymer/core/components/customBlackButton.dart';
 import 'package:gymer/core/utils/Validators.dart';
 import 'package:gymer/core/utils/colors.dart';
 
+import '../../../Questionnaire/presentation/views/goalScreen.dart';
+import '../../../Questionnaire/presentation/views/onboardingQ.dart';
 import 'loginScreen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -35,6 +37,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (_formKey.currentState!.validate()) {
       // Handle successful registration logic
       print("Form submitted successfully!");
+      Navigator.pushReplacement(context, MaterialPageRoute<void>(
+        builder: (BuildContext context) => const OnboardingQ(label: 'Goal', number: '1', rightPadding: 0, labelSize: 50, nextScreen: GoalScreen(),),
+      ),
+      );
     }
   }
 
