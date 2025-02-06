@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gymer/features/Splash/presentation/views/SplashScreen.dart';
 
 import '../../../../core/components/customBlackButton.dart';
 import '../../../../core/components/customWhiteContainer.dart';
@@ -94,11 +93,19 @@ class _WorkoutTimeScreenState extends State<WorkoutTimeScreen> {
                 onTap: () => toggleSelection("More than 1 hour"),
               ),
               Spacer(),
-              CustomBlackButton(label: 'Next', onPressed: () {
-                Navigator.pushReplacement(context, MaterialPageRoute(
-                  builder: (BuildContext context) => OnboardingQ(label: 'Fitness Analysis', number: '4', rightPadding: 40, labelSize: 40, nextScreen: ActivityLevelScreen(),),
-                ),
-                );}),
+              CustomBlackButton(
+                label: 'Next',
+                onPressed: selectedTime != null
+                    ? () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => OnboardingQ(label: 'Fitness Analysis', number: '4', rightPadding: 40, labelSize: 40, nextScreen: ActivityLevelScreen(),),
+                    ),
+                  );
+                }
+                    : () {},
+              ),
             ],
           ),
         ),

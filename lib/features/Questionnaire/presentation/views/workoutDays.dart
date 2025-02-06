@@ -86,15 +86,16 @@ class _WorkoutDaysScreenState extends State<WorkoutDaysScreen> {
                 ),
               ),
             ),
-
             CustomBlackButton(
               label: 'Next',
-              onPressed: () {
+              onPressed: selectedDays.isNotEmpty
+                  ? () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (BuildContext context) => WorkoutTimeScreen()),
                 );
-              },
+              }
+                  : () {},
             ),
           ],
         ),

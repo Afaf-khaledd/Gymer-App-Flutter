@@ -66,6 +66,11 @@ class _AgeScreenState extends State<AgeScreen> {
           SizedBox(
             width: screenWidth * 0.6,
             child: TextField(
+              onChanged: (value) {
+                setState(() {
+                  ageController.text = value;
+                });
+              },
               controller: ageController,
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
@@ -83,11 +88,17 @@ class _AgeScreenState extends State<AgeScreen> {
             ),
           ),
           Spacer(),
-          CustomBlackButton(label: 'Next', onPressed: () {
-            Navigator.push(context, MaterialPageRoute(
-              builder: (BuildContext context) => WorkoutDaysScreen(),
-            ),
-            );}),
+          CustomBlackButton(
+            label: 'Next',
+            onPressed: ageController.text.isNotEmpty
+                ? () {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (BuildContext context) => WorkoutDaysScreen(),
+              ),
+              );
+            }
+                : () {},
+          ),
         ],
       ),
     );

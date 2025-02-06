@@ -32,7 +32,9 @@ class _GenderScreenState extends State<GenderScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
           icon: Icon(Icons.arrow_back_ios_new, color: Color.fromRGBO(102, 102, 102, 1)),
         ),
         title: SvgPicture.asset(AssetsManager.thirdState),
@@ -81,11 +83,17 @@ class _GenderScreenState extends State<GenderScreen> {
           ),
 
           Spacer(),
-          CustomBlackButton(label: 'Next', onPressed: () {
-            Navigator.push(context, MaterialPageRoute(
-              builder: (BuildContext context) => AgeScreen(),
-            ),
-            );}),
+          CustomBlackButton(
+            label: 'Next',
+            onPressed: _selectedGender != null
+                ? () {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (BuildContext context) => AgeScreen(),
+              ),
+              );
+            }
+                : () {},
+          ),
         ],
       ),
     );

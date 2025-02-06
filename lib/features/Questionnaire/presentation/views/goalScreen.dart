@@ -87,11 +87,25 @@ class _GoalScreenState extends State<GoalScreen> {
                 onTap: () => toggleSelection("Endurance"),
               ),
               Spacer(),
-              CustomBlackButton(label: 'Next', onPressed: () {
-                Navigator.push(context, MaterialPageRoute(
-                builder: (BuildContext context) => OnboardingQ(label: 'Body Data', number: '2', rightPadding: 20, labelSize: 50, nextScreen: HeightScreen(),),
+              CustomBlackButton(
+                label: 'Next',
+                onPressed: selectedGoal != null
+                    ? () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => OnboardingQ(
+                        label: 'Body Data',
+                        number: '2',
+                        rightPadding: 20,
+                        labelSize: 50,
+                        nextScreen: HeightScreen(),
+                      ),
+                    ),
+                  );
+                }
+                    : () {},
               ),
-              );}),
             ],
           ),
         ),
