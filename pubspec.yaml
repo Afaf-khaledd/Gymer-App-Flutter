@@ -37,6 +37,9 @@ dependencies:
   google_fonts: ^6.2.1
   animated_toggle_switch: ^0.8.4
   image_picker:
+  simple_ruler_picker: ^0.1.1
+  flutter_svg:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
