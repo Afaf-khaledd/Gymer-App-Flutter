@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/components/customBlackButton.dart';
+import 'package:gymer/features/Home/presentation/views/homeScreen.dart';
 
 import '../../../../core/utils/assets.dart';
 
@@ -39,7 +40,12 @@ class FinalScreen extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            CustomBlackButton(label: 'Let’s Go', onPressed: () {}),
+            CustomBlackButton(label: 'Let’s Go', onPressed: () {
+              Navigator.pushReplacement(context, MaterialPageRoute<void>(
+                builder: (BuildContext context) => const HomeScreen(),
+              ),
+              );
+            }),
           ],
         ),
       ),

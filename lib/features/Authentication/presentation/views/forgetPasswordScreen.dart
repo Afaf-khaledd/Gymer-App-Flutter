@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/components/CustomTextFormField.dart';
 import 'package:gymer/core/components/customBlackButton.dart';
-import 'package:gymer/core/utils/Validators.dart';
+import 'package:gymer/core/helpers/validators.dart';
 import 'package:gymer/features/Authentication/presentation/views/resetPasswordScreen.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
@@ -52,30 +52,33 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
         ),
       ),
       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(18.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Spacer(),
-                Text(
-                  "  Enter Your Email Address",
-                  style: GoogleFonts.leagueSpartan(
-                      fontWeight: FontWeight.w500, fontSize: 18),
-                ),
-                CustomTextFormField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  hintText: 'example@example.com',
-                  validator: Validators.validateEmail,
-                ),
-                SizedBox(height: screenHeight * 0.2),
-                CustomBlackButton(label: 'Next', onPressed: _submitForm),
-                SizedBox(height: screenHeight * 0.1),
-              ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //const Spacer(),
+                  SizedBox(height: 150,),
+                  Text(
+                    "  Enter Your Email Address",
+                    style: GoogleFonts.leagueSpartan(
+                        fontWeight: FontWeight.w500, fontSize: 18),
+                  ),
+                  CustomTextFormField(
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    hintText: 'example@example.com',
+                    validator: Validators.validateEmail,
+                  ),
+                  SizedBox(height: screenHeight * 0.2),
+                  CustomBlackButton(label: 'Next', onPressed: _submitForm),
+                  SizedBox(height: screenHeight * 0.1),
+                ],
+              ),
             ),
           ),
         ),
