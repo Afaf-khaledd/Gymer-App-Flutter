@@ -1,12 +1,15 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/components/customBlackButton.dart';
 import 'package:gymer/core/utils/assets.dart';
 import 'package:gymer/core/utils/colors.dart';
 import 'package:gymer/features/Authentication/presentation/views/forgetPasswordScreen.dart';
 import 'package:gymer/features/Authentication/presentation/views/registerScreen.dart';
-
+import 'package:gymer/features/Authentication/presentation/view%20model/AuthCubit/auth_cubit.dart';
+import 'package:gymer/features/Home/presentation/views/homeScreen.dart';
 import '../../../../core/components/CustomTextFormField.dart';
 import '../../../../core/helpers/validators.dart';
 
@@ -29,6 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     // shared preference
   }
+
   @override
   void dispose() {
     emailController.dispose();
@@ -38,8 +42,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _login() {
     if (_formKey.currentState!.validate()) {
-      // Perform login logic here
-      print("Login successful!");
+      context.read<AuthCubit>().login(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+      );
     }
   }
 
@@ -56,125 +62,143 @@ class _LoginScreenState extends State<LoginScreen> {
           icon: const Icon(Icons.arrow_back_ios_rounded),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 26.0, vertical: 30),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Welcome Back!",
-                  style: GoogleFonts.poppins(fontSize: 25, fontWeight: FontWeight.w700),
-                ),
-                SizedBox(height: 20,),
-                Row(
+      body: BlocConsumer<AuthCubit, AuthState>(
+        listener: (context, state) {
+          /*if (state is AuthLoading) {
+            EasyLoading.show(status: 'Loading...');
+          } else {
+            EasyLoading.dismiss();
+          }*/
+          if (state is AuthAuthenticated) {
+            Navigator.pushReplacement(context, MaterialPageRoute<void>(
+              builder: (BuildContext context) => const HomeScreen(),
+            ),
+            );
+          } else if (state is AuthError) {
+            Fluttertoast.showToast(
+              msg: state.message,
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+          }
+        },
+        builder: (context, state) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 26.0, vertical: 30),
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Spacer(),
-                    Image.asset(AssetsManager.gymMachine1),
-                  ],
-                ),
-                SizedBox(height: 20,),
-                Text(
-                  "  Username or Email",
-                  style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w400, fontSize: 18),
-                ),
-                CustomTextFormField(
-                  controller: emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  hintText: 'example@example.com',
-                  validator: Validators.validateEmailOrUsername
-                ),
-                const SizedBox(height: 15),
-                Text(
-                  "  Password",
-                  style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w400, fontSize: 18),
-                ),
-                CustomTextFormField(
-                  controller: passwordController,
-                  keyboardType: TextInputType.text,
-                  obscureText: true,
-                  hintText: '*********',
-                  validator: Validators.validatePassword,
-                ),
-                const SizedBox(height: 15),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                    Text(
+                      "Welcome Back!",
+                      style: GoogleFonts.poppins(fontSize: 25, fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(height: 20),
                     Row(
                       children: [
-                        SizedBox(
-                          width: 50,
-                          child: AnimatedToggleSwitch<bool>.dual(
-                            current: rememberMe,
-                            first: true,
-                            second: false,
-                            borderWidth: 0.1,
-                            height: 25,
-                            indicatorSize: const Size(200, 25),
-                            onChanged: _toggleRememberMe,
-                            style: ToggleStyle(
-                              backgroundColor: rememberMe ? ColorsManager.goldColorO1 : Colors.grey[350],
-                              indicatorColor: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
+                        const Spacer(),
+                        Image.asset(AssetsManager.gymMachine1),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Text("  Username or Email", style: GoogleFonts.leagueSpartan(fontSize: 18)),
+                    CustomTextFormField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      hintText: 'example@example.com',
+                      validator: Validators.validateEmailOrUsername,
+                    ),
+                    const SizedBox(height: 15),
+                    Text("  Password", style: GoogleFonts.leagueSpartan(fontSize: 18)),
+                    CustomTextFormField(
+                      controller: passwordController,
+                      keyboardType: TextInputType.text,
+                      obscureText: true,
+                      hintText: '*********',
+                      validator: Validators.validatePassword,
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 50,
+                              child: AnimatedToggleSwitch<bool>.dual(
+                                current: rememberMe,
+                                first: true,
+                                second: false,
+                                borderWidth: 0.1,
+                                height: 25,
+                                indicatorSize: const Size(200, 25),
+                                onChanged: _toggleRememberMe,
+                                style: ToggleStyle(
+                                  backgroundColor:
+                                  rememberMe ? ColorsManager.goldColorO1 : Colors.grey[350],
+                                  indicatorColor: Colors.white,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
                             ),
-                          ),
+                            const SizedBox(width: 5),
+                            Text("Remember Me", style: GoogleFonts.poppins(fontSize: 14)),
+                          ],
                         ),
-                        const SizedBox(width: 5),
-                        Text(
-                          'Remember Me',
-                          style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w400),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const ForgetPasswordScreen()),
+                            );
+                          },
+                          child: Text("Forget Password?", style: GoogleFonts.poppins(fontSize: 14)),
                         ),
                       ],
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute<void>(
-                          builder: (BuildContext context) => const ForgetPasswordScreen(),
+                    const SizedBox(height: 40),
+                    state is AuthLoading
+                        ? const Center(child: CircularProgressIndicator(color: ColorsManager.goldColorO1,))
+                        : CustomBlackButton(
+                      label: 'Login',
+                      onPressed: _login,
+                    ),
+                    const SizedBox(height: 30),
+                    Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                          );
+                        },
+                        child: RichText(
+                          text: TextSpan(
+                            text: "Don’t have an account? ",
+                            style: GoogleFonts.leagueSpartan(fontSize: 14, color: Colors.black),
+                            children: [
+                              TextSpan(
+                                text: "Sign Up",
+                                style: GoogleFonts.leagueSpartan(
+                                    fontSize: 14, fontWeight: FontWeight.w700, color: ColorsManager.goldColorO1),
+                              ),
+                            ],
+                          ),
                         ),
-                        );
-                      },
-                      child: Text(
-                        'Forget Password?',
-                        style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.w400),
                       ),
                     ),
+                    const SizedBox(height: 20),
                   ],
                 ),
-                const SizedBox(height: 40),
-                CustomBlackButton(
-                  label: 'Login',
-                  onPressed: _login,
-                ),
-                const SizedBox(height: 30,),
-                Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const RegisterScreen()),
-                      );
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        text: "Don’t have an account? ",
-                        style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w400, fontSize: 14,color: Colors.black),
-                        children: [
-                          TextSpan(
-                            text: "Sign Up",
-                            style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w700, fontSize: 14, color: ColorsManager.goldColorO1),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
