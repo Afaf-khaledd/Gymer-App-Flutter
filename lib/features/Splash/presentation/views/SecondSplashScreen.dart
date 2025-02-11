@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gymer/core/helpers/local_storage.dart';
 import 'package:gymer/core/utils/assets.dart';
 import 'package:gymer/core/utils/colors.dart';
 import 'package:gymer/features/Boarding/presentation/views/OnBoardingPage.dart';
+import 'package:gymer/features/Home/presentation/views/homeScreen.dart';
 
 class SecondSplashScreen extends StatefulWidget {
   const SecondSplashScreen({super.key});
@@ -17,12 +19,23 @@ class _SecondSplashScreenState extends State<SecondSplashScreen>
   void initState() {
     super.initState();
     // get remember me and token to know where to navigate!
-    Future.delayed(const Duration(seconds: 3), () {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const OnBoardingPage()));
-    });
+    _navigateBasedOnAuth();
   }
 
+  Future<void> _navigateBasedOnAuth() async {
+    final token = await LocalStorage.getToken();
+    final rememberMe = await LocalStorage.getRememberMe();
+
+    Widget nextScreen = (token != null && rememberMe == true)
+        ? const HomeScreen()
+        : const OnBoardingPage();
+
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => nextScreen),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,11 +97,12 @@ class _SecondSplashScreenState extends State<SecondSplashScreen>
                 ),
               )),
           Expanded(
-              flex: 5,
-              child: Image.asset(
-                AssetsManager.splashImage,
-                fit: BoxFit.contain,
-              ),)
+            flex: 5,
+            child: Image.asset(
+              AssetsManager.splashImage,
+              fit: BoxFit.contain,
+            ),
+          )
         ],
       )),
     );

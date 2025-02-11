@@ -23,18 +23,20 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(String email, String password, bool rememberMe) async {
     emit(AuthLoading());
 
     try {
       final user = await authRepository.login(email: email, password: password);
+      await LocalStorage.setRememberMe(rememberMe);
       emit(AuthAuthenticated(user));
     } catch (e) {
       emit(AuthError(e.toString()));
     }
   }
 
-  Future<void> register(String fullName, String userName, String email, String password) async {
+  Future<void> register(
+      String fullName, String userName, String email, String password) async {
     emit(AuthLoading());
 
     try {
@@ -51,7 +53,6 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   Future<void> logout() async {
-    await authRepository.logout();
     emit(AuthUnauthenticated());
   }
 }

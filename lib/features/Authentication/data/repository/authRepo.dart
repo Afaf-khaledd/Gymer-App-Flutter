@@ -13,10 +13,12 @@ class AuthenticationRepository {
     try {
       if (error is String) {
         final decodedError = jsonDecode(error);
-        if (decodedError is Map<String, dynamic> && decodedError.containsKey("message")) {
+        if (decodedError is Map<String, dynamic> &&
+            decodedError.containsKey("message")) {
           return decodedError["message"];
         }
-      } else if (error is Map<String, dynamic> && error.containsKey("message")) {
+      } else if (error is Map<String, dynamic> &&
+          error.containsKey("message")) {
         return error["message"];
       }
     } catch (e) {
@@ -24,6 +26,7 @@ class AuthenticationRepository {
     }
     return "An unexpected error occurred. Please try again.";
   }
+
   // call get api to get user data and save it
   Future<UserModel> login({
     required String email,
@@ -58,6 +61,7 @@ class AuthenticationRepository {
       throw Exception(_handleError(e.toString()));
     }
   }
+
   // set remember me true
   Future<UserModel> register({
     required String fullName,
@@ -97,9 +101,11 @@ class AuthenticationRepository {
       throw Exception(_handleError(e.toString()));
     }
   }
+
   // Logout!! remove remember me
   Future<void> logout() async {
     await LocalStorage.removeToken();
     await LocalStorage.removeUserData();
+    await LocalStorage.clearStorage();
   }
 }

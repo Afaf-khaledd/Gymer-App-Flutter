@@ -11,7 +11,7 @@ class ApiService {
   ApiService._privateConstructor() {
     dio = Dio(
       BaseOptions(
-        baseUrl: "http://192.168.1.9:3000/api/",
+        baseUrl: "http://localhost:3000/api/",
         //connectTimeout: Duration(seconds: 30),
         //receiveTimeout: Duration(seconds: 30),
         headers: {
@@ -21,9 +21,11 @@ class ApiService {
     );
   }
 
-  Future<Response> post(String endpoint, {Map<String, dynamic>? data, Map<String, String>? headers}) async {
+  Future<Response> post(String endpoint,
+      {Map<String, dynamic>? data, Map<String, String>? headers}) async {
     try {
-      return await dio.post(endpoint, data: data, options: Options(headers: headers));
+      return await dio.post(endpoint,
+          data: data, options: Options(headers: headers));
     } catch (e) {
       throw Exception("POST API Error: $e");
     }

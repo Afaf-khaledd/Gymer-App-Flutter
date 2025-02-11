@@ -43,9 +43,10 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login() {
     if (_formKey.currentState!.validate()) {
       context.read<AuthCubit>().login(
-        emailController.text.trim(),
-        passwordController.text.trim(),
-      );
+            emailController.text.trim(),
+            passwordController.text.trim(),
+            rememberMe,
+          );
     }
   }
 
@@ -70,9 +71,11 @@ class _LoginScreenState extends State<LoginScreen> {
             EasyLoading.dismiss();
           }*/
           if (state is AuthAuthenticated) {
-            Navigator.pushReplacement(context, MaterialPageRoute<void>(
-              builder: (BuildContext context) => const HomeScreen(),
-            ),
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute<void>(
+                builder: (BuildContext context) => const HomeScreen(),
+              ),
             );
           } else if (state is AuthError) {
             Fluttertoast.showToast(
@@ -96,7 +99,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     Text(
                       "Welcome Back!",
-                      style: GoogleFonts.poppins(fontSize: 25, fontWeight: FontWeight.w700),
+                      style: GoogleFonts.poppins(
+                          fontSize: 25, fontWeight: FontWeight.w700),
                     ),
                     const SizedBox(height: 20),
                     Row(
@@ -106,7 +110,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    Text("  Username or Email", style: GoogleFonts.leagueSpartan(fontSize: 18)),
+                    Text("  Username or Email",
+                        style: GoogleFonts.leagueSpartan(fontSize: 18)),
                     CustomTextFormField(
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
@@ -114,7 +119,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       validator: Validators.validateEmailOrUsername,
                     ),
                     const SizedBox(height: 15),
-                    Text("  Password", style: GoogleFonts.leagueSpartan(fontSize: 18)),
+                    Text("  Password",
+                        style: GoogleFonts.leagueSpartan(fontSize: 18)),
                     CustomTextFormField(
                       controller: passwordController,
                       keyboardType: TextInputType.text,
@@ -139,53 +145,65 @@ class _LoginScreenState extends State<LoginScreen> {
                                 indicatorSize: const Size(200, 25),
                                 onChanged: _toggleRememberMe,
                                 style: ToggleStyle(
-                                  backgroundColor:
-                                  rememberMe ? ColorsManager.goldColorO1 : Colors.grey[350],
+                                  backgroundColor: rememberMe
+                                      ? ColorsManager.goldColorO1
+                                      : Colors.grey[350],
                                   indicatorColor: Colors.white,
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                               ),
                             ),
                             const SizedBox(width: 5),
-                            Text("Remember Me", style: GoogleFonts.poppins(fontSize: 14)),
+                            Text("Remember Me",
+                                style: GoogleFonts.poppins(fontSize: 14)),
                           ],
                         ),
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const ForgetPasswordScreen()),
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ForgetPasswordScreen()),
                             );
                           },
-                          child: Text("Forget Password?", style: GoogleFonts.poppins(fontSize: 14)),
+                          child: Text("Forget Password?",
+                              style: GoogleFonts.poppins(fontSize: 14)),
                         ),
                       ],
                     ),
                     const SizedBox(height: 40),
                     state is AuthLoading
-                        ? const Center(child: CircularProgressIndicator(color: ColorsManager.goldColorO1,))
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                            color: ColorsManager.goldColorO1,
+                          ))
                         : CustomBlackButton(
-                      label: 'Login',
-                      onPressed: _login,
-                    ),
+                            label: 'Login',
+                            onPressed: _login,
+                          ),
                     const SizedBox(height: 30),
                     Center(
                       child: GestureDetector(
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const RegisterScreen()),
+                            MaterialPageRoute(
+                                builder: (context) => const RegisterScreen()),
                           );
                         },
                         child: RichText(
                           text: TextSpan(
                             text: "Don’t have an account? ",
-                            style: GoogleFonts.leagueSpartan(fontSize: 14, color: Colors.black),
+                            style: GoogleFonts.leagueSpartan(
+                                fontSize: 14, color: Colors.black),
                             children: [
                               TextSpan(
                                 text: "Sign Up",
                                 style: GoogleFonts.leagueSpartan(
-                                    fontSize: 14, fontWeight: FontWeight.w700, color: ColorsManager.goldColorO1),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w700,
+                                    color: ColorsManager.goldColorO1),
                               ),
                             ],
                           ),
