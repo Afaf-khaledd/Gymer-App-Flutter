@@ -24,7 +24,7 @@ class AuthenticationRepository {
     }
     return "An unexpected error occurred. Please try again.";
   }
-
+  // call get api to get user data and save it
   Future<UserModel> login({
     required String email,
     required String password,
@@ -58,7 +58,7 @@ class AuthenticationRepository {
       throw Exception(_handleError(e.toString()));
     }
   }
-
+  // set remember me true
   Future<UserModel> register({
     required String fullName,
     required String userName,
@@ -97,7 +97,7 @@ class AuthenticationRepository {
       throw Exception(_handleError(e.toString()));
     }
   }
-  // Logout!!
+  // Logout!! remove remember me
   Future<void> logout() async {
     await LocalStorage.removeToken();
     await LocalStorage.removeUserData();

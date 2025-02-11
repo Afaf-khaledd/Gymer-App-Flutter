@@ -4,6 +4,8 @@ import 'package:gymer/core/helpers/apiService.dart';
 
 import '../../features/Authentication/data/repository/authRepo.dart';
 import '../../features/Authentication/presentation/view model/AuthCubit/auth_cubit.dart';
+import '../../features/Questionnaire/data/repository/questionnaireRepo.dart';
+import '../../features/Questionnaire/presentation/view model/questionnaireCubit/questionnaire_cubit.dart';
 
 final getIt = GetIt.instance;
 void setupServiceLocator() {
@@ -13,7 +15,7 @@ void setupServiceLocator() {
   getIt.registerFactory<AuthCubit>(() => AuthCubit(getIt<AuthenticationRepository>()));
 
   //Questionnaire
-/*  getIt.registerLazySingleton<QuestionnaireRepository>(() => QuestionnaireRepository(apiService: ApiService()));
-  getIt.registerFactory<QuestionnaireCubit>(() => QuestionnaireCubit(getIt<QuestionnaireRepository>()));*/
+  getIt.registerLazySingleton<QuestionnaireRepository>(() => QuestionnaireRepository(apiService: apiService));
+  getIt.registerFactory<QuestionnaireCubit>(() => QuestionnaireCubit(getIt<QuestionnaireRepository>()));
 
 }

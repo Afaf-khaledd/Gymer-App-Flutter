@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/utils/colors.dart';
@@ -7,20 +8,16 @@ import 'package:simple_ruler_picker/simple_ruler_picker.dart';
 
 import '../../../../core/components/customBlackButton.dart';
 import '../../../../core/utils/assets.dart';
+import '../view model/questionnaireCubit/questionnaire_cubit.dart';
 import 'finalScreen.dart';
 
-class HeightScreen extends StatefulWidget {
+class HeightScreen extends StatelessWidget {
   const HeightScreen({super.key});
 
   @override
-  State<HeightScreen> createState() => _HeightScreenState();
-}
-
-class _HeightScreenState extends State<HeightScreen> {
-  double _height = 150;
-  @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -52,9 +49,10 @@ class _HeightScreenState extends State<HeightScreen> {
                 padding: const EdgeInsets.only(right: 16),
                 child: InkWell(
                   onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (BuildContext context) => FinalScreen()),
+                    context.read<QuestionnaireCubit>().skipStep();
+                    Navigator.pushReplacement(context, MaterialPageRoute<void>(
+                      builder: (BuildContext context) => const FinalScreen(),
+                    ),
                     );
                   },
                   child: Text(
@@ -78,50 +76,68 @@ class _HeightScreenState extends State<HeightScreen> {
                       style: GoogleFonts.poppins(fontWeight: FontWeight.w700, fontSize: 30),
                     ),
                     const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          _height.toStringAsFixed(0),
-                          style: GoogleFonts.poppins(fontSize: 54, fontWeight: FontWeight.w700),
-                        ),
-                        Text(
-                          'Cm',
-                          style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 30),
-                    SizedBox(
-                      height: screenHeight*0.48,
-                      width: 170,
-                      child: SimpleRulerPicker(
-                        selectedColor: ColorsManager.goldColorO1,
-                        labelColor: Colors.black45,
-                        initialValue: _height.toInt(),
-                        minValue: 0,
-                        maxValue: 250,
-                        lineStroke: 2,
-                        longLineHeight: 50,
-                        shortLineHeight: 25,
-                        scaleItemWidth: 25,
-                        scaleLabelSize: 24,
-                       // scaleLabelWidth: 30,
-                        lineColor: Colors.grey,
-                        height: 400,
-                        onValueChanged: (value) {
-                          setState(() {
-                            _height = value.toDouble();
-                          });
-                        },
-                        axis: Axis.vertical,
-                      ),
+
+                    BlocBuilder<QuestionnaireCubit, QuestionnaireState>(
+                      builder: (context, state) {
+                        double height = 150;
+                        if (state is QuestionnaireLoaded) {
+                          height = state.questionnaire.height?.toDouble() ?? 150;
+                        }
+                        return Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  height.toStringAsFixed(0),
+                                  style: GoogleFonts.poppins(fontSize: 54, fontWeight: FontWeight.w700),
+                                ),
+                                Text(
+                                  'Cm',
+                                  style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w500),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 30),
+
+                            SizedBox(
+                              height: screenHeight * 0.48,
+                              width: 170,
+                              child: SimpleRulerPicker(
+                                selectedColor: ColorsManager.goldColorO1,
+                                labelColor: Colors.black45,
+                                initialValue: height.toInt(),
+                                minValue: 50,
+                                maxValue: 250,
+                                lineStroke: 2,
+                                longLineHeight: 50,
+                                shortLineHeight: 25,
+                                scaleItemWidth: 25,
+                                scaleLabelSize: 24,
+                                lineColor: Colors.grey,
+                                height: 400,
+                                onValueChanged: (value) {
+                                  context.read<QuestionnaireCubit>().updateAnswer("height", value);
+                                },
+                                axis: Axis.vertical,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
 
                     const SizedBox(height: 80),
+
                     CustomBlackButton(
                       label: 'Next',
                       onPressed: () {
+                        final questionnaireCubit = context.read<QuestionnaireCubit>();
+                        final state = questionnaireCubit.state;
+                        if (state is QuestionnaireLoaded && state.questionnaire.height == null) {
+                          questionnaireCubit.updateAnswer("height", 150);
+                        }
+                        context.read<QuestionnaireCubit>().goToNextStep();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (BuildContext context) => WeightScreen()),

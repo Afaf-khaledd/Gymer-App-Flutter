@@ -29,4 +29,7 @@ class LocalStorage {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('user');
   }
+
+  // remember me!
+
 }

@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       rememberMe = value;
     });
-    // shared preference
+    // shared preference set value
   }
 
   @override

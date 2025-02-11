@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gymer/core/utils/colors.dart';
-import 'package:gymer/features/Questionnaire/presentation/views/targetWeightScreen.dart';
+import 'package:gymer/features/Questionnaire/presentation/views/genderScreen.dart';
 import 'package:simple_ruler_picker/simple_ruler_picker.dart';
 
 import '../../../../core/components/customBlackButton.dart';
 import '../../../../core/utils/assets.dart';
+import '../../../../core/utils/colors.dart';
 import '../view model/questionnaireCubit/questionnaire_cubit.dart';
 import 'WeightToggleButton.dart';
 import 'finalScreen.dart';
 
-class WeightScreen extends StatelessWidget {
-  const WeightScreen({super.key});
+class TargetWeightScreen extends StatelessWidget {
+  const TargetWeightScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +81,7 @@ class WeightScreen extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: "Current",
+                            text: "Target",
                             style: GoogleFonts.poppins(
                               fontWeight: FontWeight.w700,
                               fontSize: 30,
@@ -102,14 +102,13 @@ class WeightScreen extends StatelessWidget {
 
                     BlocBuilder<QuestionnaireCubit, QuestionnaireState>(
                       builder: (context, state) {
-                        double weight = 60;
+                        double targetWeight = 90;
                         bool isMetric = true;
 
                         if (state is QuestionnaireLoaded) {
-                          weight = state.questionnaire.currentWeight?.toDouble() ?? 60;
+                          targetWeight = state.questionnaire.goalWeight?.toDouble() ?? 90;
                           isMetric = true;
                         }
-
                         return Column(
                           children: [
                             WeightToggleButton(
@@ -123,7 +122,7 @@ class WeightScreen extends StatelessWidget {
                             SimpleRulerPicker(
                               selectedColor: ColorsManager.goldColorO1,
                               labelColor: Colors.black45,
-                              initialValue: weight.toInt(),
+                              initialValue: targetWeight.toInt(),
                               minValue: 0,
                               maxValue: 500,
                               lineStroke: 2,
@@ -135,7 +134,7 @@ class WeightScreen extends StatelessWidget {
                               lineColor: Colors.grey,
                               height: 200,
                               onValueChanged: (value) {
-                                context.read<QuestionnaireCubit>().updateAnswer("currentWeight", value);
+                                context.read<QuestionnaireCubit>().updateAnswer("goalWeight", value);
                               },
                               axis: Axis.horizontal,
                             ),
@@ -146,11 +145,11 @@ class WeightScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  weight.toStringAsFixed(0),
+                                  targetWeight.toStringAsFixed(0),
                                   style: GoogleFonts.poppins(fontSize: 54, fontWeight: FontWeight.w700),
                                 ),
                                 Text(
-                                  isMetric? 'KG' : 'LB',
+                                  isMetric ? 'KG' : 'LB',
                                   style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w500),
                                 ),
                               ],
@@ -160,20 +159,23 @@ class WeightScreen extends StatelessWidget {
                       },
                     ),
 
-                    const SizedBox(height: 152),
+                    const SizedBox(height: 153),
 
+                    // Next Button
                     CustomBlackButton(
                       label: 'Next',
                       onPressed: () {
                         final questionnaireCubit = context.read<QuestionnaireCubit>();
                         final state = questionnaireCubit.state;
-                        if (state is QuestionnaireLoaded && state.questionnaire.currentWeight == null) {
-                          questionnaireCubit.updateAnswer("currentWeight", 60);
+                        if (state is QuestionnaireLoaded && state.questionnaire.goalWeight == null) {
+                          questionnaireCubit.updateAnswer("goalWeight", 90);
                         }
                         context.read<QuestionnaireCubit>().goToNextStep();
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (BuildContext context) => TargetWeightScreen()),
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => GenderScreen(),
+                          ),
                         );
                       },
                     ),

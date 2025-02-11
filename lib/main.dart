@@ -6,6 +6,7 @@ import 'package:gymer/features/Splash/presentation/views/SplashScreen.dart';
 
 import 'core/helpers/seviceLocator.dart';
 import 'features/Authentication/presentation/view model/AuthCubit/auth_cubit.dart';
+import 'features/Questionnaire/presentation/view model/questionnaireCubit/questionnaire_cubit.dart';
 
 
 void main() {
@@ -35,9 +36,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthCubit>(
           create: (_) => getIt<AuthCubit>(),
         ),
-      /*  BlocProvider<QuestionnaireCubit>(
-          create: (_) => getIt<QuestionnaireCubit>(),
-        ),*/
+        BlocProvider<QuestionnaireCubit>(
+          create: (_) => getIt<QuestionnaireCubit>()..initializeQuestionnaire(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

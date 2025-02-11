@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/features/Questionnaire/presentation/views/workoutDays.dart';
@@ -6,6 +7,7 @@ import 'package:gymer/features/Questionnaire/presentation/views/workoutDays.dart
 import '../../../../core/components/customBlackButton.dart';
 import '../../../../core/utils/assets.dart';
 import '../../../../core/utils/colors.dart';
+import '../view model/questionnaireCubit/questionnaire_cubit.dart';
 import 'finalScreen.dart';
 
 class AgeScreen extends StatefulWidget {
@@ -16,22 +18,25 @@ class AgeScreen extends StatefulWidget {
 }
 
 class _AgeScreenState extends State<AgeScreen> {
-  TextEditingController ageController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
 
   @override
   void dispose() {
     super.dispose();
-    ageController.dispose();
+    _ageController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {Navigator.pop(context);},
-          icon: Icon(Icons.arrow_back_ios_new, color: Color.fromRGBO(102, 102, 102, 1)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back_ios_new, color: Color.fromRGBO(102, 102, 102, 1)),
         ),
         title: SvgPicture.asset(AssetsManager.thirdState),
         toolbarHeight: 100,
@@ -39,39 +44,38 @@ class _AgeScreenState extends State<AgeScreen> {
         centerTitle: true,
         actions: [
           InkWell(
-            onTap: (){
-              Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (BuildContext context) => FinalScreen()),
-            );},
-            child: Text(
-              'Skip',
-              style: GoogleFonts.leagueSpartan(
-                fontSize: 18,
-                fontWeight: FontWeight.w400,
-                color: Color.fromRGBO(102, 102, 102, 0.7),
+            onTap: () {
+              context.read<QuestionnaireCubit>().skipStep();
+              Navigator.pushReplacement(context, MaterialPageRoute<void>(
+                builder: (BuildContext context) => const FinalScreen(),
+              ));
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(
+                'Skip',
+                style: GoogleFonts.leagueSpartan(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                  color: const Color.fromRGBO(102, 102, 102, 0.7),
+                ),
               ),
             ),
           ),
-          SizedBox(width: 30),
+          const SizedBox(width: 30),
         ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-       // mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(height: 10,),
+          const SizedBox(height: 10),
           Text("What Is Your Age", style: GoogleFonts.poppins(fontWeight: FontWeight.w700, fontSize: 30)),
-          Spacer(),
+          const Spacer(),
+
           SizedBox(
             width: screenWidth * 0.6,
             child: TextField(
-              onChanged: (value) {
-                setState(() {
-                  ageController.text = value;
-                });
-              },
-              controller: ageController,
+              controller: _ageController,
               textAlign: TextAlign.center,
               keyboardType: TextInputType.number,
               style: GoogleFonts.poppins(fontWeight: FontWeight.w700, fontSize: 50),
@@ -87,17 +91,30 @@ class _AgeScreenState extends State<AgeScreen> {
               cursorWidth: 0,
             ),
           ),
-          Spacer(),
-          CustomBlackButton(
-            label: 'Next',
-            onPressed: ageController.text.isNotEmpty
-                ? () {
-              Navigator.push(context, MaterialPageRoute(
-                builder: (BuildContext context) => WorkoutDaysScreen(),
-              ),
+
+          const Spacer(),
+
+          BlocBuilder<QuestionnaireCubit, QuestionnaireState>(
+            builder: (context, state) {
+              return CustomBlackButton(
+                label: 'Next',
+                onPressed: () {
+                  String ageText = _ageController.text.trim();
+                  int? age = int.tryParse(ageText);
+
+                  if (age != null) {
+                    context.read<QuestionnaireCubit>().updateAnswer("age", age);
+                    context.read<QuestionnaireCubit>().goToNextStep();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => WorkoutDaysScreen(),
+                      ),
+                    );
+                  }
+                },
               );
-            }
-                : () {},
+            },
           ),
         ],
       ),

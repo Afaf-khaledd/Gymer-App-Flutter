@@ -16,6 +16,7 @@ class _SecondSplashScreenState extends State<SecondSplashScreen>
   @override
   void initState() {
     super.initState();
+    // get remember me and token to know where to navigate!
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const OnBoardingPage()));
