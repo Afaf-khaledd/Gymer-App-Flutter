@@ -10,19 +10,6 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit(this.authRepository) : super(AuthInitial());
 
-  Future<void> checkAuth() async {
-    emit(AuthLoading());
-
-    final token = await LocalStorage.getToken();
-    final user = await LocalStorage.getUserData();
-
-    if (token == null || user == null) {
-      emit(AuthUnauthenticated());
-    } else {
-      emit(AuthAuthenticated(user));
-    }
-  }
-
   Future<void> login(String input, String password, bool rememberMe) async {
     emit(AuthLoading());
 
@@ -34,7 +21,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
 
       await LocalStorage.setRememberMe(rememberMe);
-      emit(AuthAuthenticated(user));
+      emit(AuthAuthenticated(user as UserModel));
     } catch (e) {
       emit(AuthError(e.toString()));
     }
@@ -63,6 +50,34 @@ class AuthCubit extends Cubit<AuthState> {
     try {
       await authRepository.logout();
       emit(AuthUnauthenticated());
+    } catch (e) {
+      emit(AuthError(e.toString()));
+    }
+  }
+
+  Future<void> getProfile() async {
+    emit(AuthInitial());
+    try {
+      final user = await authRepository.getProfile();
+      if (user != null) {
+        emit(ProfileRetrieved(user));
+      } else {
+        emit(AuthError("Failed to retrieve profile"));
+      }
+    } catch (e) {
+      emit(AuthError(e.toString()));
+    }
+  }
+
+  Future<void> updateProfile(Map<String, dynamic> updatedData) async {
+    emit(ProfileLoading());
+    try {
+      final user = await authRepository.updateProfile(updatedData);
+      if (user != null) {
+        emit(ProfileUpdated(user));
+      } else {
+        emit(AuthError("Failed to update profile"));
+      }
     } catch (e) {
       emit(AuthError(e.toString()));
     }

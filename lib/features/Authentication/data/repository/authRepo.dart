@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 
 import '../../../../core/helpers/apiService.dart';
@@ -34,8 +32,7 @@ class AuthenticationRepository {
     return "An unexpected error occurred. Please try again.";
   }
 
-  // call get api to get user data and save it
-  Future<UserModel> login(
+  Future<Future<UserModel?>> login(
       Map<String, String> credentials, String password) async {
     try {
       final response = await apiService.post("/authentication/login", data: {
@@ -47,18 +44,9 @@ class AuthenticationRepository {
         final data = response.data['data'];
         final token = data['token'];
 
-        final user = UserModel(
-          userId: '',
-          fullName: '',
-          userName: credentials.containsKey('username')
-              ? credentials['username']!
-              : '',
-          email: credentials.containsKey('email') ? credentials['email']! : '',
-          token: token,
-        );
+        final user = getProfile();
 
         await LocalStorage.saveToken(token);
-        await LocalStorage.saveUserData(user);
 
         return user;
       } else {
@@ -91,7 +79,6 @@ class AuthenticationRepository {
         final userCreated = data['userCreated'];
 
         final user = UserModel(
-          userId: userCreated['_id'],
           fullName: userCreated['fullName'],
           userName: userCreated['userName'],
           email: userCreated['email'],
@@ -100,7 +87,6 @@ class AuthenticationRepository {
 
         await LocalStorage.setRememberMe(true);
         await LocalStorage.saveToken(token);
-        await LocalStorage.saveUserData(user);
 
         return user;
       } else {
@@ -112,10 +98,53 @@ class AuthenticationRepository {
       throw Exception("Unexpected error: $e");
     }
   }
+  Future<UserModel?> getProfile() async {
+    try {
+      String? token = await LocalStorage.getToken();
+      if (token == null) throw Exception("No token found");
+
+      final response = await apiService.get(
+        "/profile/retrieve",
+        headers: {"Authorization": "Bearer $token"},
+      );
+
+      if (response.statusCode == 200) {
+        final profileData = response.data['data']['profileInfo'];
+        print(profileData);
+        return UserModel.fromJson(profileData, token);
+      } else {
+        throw Exception(response.data['message'] ?? "Failed to retrieve profile");
+      }
+    } catch (e) {
+      throw Exception("Unexpected error: ${e.toString()}");
+    }
+  }
+
+  Future<UserModel?> updateProfile(Map<String, dynamic> updatedData) async {
+    try {
+      String? token = await LocalStorage.getToken();
+      if (token == null) throw Exception("No token found");
+
+      final response = await apiService.patch(
+        "/profile/edit",
+        data: updatedData,
+        headers: {"Authorization": "Bearer $token"},
+      );
+
+      if (response.statusCode == 200) {
+        final profileData = response.data['data']['profileInfo'];
+        print(profileData);
+        return UserModel.fromJson(profileData, token);
+      } else {
+        throw Exception(response.data['message'] ?? "Failed to update profile");
+      }
+    } catch (e) {
+      throw Exception("Unexpected error: ${e.toString()}");
+    }
+  }
 
   Future<void> logout() async {
     await LocalStorage.removeToken();
-    await LocalStorage.removeUserData();
     await LocalStorage.clearStorage();
   }
 }

@@ -1,8 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../features/Authentication/data/models/userModel.dart';
-
 class LocalStorage {
   static const FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
@@ -18,7 +16,7 @@ class LocalStorage {
     await _secureStorage.delete(key: 'token');
   }
 
-  static Future<void> saveUserData(UserModel user) async {
+  /*static Future<void> saveUserData(UserModel user) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('user', user.encode());
   }
@@ -32,7 +30,7 @@ class LocalStorage {
   static Future<void> removeUserData() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('user');
-  }
+  }*/
 
   // remember me!
   static Future<void> setRememberMe(bool rememberMe) async {

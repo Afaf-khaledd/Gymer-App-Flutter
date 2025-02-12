@@ -1,28 +1,46 @@
 import 'package:dio/dio.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gymer/core/helpers/apiService.dart';
 import 'package:gymer/features/Questionnaire/data/models/quesitionnaireModel.dart';
 
 import '../../../../core/helpers/local_storage.dart';
 
-class QuestionnaireRepository{
+class QuestionnaireRepository {
   final ApiService apiService;
 
   QuestionnaireRepository({required this.apiService});
 
+  String _handleError(dynamic error) {
+    try {
+      if (error is DioException) {
+        if (error.response != null &&
+            error.response?.data is Map<String, dynamic>) {
+          final errorData = error.response?.data;
+          if (errorData != null && errorData.containsKey("message")) {
+            return errorData["message"];
+          }
+        }
+        return "Server error: ${error.response?.statusMessage ?? 'Unknown error'}";
+      } else if (error is Map<String, dynamic> && error.containsKey("message")) {
+        return error["message"];
+      } else if (error is String) {
+        return error;
+      }
+    } catch (e) {
+      return "Error parsing response. Please try again.";
+    }
+    return "An unexpected error occurred. Please try again.";
+  }
+
   Future<bool> submitQuestionnaire(QuestionnaireModel questionnaire) async {
     try {
       String? token = await LocalStorage.getToken();
-      print("Retrieved token: $token");
       if (token == null) {
-        Fluttertoast.showToast(msg: "Error: Token is missing.");
-        return false;
+        throw Exception("Authentication error: Token is missing.");
       }
 
       final requestData = questionnaire.toJson();
-      print("Submitting questionnaire: $requestData");
 
-      Response response = await apiService.post(
+      final response = await apiService.post(
         "/questionnaire/submit",
         data: requestData,
         headers: {
@@ -30,20 +48,17 @@ class QuestionnaireRepository{
         },
       );
 
-      print("Response status: ${response.statusCode}");
-      print("Response data: ${response.data}");
-
-      if (response.statusCode == 200) {
-        Fluttertoast.showToast(msg: "Questionnaire submitted successfully.");
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return true;
       } else {
-        Fluttertoast.showToast(msg: "Error: ${response.data}");
-        return false;
+        throw Exception(_handleError(response.data));
       }
+    } on DioException catch (dioError) {
+      final errorMessage = _handleError(dioError);
+      throw Exception(errorMessage);
     } catch (e) {
-      print("Error: $e");
-      Fluttertoast.showToast(msg: "Error submitting questionnaire.");
-      return false;
+      final errorMessage = "Unexpected error: $e";
+      throw Exception(errorMessage);
     }
   }
 }

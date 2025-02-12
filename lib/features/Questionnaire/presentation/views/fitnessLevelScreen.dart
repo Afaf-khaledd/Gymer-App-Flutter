@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gymer/core/utils/colors.dart';
 import 'package:gymer/features/Questionnaire/presentation/view%20model/questionnaireCubit/questionnaire_cubit.dart';
 
 import '../../../../core/components/customBlackButton.dart';
@@ -42,7 +44,7 @@ class FitnessLevelScreen extends StatelessWidget {
       ),
       body: BlocBuilder<QuestionnaireCubit, QuestionnaireState>(
         builder: (context, state) {
-          if (state is! QuestionnaireLoaded) return const Center(child: CircularProgressIndicator());
+          if (state is! QuestionnaireLoaded) return const Center(child: CircularProgressIndicator(color: ColorsManager.goldColorO1,));
 
           final questionnaire = state.questionnaire;
           double fitnessLevel = _getFitnessLevelIndex(questionnaire.fittnesslevel);
@@ -89,14 +91,50 @@ class FitnessLevelScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 CustomBlackButton(
                   label: 'Finish',
-                  onPressed: () {
+                  onPressed: () async {
                     final questionnaireCubit = context.read<QuestionnaireCubit>();
                     final state = questionnaireCubit.state;
                     if (state is QuestionnaireLoaded && state.questionnaire.fittnesslevel == null) {
                       questionnaireCubit.updateAnswer("fittnesslevel", _labels[0]);
                     }
-                    context.read<QuestionnaireCubit>().submitQuestionnaire();
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const FinalScreen()));
+                    try {
+                      await questionnaireCubit.submitQuestionnaire();
+
+                      final newState = questionnaireCubit.state;
+                      if (newState is QuestionnaireSubmitted) {
+                        Fluttertoast.showToast(
+                          msg: "Questionnaire submitted successfully.",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => const FinalScreen()),
+                        );
+                      } else if (newState is QuestionnaireError) {
+                        Fluttertoast.showToast(
+                          msg: newState.message,
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          backgroundColor: Colors.red,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                      }
+                    } catch (e) {
+                      Fluttertoast.showToast(
+                        msg: "An error occurred. Please try again.",
+                        toastLength: Toast.LENGTH_LONG,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 16.0,
+                      );
+                    }
                   },
                 ),
               ],
