@@ -28,13 +28,10 @@ class AuthenticationRepository {
   }
 
   // call get api to get user data and save it
-  Future<UserModel> login({
-    required String email,
-    required String password,
-  }) async {
+  Future<UserModel> login(Map<String, String> credentials, String password) async {
     try {
       final response = await apiService.post("/authentication/login", data: {
-        'email': email,
+        ...credentials,
         'password': password,
       });
 
@@ -45,8 +42,8 @@ class AuthenticationRepository {
         final user = UserModel(
           userId: '',
           fullName: '',
-          userName: '',
-          email: email,
+          userName: credentials.containsKey('username') ? credentials['username']! : '',
+          email: credentials.containsKey('email') ? credentials['email']! : '',
           token: token,
         );
 
@@ -62,7 +59,6 @@ class AuthenticationRepository {
     }
   }
 
-  // set remember me true
   Future<UserModel> register({
     required String fullName,
     required String userName,
@@ -103,7 +99,6 @@ class AuthenticationRepository {
     }
   }
 
-  // Logout!! remove remember me
   Future<void> logout() async {
     await LocalStorage.removeToken();
     await LocalStorage.removeUserData();

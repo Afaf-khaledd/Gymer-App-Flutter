@@ -23,11 +23,16 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> login(String email, String password, bool rememberMe) async {
+  Future<void> login(String input, String password, bool rememberMe) async {
     emit(AuthLoading());
 
     try {
-      final user = await authRepository.login(email: email, password: password);
+      bool isEmail = input.contains('@');
+      final user = await authRepository.login(
+        isEmail ? {'email': input} : {'userName': input},
+        password,
+      );
+
       await LocalStorage.setRememberMe(rememberMe);
       emit(AuthAuthenticated(user));
     } catch (e) {

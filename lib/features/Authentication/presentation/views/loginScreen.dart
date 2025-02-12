@@ -21,7 +21,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController();
+  final TextEditingController inputController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool rememberMe = true;
@@ -35,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void dispose() {
-    emailController.dispose();
+    inputController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -43,10 +43,10 @@ class _LoginScreenState extends State<LoginScreen> {
   void _login() {
     if (_formKey.currentState!.validate()) {
       context.read<AuthCubit>().login(
-            emailController.text.trim(),
-            passwordController.text.trim(),
-            rememberMe,
-          );
+        inputController.text.trim(),
+        passwordController.text.trim(),
+        rememberMe,
+      );
     }
   }
 
@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Text("  Username or Email",
                         style: GoogleFonts.leagueSpartan(fontSize: 18)),
                     CustomTextFormField(
-                      controller: emailController,
+                      controller: inputController,
                       keyboardType: TextInputType.emailAddress,
                       hintText: 'example@example.com',
                       validator: Validators.validateEmailOrUsername,
@@ -164,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      const ForgetPasswordScreen()),
+                                  const ForgetPasswordScreen()),
                             );
                           },
                           child: Text("Forget Password?",
@@ -175,13 +175,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 40),
                     state is AuthLoading
                         ? const Center(
-                            child: CircularProgressIndicator(
-                            color: ColorsManager.goldColorO1,
-                          ))
+                        child: CircularProgressIndicator(
+                          color: ColorsManager.goldColorO1,
+                        ))
                         : CustomBlackButton(
-                            label: 'Login',
-                            onPressed: _login,
-                          ),
+                      label: 'Login',
+                      onPressed: _login,
+                    ),
                     const SizedBox(height: 30),
                     Center(
                       child: GestureDetector(
