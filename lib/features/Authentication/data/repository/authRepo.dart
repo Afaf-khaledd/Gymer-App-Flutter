@@ -90,6 +90,7 @@ class AuthenticationRepository {
           token: token,
         );
 
+        await LocalStorage.setRememberMe(true);
         await LocalStorage.saveToken(token);
         await LocalStorage.saveUserData(user);
 
