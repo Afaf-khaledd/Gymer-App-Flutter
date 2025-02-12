@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
+
 import '../../../../core/helpers/apiService.dart';
 import '../../../../core/helpers/local_storage.dart';
 import '../models/userModel.dart';
@@ -11,15 +13,20 @@ class AuthenticationRepository {
 
   String _handleError(dynamic error) {
     try {
-      if (error is String) {
-        final decodedError = jsonDecode(error);
-        if (decodedError is Map<String, dynamic> &&
-            decodedError.containsKey("message")) {
-          return decodedError["message"];
+      if (error is DioException) {
+        if (error.response != null &&
+            error.response?.data is Map<String, dynamic>) {
+          final errorData = error.response?.data;
+          if (errorData != null && errorData.containsKey("message")) {
+            return errorData["message"];
+          }
         }
+        return "Server error: ${error.response?.statusMessage ?? 'Unknown error'}";
       } else if (error is Map<String, dynamic> &&
           error.containsKey("message")) {
         return error["message"];
+      } else if (error is String) {
+        return error;
       }
     } catch (e) {
       return "Error parsing response. Please try again.";
@@ -28,7 +35,8 @@ class AuthenticationRepository {
   }
 
   // call get api to get user data and save it
-  Future<UserModel> login(Map<String, String> credentials, String password) async {
+  Future<UserModel> login(
+      Map<String, String> credentials, String password) async {
     try {
       final response = await apiService.post("/authentication/login", data: {
         ...credentials,
@@ -42,7 +50,9 @@ class AuthenticationRepository {
         final user = UserModel(
           userId: '',
           fullName: '',
-          userName: credentials.containsKey('username') ? credentials['username']! : '',
+          userName: credentials.containsKey('username')
+              ? credentials['username']!
+              : '',
           email: credentials.containsKey('email') ? credentials['email']! : '',
           token: token,
         );
@@ -54,8 +64,10 @@ class AuthenticationRepository {
       } else {
         throw Exception(_handleError(response.data));
       }
+    } on DioException catch (dioError) {
+      throw Exception(_handleError(dioError));
     } catch (e) {
-      throw Exception(_handleError(e.toString()));
+      throw Exception("Unexpected error: $e");
     }
   }
 
@@ -94,8 +106,10 @@ class AuthenticationRepository {
       } else {
         throw Exception(_handleError(response.data));
       }
+    } on DioException catch (dioError) {
+      throw Exception(_handleError(dioError));
     } catch (e) {
-      throw Exception(_handleError(e.toString()));
+      throw Exception("Unexpected error: $e");
     }
   }
 

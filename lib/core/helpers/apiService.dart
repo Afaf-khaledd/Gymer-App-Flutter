@@ -11,7 +11,7 @@ class ApiService {
   ApiService._privateConstructor() {
     dio = Dio(
       BaseOptions(
-        baseUrl: "http://192.168.1.9:3000/api/",
+        baseUrl: "http://10.0.2.2:3000/api/",
         //baseUrl: "http://10.0.2.2:3000/api/",
         //connectTimeout: Duration(seconds: 30),
         //receiveTimeout: Duration(seconds: 30),
@@ -27,8 +27,13 @@ class ApiService {
     try {
       return await dio.post(endpoint,
           data: data, options: Options(headers: headers));
+    } on DioException catch (dioError) {
+      print(
+          "Dio Error: ${dioError.response?.statusCode} - ${dioError.response?.data}");
+      throw dioError;
     } catch (e) {
-      throw Exception("POST API Error: $e");
+      print("Unknown API Error: $e");
+      throw Exception("Unknown API error occurred.");
     }
   }
 }
