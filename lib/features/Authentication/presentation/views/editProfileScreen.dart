@@ -26,6 +26,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController userNameController;
   late TextEditingController weightController;
   late TextEditingController fullNameController;
+  late String profileUrl;
 
   File? _profileImage;
   final ImagePicker _picker = ImagePicker();
@@ -46,6 +47,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     userNameController.text = user.userName;
     weightController.text = user.currentWeight.toString();
     fullNameController.text = user.fullName;
+    profileUrl = user.profileUrl!;
   }
 
   Future<void> _pickImage() async {
@@ -54,6 +56,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       setState(() {
         _profileImage = File(pickedFile.path);
       });
+      context.read<AuthCubit>().updateProfileImage(_profileImage!);
     }
   }
 
@@ -103,6 +106,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             fontSize: 16.0,
           );
         }
+        else if (state is ProfileImageUpdated) {
+          setState(() {
+            profileUrl = state.newImage;
+          });
+          Fluttertoast.showToast(
+            msg: "Profile image updated successfully!",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+            fontSize: 16.0,
+          );
+        }
       },
       child: Scaffold(
         appBar: AppBar(
@@ -120,7 +136,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         body: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
-            if (state is AuthInitial) {
+            if (state is AuthInitial || state is ProfileImageLoading) {
               return const Center(child: CircularProgressIndicator(color: ColorsManager.goldColorO1));
             } else  if (state is ProfileRetrieved) {
               _initializeControllers(state.user);
@@ -141,9 +157,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             CircleAvatar(
                               radius: 70,
                               backgroundColor: Colors.white,
-                              backgroundImage: _profileImage != null
-                                  ? FileImage(_profileImage!)
-                                  : const AssetImage(AssetsManager.defaultProfileImage),
+                              backgroundImage: (profileUrl.isNotEmpty
+                                  ? NetworkImage(profileUrl) as ImageProvider
+                                  : const AssetImage(
+                                  AssetsManager.defaultProfileImage)),
                             ),
                             Positioned(
                               bottom: 0,

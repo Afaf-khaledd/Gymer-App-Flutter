@@ -51,7 +51,7 @@ class ApiService {
     }
   }
   Future<Response> patch(String endpoint,
-      {Map<String, dynamic>? data, Map<String, String>? headers}) async {
+      {dynamic data, Map<String, String>? headers}) async {
     try {
       return await dio.patch(
         endpoint,

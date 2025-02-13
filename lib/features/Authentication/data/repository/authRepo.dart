@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 
 import '../../../../core/helpers/apiService.dart';
@@ -32,7 +34,7 @@ class AuthenticationRepository {
     return "An unexpected error occurred. Please try again.";
   }
 
-  Future<Future<UserModel?>> login(
+  Future<UserModel?> login(
       Map<String, String> credentials, String password) async {
     try {
       final response = await apiService.post("/authentication/login", data: {
@@ -44,10 +46,10 @@ class AuthenticationRepository {
         final data = response.data['data'];
         final token = data['token'];
 
-        final user = getProfile();
 
         await LocalStorage.saveToken(token);
 
+        final user = await getProfile();
         return user;
       } else {
         throw Exception(_handleError(response.data));
@@ -137,6 +139,27 @@ class AuthenticationRepository {
         return UserModel.fromJson(profileData, token);
       } else {
         throw Exception(response.data['message'] ?? "Failed to update profile");
+      }
+    } catch (e) {
+      throw Exception("Unexpected error: ${e.toString()}");
+    }
+  }
+  Future<String?> updateProfileImage(File imageFile) async {
+    try {
+      String? token = await LocalStorage.getToken();
+      if (token == null) throw Exception("No token found");
+      FormData formData = FormData.fromMap({"profile": await MultipartFile.fromFile(imageFile.path,)});
+      final response = await apiService.patch(
+        "/profile/edit/photo",
+        data: formData,
+        headers: {"Authorization": "Bearer $token", "Content-Type":"multipart/form-data"},
+      );
+
+      if (response.statusCode == 200) {
+        print('Image uploaded!');
+        return response.data['data']['profilePicture'];
+      } else {
+        throw Exception(response.data['message'] ?? "Failed to update image");
       }
     } catch (e) {
       throw Exception("Unexpected error: ${e.toString()}");

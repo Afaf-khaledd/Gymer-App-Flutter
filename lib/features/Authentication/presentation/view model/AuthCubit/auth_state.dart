@@ -28,3 +28,13 @@ class ProfileUpdated extends AuthState {
   final UserModel updatedUser;
   ProfileUpdated(this.updatedUser);
 }
+
+class ProfileImageLoading extends AuthState {}
+class ProfileImageUpdated extends AuthState {
+  final String newImage;
+  ProfileImageUpdated(this.newImage);
+}
+class ProfileImageError extends AuthState {
+  final String message;
+  ProfileImageError(this.message);
+}

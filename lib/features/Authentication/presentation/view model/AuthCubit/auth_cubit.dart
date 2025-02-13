@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/helpers/local_storage.dart';
 import '../../../data/models/userModel.dart';
@@ -80,6 +82,20 @@ class AuthCubit extends Cubit<AuthState> {
       }
     } catch (e) {
       emit(AuthError(e.toString()));
+    }
+  }
+  Future<void> updateProfileImage(File imageFile) async {
+    emit(ProfileImageLoading());
+    try {
+      String? newProfileImageUrl = await authRepository.updateProfileImage(imageFile);
+      if( newProfileImageUrl != null){
+        emit(ProfileImageUpdated(newProfileImageUrl));
+      }
+      else{
+        emit(ProfileImageError("Failed to update profile image"));
+      }
+    } catch (e) {
+      emit(ProfileImageError(e.toString()));
     }
   }
 }
