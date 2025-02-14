@@ -46,7 +46,6 @@ class AuthenticationRepository {
         final data = response.data['data'];
         final token = data['token'];
 
-
         await LocalStorage.saveToken(token);
 
         final user = await getProfile();
@@ -100,6 +99,7 @@ class AuthenticationRepository {
       throw Exception("Unexpected error: $e");
     }
   }
+
   Future<UserModel?> getProfile() async {
     try {
       String? token = await LocalStorage.getToken();
@@ -115,7 +115,8 @@ class AuthenticationRepository {
         print(profileData);
         return UserModel.fromJson(profileData, token);
       } else {
-        throw Exception(response.data['message'] ?? "Failed to retrieve profile");
+        throw Exception(
+            response.data['message'] ?? "Failed to retrieve profile");
       }
     } catch (e) {
       throw Exception("Unexpected error: ${e.toString()}");
@@ -144,15 +145,23 @@ class AuthenticationRepository {
       throw Exception("Unexpected error: ${e.toString()}");
     }
   }
+
   Future<String?> updateProfileImage(File imageFile) async {
     try {
       String? token = await LocalStorage.getToken();
       if (token == null) throw Exception("No token found");
-      FormData formData = FormData.fromMap({"profile": await MultipartFile.fromFile(imageFile.path,)});
+      FormData formData = FormData.fromMap({
+        "profile": await MultipartFile.fromFile(
+          imageFile.path,
+        )
+      });
       final response = await apiService.patch(
         "/profile/edit/photo",
         data: formData,
-        headers: {"Authorization": "Bearer $token", "Content-Type":"multipart/form-data"},
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "multipart/form-data"
+        },
       );
 
       if (response.statusCode == 200) {
@@ -163,6 +172,49 @@ class AuthenticationRepository {
       }
     } catch (e) {
       throw Exception("Unexpected error: ${e.toString()}");
+    }
+  }
+
+  Future<Map<String, String>> sendPasswordResetEmail(String email) async {
+    try {
+      final response =
+          await apiService.post('/authentication/forget_password', data: {
+        'email': email,
+      });
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return {
+          "message": response.data['message'] ??
+              "Check your email for reset instructions",
+          "token": response.data['token'] ?? ""
+        };
+      } else {
+        throw Exception(_handleError(response.data));
+      }
+    } on DioException catch (dioError) {
+      throw Exception(_handleError(dioError));
+    } catch (e) {
+      throw Exception("Unexpected error: $e");
+    }
+  }
+
+  Future<String?> resetPassword({
+    required String token,
+    required String newPassword,
+  }) async {
+    try {
+      final response =
+          await apiService.put('/authentication/reset_password/$token', data: {
+        'token': token,
+        'password': newPassword,
+      });
+
+      if (response.statusCode == 200) {
+        return response.data['message'];
+      } else {
+        throw Exception(response.data['message'] ?? "Failed to reset password");
+      }
+    } catch (e) {
+      throw Exception("Unexpected error: $e");
     }
   }
 

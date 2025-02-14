@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gymer/core/helpers/deepLinking.dart';
 import '../../../../../core/helpers/local_storage.dart';
 import '../../../data/models/userModel.dart';
 import '../../../data/repository/authRepo.dart';
@@ -11,6 +13,16 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthenticationRepository authRepository;
 
   AuthCubit(this.authRepository) : super(AuthInitial());
+
+  void initializeDeepLinks(BuildContext context) {
+    DeepLinking.initialize(context);
+  }
+
+  @override
+  Future<void> close() {
+    DeepLinking.dispose();
+    return super.close();
+  }
 
   Future<void> login(String input, String password, bool rememberMe) async {
     emit(AuthLoading());
@@ -84,18 +96,44 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthError(e.toString()));
     }
   }
+
   Future<void> updateProfileImage(File imageFile) async {
     emit(ProfileImageLoading());
     try {
-      String? newProfileImageUrl = await authRepository.updateProfileImage(imageFile);
-      if( newProfileImageUrl != null){
+      String? newProfileImageUrl =
+          await authRepository.updateProfileImage(imageFile);
+      if (newProfileImageUrl != null) {
         emit(ProfileImageUpdated(newProfileImageUrl));
-      }
-      else{
+      } else {
         emit(ProfileImageError("Failed to update profile image"));
       }
     } catch (e) {
       emit(ProfileImageError(e.toString()));
+    }
+  }
+
+  Future<void> forgetPassword(String email) async {
+    emit(AuthLoading());
+    try {
+      final response = await authRepository.sendPasswordResetEmail(email);
+      final String message =
+          response['message'] ?? "Check your email for reset instructions";
+      emit(ForgetPasswordSuccess(message));
+    } catch (e) {
+      emit(AuthError(e.toString()));
+    }
+  }
+
+  Future<void> resetPassword(String token, String newPassword) async {
+    emit(AuthLoading());
+    try {
+      final response = await authRepository.resetPassword(
+        token: token,
+        newPassword: newPassword,
+      );
+      emit(ResetPasswordSuccess(response ?? "Password reset successfully"));
+    } catch (e) {
+      emit(AuthError(e.toString()));
     }
   }
 }

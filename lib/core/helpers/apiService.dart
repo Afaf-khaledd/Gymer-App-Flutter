@@ -11,8 +11,8 @@ class ApiService {
   ApiService._privateConstructor() {
     dio = Dio(
       BaseOptions(
-        //baseUrl: "http://10.0.2.2:3000/api/",
-        baseUrl: "http://192.168.1.9:3000/api/",
+        baseUrl: "http://10.0.2.2:3000/api/",
+        // baseUrl: "http://192.168.1.9:3000/api/",
         //connectTimeout: Duration(seconds: 30),
         //receiveTimeout: Duration(seconds: 30),
         headers: {
@@ -35,8 +35,8 @@ class ApiService {
       throw Exception("Unknown API error occurred.");
     }
   }
-  Future<Response> get(String endpoint,
-      {Map<String, String>? headers}) async {
+
+  Future<Response> get(String endpoint, {Map<String, String>? headers}) async {
     try {
       return await dio.get(
         endpoint,
@@ -50,6 +50,7 @@ class ApiService {
       throw Exception("Unknown API error occurred.");
     }
   }
+
   Future<Response> patch(String endpoint,
       {dynamic data, Map<String, String>? headers}) async {
     try {
@@ -63,6 +64,21 @@ class ApiService {
       throw dioError;
     } catch (e) {
       //print("Unknown API Error: $e");
+      throw Exception("Unknown API error occurred.");
+    }
+  }
+
+  Future<Response> put(String endpoint,
+      {dynamic data, Map<String, String>? headers}) async {
+    try {
+      return await dio.put(
+        endpoint,
+        data: data,
+        options: Options(headers: headers),
+      );
+    } on DioException catch (dioError) {
+      throw dioError;
+    } catch (e) {
       throw Exception("Unknown API error occurred.");
     }
   }

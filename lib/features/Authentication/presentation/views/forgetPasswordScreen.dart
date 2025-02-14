@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/components/CustomTextFormField.dart';
 import 'package:gymer/core/components/customBlackButton.dart';
 import 'package:gymer/core/helpers/validators.dart';
-import 'package:gymer/features/Authentication/presentation/views/resetPasswordScreen.dart';
+import 'package:gymer/features/Authentication/presentation/view%20model/AuthCubit/auth_cubit.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -22,12 +23,15 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     super.dispose();
   }
 
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthCubit>().initializeDeepLinks(context);
+  }
+
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ResetPasswordScreen()),
-      );
+      context.read<AuthCubit>().forgetPassword(emailController.text);
     }
   }
 
@@ -54,33 +58,53 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //const Spacer(),
-                  SizedBox(height: 150,),
-                  Text(
-                    "  Enter Your Email Address",
-                    style: GoogleFonts.leagueSpartan(
-                        fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                  CustomTextFormField(
-                    controller: emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    hintText: 'example@example.com',
-                    validator: Validators.validateEmail,
-                  ),
-                  SizedBox(height: screenHeight * 0.2),
-                  CustomBlackButton(label: 'Next', onPressed: _submitForm),
-                  SizedBox(height: screenHeight * 0.1),
-                ],
-              ),
-            ),
-          ),
+              padding: const EdgeInsets.all(18.0),
+              child: BlocConsumer<AuthCubit, AuthState>(
+                listener: (context, state) {
+                  if (state is ForgetPasswordSuccess) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text("Reset link sent! Check your email.")),
+                    );
+                  } else if (state is AuthError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(state.message)),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //const Spacer(),
+                        SizedBox(
+                          height: 150,
+                        ),
+                        Text(
+                          "  Enter Your Email Address",
+                          style: GoogleFonts.leagueSpartan(
+                              fontWeight: FontWeight.w500, fontSize: 18),
+                        ),
+                        CustomTextFormField(
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          hintText: 'example@example.com',
+                          validator: Validators.validateEmail,
+                        ),
+                        SizedBox(height: screenHeight * 0.2),
+                        state is AuthLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : CustomBlackButton(
+                                label: 'Next', onPressed: _submitForm),
+                        SizedBox(height: screenHeight * 0.1),
+                      ],
+                    ),
+                  );
+                },
+              )),
         ),
       ),
     );

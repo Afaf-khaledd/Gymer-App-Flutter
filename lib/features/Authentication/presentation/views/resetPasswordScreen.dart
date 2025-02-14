@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/components/CustomTextFormField.dart';
 import 'package:gymer/core/helpers/validators.dart';
+import 'package:gymer/features/Authentication/presentation/view%20model/AuthCubit/auth_cubit.dart';
 import '../../../../core/components/customBlackButton.dart';
 import 'loginScreen.dart'; // Import the login screen for navigation
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({super.key});
+  final String token;
+  const ResetPasswordScreen({super.key, required this.token});
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
@@ -26,11 +29,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
-      // Navigate to Login after successful password reset
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginScreen()), // Redirect to login
-      );
+      final newPassword = passwordController.text;
+      context.read<AuthCubit>().resetPassword(widget.token, newPassword);
     }
   }
 
@@ -57,48 +57,75 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(18.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //const Spacer(),
-                  SizedBox(height: 90),
-                  Text(
-                    "  Password",
-                    style: GoogleFonts.leagueSpartan(
-                        fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                  CustomTextFormField(
-                    controller: passwordController,
-                    keyboardType: TextInputType.text,
-                    hintText: '**********',
-                    obscureText: true,
-                    validator: Validators.validatePassword,
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    "  Confirm Password",
-                    style: GoogleFonts.leagueSpartan(
-                        fontWeight: FontWeight.w500, fontSize: 18),
-                  ),
-                  CustomTextFormField(
-                    controller: confirmPasswordController,
-                    keyboardType: TextInputType.text,
-                    hintText: '**********',
-                    obscureText: true,
-                    validator: (value) =>
-                        Validators.validateConfirmPassword(value, passwordController.text),
-                  ),
-                  SizedBox(height: screenHeight * 0.2),
-                  CustomBlackButton(label: 'Reset', onPressed: _submitForm),
-                  SizedBox(height: screenHeight * 0.1),
-                ],
-              ),
-            ),
-          ),
+              padding: const EdgeInsets.all(18.0),
+              child: BlocConsumer<AuthCubit, AuthState>(
+                listener: (context, state) {
+                  if (state is ResetPasswordSuccess) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text(state.message),
+                          backgroundColor: Colors.green),
+                    );
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()),
+                    );
+                  } else if (state is AuthError) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text(state.message),
+                          backgroundColor: Colors.red),
+                    );
+                  }
+                },
+                builder: (context, state) {
+                  return Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //const Spacer(),
+                        SizedBox(height: 90),
+                        Text(
+                          "  Password",
+                          style: GoogleFonts.leagueSpartan(
+                              fontWeight: FontWeight.w500, fontSize: 18),
+                        ),
+                        CustomTextFormField(
+                          controller: passwordController,
+                          keyboardType: TextInputType.text,
+                          hintText: '**********',
+                          obscureText: true,
+                          validator: Validators.validatePassword,
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          "  Confirm Password",
+                          style: GoogleFonts.leagueSpartan(
+                              fontWeight: FontWeight.w500, fontSize: 18),
+                        ),
+                        CustomTextFormField(
+                          controller: confirmPasswordController,
+                          keyboardType: TextInputType.text,
+                          hintText: '**********',
+                          obscureText: true,
+                          validator: (value) =>
+                              Validators.validateConfirmPassword(
+                                  value, passwordController.text),
+                        ),
+                        SizedBox(height: screenHeight * 0.2),
+                        state is AuthLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : CustomBlackButton(
+                                label: 'Reset', onPressed: _submitForm),
+                        SizedBox(height: screenHeight * 0.1),
+                      ],
+                    ),
+                  );
+                },
+              )),
         ),
       ),
     );

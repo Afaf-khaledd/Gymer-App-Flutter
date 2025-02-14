@@ -17,6 +17,7 @@ class AuthError extends AuthState {
   final String message;
   AuthError(this.message);
 }
+
 class ProfileLoading extends AuthState {}
 
 class ProfileRetrieved extends AuthState {
@@ -30,11 +31,23 @@ class ProfileUpdated extends AuthState {
 }
 
 class ProfileImageLoading extends AuthState {}
+
 class ProfileImageUpdated extends AuthState {
   final String newImage;
   ProfileImageUpdated(this.newImage);
 }
+
 class ProfileImageError extends AuthState {
   final String message;
   ProfileImageError(this.message);
+}
+
+class ForgetPasswordSuccess extends AuthState {
+  final String message;
+  ForgetPasswordSuccess(this.message);
+}
+
+class ResetPasswordSuccess extends AuthState {
+  final String message;
+  ResetPasswordSuccess(this.message);
 }
