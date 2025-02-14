@@ -1,16 +1,21 @@
 import 'dart:async';
+import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
 import 'package:gymer/features/Authentication/presentation/views/resetPasswordScreen.dart';
-import 'package:uni_links/uni_links.dart';
+//import 'package:uni_links/uni_links.dart';
 
 class DeepLinking {
   static StreamSubscription<String?>? _sub;
+  static late AppLinks appLinks;
 
   /// Initialize deep link listener
   static void initialize(BuildContext context) {
-    _sub = linkStream.listen((String? link) {
+    appLinks = AppLinks();
+
+    // Listen for incoming deep links
+    appLinks.uriLinkStream.listen((Uri? link) {
       if (link != null) {
-        Uri uri = Uri.parse(link);
+        Uri uri = link;
         if (uri.path == "/reset-password") {
           String? token = uri.queryParameters["token"];
           if (token != null) {

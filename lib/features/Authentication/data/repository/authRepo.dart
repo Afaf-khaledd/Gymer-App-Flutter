@@ -88,6 +88,7 @@ class AuthenticationRepository {
 
         await LocalStorage.setRememberMe(true);
         await LocalStorage.saveToken(token);
+        await LocalStorage.setSubmitQuest(false);
 
         return user;
       } else {

@@ -49,6 +49,7 @@ class QuestionnaireRepository {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        LocalStorage.setSubmitQuest(true);
         return true;
       } else {
         throw Exception(_handleError(response.data));

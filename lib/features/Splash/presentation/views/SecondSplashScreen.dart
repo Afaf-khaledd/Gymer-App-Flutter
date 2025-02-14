@@ -7,6 +7,9 @@ import 'package:gymer/core/utils/colors.dart';
 import 'package:gymer/features/Boarding/presentation/views/OnBoardingPage.dart';
 import 'package:gymer/features/Home/presentation/views/homeScreen.dart';
 
+import '../../../Questionnaire/presentation/views/goalScreen.dart';
+import '../../../Questionnaire/presentation/views/onboardingQ.dart';
+
 class SecondSplashScreen extends StatefulWidget {
   const SecondSplashScreen({super.key});
   @override
@@ -18,17 +21,33 @@ class _SecondSplashScreenState extends State<SecondSplashScreen>
   @override
   void initState() {
     super.initState();
-    // get remember me and token to know where to navigate!
     _navigateBasedOnAuth();
   }
 
   Future<void> _navigateBasedOnAuth() async {
     final token = await LocalStorage.getToken();
     final rememberMe = await LocalStorage.getRememberMe();
+    final questDone = await LocalStorage.getSubmitQuest();
+    /*print('Token: $token');
+    print('RememberMe: $rememberMe');
+    print('QuestDone: $questDone');*/
+    Widget nextScreen;
 
-    Widget nextScreen = (token != null && rememberMe == true)
-        ? const HomeScreen()
-        : const OnBoardingPage();
+    if (token != null && rememberMe == true) {
+      if (questDone == true || questDone == null) {
+        nextScreen = const HomeScreen();
+      } else {
+        nextScreen = const OnboardingQ(
+          label: 'Goal',
+          number: '1',
+          rightPadding: 0,
+          labelSize: 50,
+          nextScreen: GoalScreen(),
+        );
+      }
+    } else {
+      nextScreen = const OnBoardingPage();
+    }
 
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
@@ -36,6 +55,7 @@ class _SecondSplashScreenState extends State<SecondSplashScreen>
       );
     });
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/utils/colors.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/components/CustomTextFormField.dart';
 import '../../../../core/components/customBlackButton.dart';
@@ -52,9 +53,39 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
+    if (pickedFile == null) return;
+
+    final CroppedFile? croppedFile = await ImageCropper().cropImage(
+        sourcePath: pickedFile.path,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+      compressQuality: 90,
+      maxWidth: 700,
+      maxHeight: 700,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Cropper',
+          toolbarColor: Colors.black87,//ColorsManager.goldColorO60,
+          toolbarWidgetColor: Colors.white,
+          activeControlsWidgetColor: ColorsManager.goldColorO1,
+          hideBottomControls: false,
+          lockAspectRatio: true,
+          aspectRatioPresets: [
+          CropAspectRatioPreset.original,
+          CropAspectRatioPreset.square,
+          CropAspectRatioPreset.ratio3x2,
+          CropAspectRatioPreset.ratio4x3,
+          ],
+        ),
+        IOSUiSettings(
+          title: 'Crop your image',
+          aspectRatioLockEnabled: false
+        ),
+      ]
+    );
+
+    if(croppedFile != null){
       setState(() {
-        _profileImage = File(pickedFile.path);
+        _profileImage = File(croppedFile.path);
       });
       context.read<AuthCubit>().updateProfileImage(_profileImage!);
     }

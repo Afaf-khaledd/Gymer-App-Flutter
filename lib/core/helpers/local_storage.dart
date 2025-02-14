@@ -43,6 +43,16 @@ class LocalStorage {
     final value = await prefs.getBool('remember_me');
     return value;
   }
+  // questionnaire done
+  static Future<void> setSubmitQuest(bool submit) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('quest_submitted', submit);
+  }
+  static Future<bool?> getSubmitQuest() async {
+    final prefs = await SharedPreferences.getInstance();
+    final value = await prefs.getBool('quest_submitted');
+    return value;
+  }
 
   static Future<void> clearStorage() async {
     await _secureStorage.deleteAll();
