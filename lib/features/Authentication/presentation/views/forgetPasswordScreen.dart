@@ -5,6 +5,7 @@ import 'package:gymer/core/components/CustomTextFormField.dart';
 import 'package:gymer/core/components/customBlackButton.dart';
 import 'package:gymer/core/helpers/validators.dart';
 import 'package:gymer/features/Authentication/presentation/view%20model/AuthCubit/auth_cubit.dart';
+import 'package:gymer/features/Authentication/presentation/views/resetPasswordScreen.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -23,11 +24,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    context.read<AuthCubit>().initializeDeepLinks(context);
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   context.read<AuthCubit>();
+  // }
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
@@ -62,10 +63,11 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               child: BlocConsumer<AuthCubit, AuthState>(
                 listener: (context, state) {
                   if (state is ForgetPasswordSuccess) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text("Reset link sent! Check your email.")),
-                    );
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ResetPasswordScreen(
+                                email: emailController.text)));
                   } else if (state is AuthError) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(content: Text(state.message)),

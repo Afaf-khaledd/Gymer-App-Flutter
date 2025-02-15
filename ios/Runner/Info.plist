@@ -60,7 +60,6 @@
 	<!-- Universal Links support -->
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>https</string>
 		<string>gymer</string>
 	</array>
 
@@ -73,5 +72,7 @@
 			</array>
 		</dict>
 	</array>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
+	<true/>
 </dict>
 </plist>

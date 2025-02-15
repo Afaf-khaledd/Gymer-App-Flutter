@@ -8,12 +8,12 @@ import 'core/helpers/seviceLocator.dart';
 import 'features/Authentication/presentation/view model/AuthCubit/auth_cubit.dart';
 import 'features/Questionnaire/presentation/view model/questionnaireCubit/questionnaire_cubit.dart';
 
-
 void main() {
   setupServiceLocator();
   runApp(const MyApp());
   configLoading(); // Configure loading UI
 }
+
 void configLoading() {
   EasyLoading.instance
     ..indicatorType = EasyLoadingIndicatorType.fadingCircle
@@ -45,8 +45,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData.light().copyWith(
             scaffoldBackgroundColor: ColorsManager.BGColor,
             focusColor: ColorsManager.blackColor,
-            primaryColor: ColorsManager.blackColor
-        ),
+            primaryColor: ColorsManager.blackColor),
         home: const SplashScreen(),
         builder: EasyLoading.init(),
       ),

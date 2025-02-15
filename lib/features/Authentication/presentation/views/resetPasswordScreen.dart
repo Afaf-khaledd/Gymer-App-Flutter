@@ -8,8 +8,8 @@ import '../../../../core/components/customBlackButton.dart';
 import 'loginScreen.dart'; // Import the login screen for navigation
 
 class ResetPasswordScreen extends StatefulWidget {
-  final String token;
-  const ResetPasswordScreen({super.key, required this.token});
+  final String email;
+  const ResetPasswordScreen({super.key, required this.email});
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
@@ -30,7 +30,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       final newPassword = passwordController.text;
-      context.read<AuthCubit>().resetPassword(widget.token, newPassword);
+      context.read<AuthCubit>().resetPassword(widget.email, newPassword);
     }
   }
 

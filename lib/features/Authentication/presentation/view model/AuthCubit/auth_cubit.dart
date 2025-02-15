@@ -1,8 +1,5 @@
 import 'dart:io';
-
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gymer/core/helpers/deepLinking.dart';
 import '../../../../../core/helpers/local_storage.dart';
 import '../../../data/models/userModel.dart';
 import '../../../data/repository/authRepo.dart';
@@ -13,16 +10,6 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthenticationRepository authRepository;
 
   AuthCubit(this.authRepository) : super(AuthInitial());
-
-  void initializeDeepLinks(BuildContext context) {
-    DeepLinking.initialize(context);
-  }
-
-  @override
-  Future<void> close() {
-    DeepLinking.dispose();
-    return super.close();
-  }
 
   Future<void> login(String input, String password, bool rememberMe) async {
     emit(AuthLoading());
@@ -124,11 +111,11 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> resetPassword(String token, String newPassword) async {
+  Future<void> resetPassword(String email, String newPassword) async {
     emit(AuthLoading());
     try {
       final response = await authRepository.resetPassword(
-        token: token,
+        email: email,
         newPassword: newPassword,
       );
       emit(ResetPasswordSuccess(response ?? "Password reset successfully"));

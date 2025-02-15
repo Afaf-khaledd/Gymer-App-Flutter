@@ -185,8 +185,7 @@ class AuthenticationRepository {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return {
           "message": response.data['message'] ??
-              "Check your email for reset instructions",
-          "token": response.data['token'] ?? ""
+              "Check your email for reset instructions"
         };
       } else {
         throw Exception(_handleError(response.data));
@@ -199,13 +198,13 @@ class AuthenticationRepository {
   }
 
   Future<String?> resetPassword({
-    required String token,
+    required String email,
     required String newPassword,
   }) async {
     try {
       final response =
-          await apiService.put('/authentication/reset_password/$token', data: {
-        'token': token,
+          await apiService.put('/authentication/reset_password', data: {
+        'email': email,
         'password': newPassword,
       });
 
