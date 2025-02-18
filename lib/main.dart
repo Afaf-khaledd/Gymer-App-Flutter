@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:gymer/core/utils/colors.dart';
+import 'package:gymer/features/Chatbot/data/repository/chatRepo.dart';
+import 'package:gymer/features/Chatbot/data/repository/chatRepo.dart';
+import 'package:gymer/features/Chatbot/presentation/view%20model/chatCubit/chat_cubit.dart';
+import 'package:gymer/features/Chatbot/presentation/view%20model/chatCubit/chat_cubit.dart';
 import 'package:gymer/features/Splash/presentation/views/SplashScreen.dart';
 
 import 'core/helpers/seviceLocator.dart';
@@ -38,6 +42,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<QuestionnaireCubit>(
           create: (_) => getIt<QuestionnaireCubit>()..initializeQuestionnaire(),
+        ),
+        BlocProvider<ChatCubit>(
+          create: (_) => getIt<ChatCubit>(),
         ),
       ],
       child: MaterialApp(

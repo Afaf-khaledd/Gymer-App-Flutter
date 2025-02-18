@@ -5,6 +5,7 @@ class UserModel {
   final String token;
   int? currentWeight;
   String? profileUrl;
+  String? workoutPlan;
 
 
   UserModel({
@@ -13,7 +14,8 @@ class UserModel {
     required this.email,
     required this.token,
     this.currentWeight,
-    this.profileUrl
+    this.profileUrl,
+    this.workoutPlan
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json, String token) {
@@ -23,6 +25,7 @@ class UserModel {
       email: json['email'] ?? '',
       currentWeight: json['currentWeight'] ?? 0,
       profileUrl: json['photourl'] ?? '',
+      workoutPlan: json['workoutPlan'] ?? '',
       token: token,
     );
   }
@@ -34,7 +37,8 @@ class UserModel {
       'email': email,
       'token': token,
       'currentWeight': currentWeight,
-      'photourl': profileUrl
+      'photourl': profileUrl,
+      'workoutPlan':workoutPlan
     };
   }
 }

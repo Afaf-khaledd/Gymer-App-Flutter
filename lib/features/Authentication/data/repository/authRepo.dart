@@ -47,7 +47,7 @@ class AuthenticationRepository {
         final token = data['token'];
 
         await LocalStorage.saveToken(token);
-
+        print("token: $token");
         final user = await getProfile();
         return user;
       } else {
@@ -89,6 +89,7 @@ class AuthenticationRepository {
         await LocalStorage.setRememberMe(true);
         await LocalStorage.saveToken(token);
         await LocalStorage.setSubmitQuest(false);
+        print("token: $token");
 
         return user;
       } else {
