@@ -60,7 +60,6 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
         leading: IconButton(onPressed: (){
           Navigator.pushReplacement(context, MaterialPageRoute<void>(
           builder: (BuildContext context) => const InitChatbotScreen(),
@@ -95,7 +94,9 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: (context.watch<ChatCubit>().state is ChatFailure)
+            ? Color.fromRGBO(255, 255, 255, 1.2)
+            : Color.fromRGBO(255, 255, 255, 1.208),
       ),
       body: Column(
         children: [
@@ -111,36 +112,44 @@ class _ChatScreenState extends State<ChatScreen> {
                 } else if (state is ChatbotLoadingRes) {
                   messages = state.messages;
                 } else if(state is ChatFailure){
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.error_outline, color: Colors.redAccent, size: 50),
-                        const SizedBox(height: 10),
-                        Text(
-                          "Something went wrong!",
-                          style: GoogleFonts.dmSans(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.redAccent),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          state.error,
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.dmSans(fontSize: 14, color: Colors.grey),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () => context.read<ChatCubit>().loadChatHistory(widget.sessionId),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: ColorsManager.goldColorO1,
-                          ),
-                          child: Text("Retry",style: GoogleFonts.dmSans(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
 
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.error_outline, color: Colors.redAccent, size: 50),
+                          const SizedBox(height: 10),
+                          Text(
+                            "Something went wrong!",
+                            style: GoogleFonts.dmSans(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent),
                           ),
-                      ],
+                          const SizedBox(height: 5),
+                          Text(
+                            state.error,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.dmSans(fontSize: 14, color: Colors.grey),
+                          ),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            onPressed: (){
+                              context.read<ChatCubit>().loadChatHistory(widget.sessionId);
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                _scrollToBottom();
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: ColorsManager.goldColorO1,
+                            ),
+                            child: Text("Retry",style: GoogleFonts.dmSans(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+
+                            ),
+                        ],
+                      ),
                     ),
                   );
                 }
@@ -159,7 +168,7 @@ class _ChatScreenState extends State<ChatScreen> {
               },
             ),
           ),
-          _buildInputField(),
+          (context.watch<ChatCubit>().state is ChatFailure) ? SizedBox() : _buildInputField(),
         ],
       ),
     );
