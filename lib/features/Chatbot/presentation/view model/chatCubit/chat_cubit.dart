@@ -23,7 +23,7 @@ class ChatCubit extends Cubit<ChatState> {
         emit(ChatSessionsLoaded(List.from(_chatSessions)));
       }
     } catch (e) {
-      emit(ChatFailure(e.toString()));
+      emit(ChatCreateFailure(e.toString()));
     }
   }
 
@@ -35,7 +35,7 @@ class ChatCubit extends Cubit<ChatState> {
       selectedSession = newSession;
       emit(ChatCreateSuccess(newSession));
     } catch (e) {
-      emit(ChatFailure(e.toString()));
+      emit(ChatCreateFailure(e.toString()));
     }
   }
 

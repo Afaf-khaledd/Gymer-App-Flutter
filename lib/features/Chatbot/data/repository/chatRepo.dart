@@ -73,6 +73,7 @@ class ChatRepository {
   Future<ResponseModel> sendMessage(String message,String sessionId) async {
     try {
       String? token = await LocalStorage.getToken();
+      print('token: $token');
       if (token == null) {
         throw Exception("Authentication error: Token is missing.");
       }

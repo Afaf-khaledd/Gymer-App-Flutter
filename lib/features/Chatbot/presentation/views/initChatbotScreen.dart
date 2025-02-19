@@ -86,9 +86,10 @@ class _InitChatbotScreenState extends State<InitChatbotScreen> {
               ),
             );
           }
-          else if (state is ChatFailure) {
+          else if (state is ChatCreateFailure) {
             Fluttertoast.showToast(
               msg: "Error: ${state.error}",
+              fontSize: 17,
               toastLength: Toast.LENGTH_LONG,
               gravity: ToastGravity.TOP,
               backgroundColor: Colors.redAccent,
@@ -205,7 +206,7 @@ class _InitChatbotScreenState extends State<InitChatbotScreen> {
                       ),
                     ]
 
-                    else if (state is ChatFailure) ...[
+                    else if (state is ChatCreateFailure) ...[
                         Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
@@ -229,7 +230,7 @@ class _InitChatbotScreenState extends State<InitChatbotScreen> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: ColorsManager.goldColorO1,
                                 ),
-                                child: const Text("Retry"),
+                                child: Text("Retry",style: GoogleFonts.dmSans(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
                               ),
                             ],
                           ),

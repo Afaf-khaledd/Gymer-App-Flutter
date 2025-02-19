@@ -60,6 +60,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+
         leading: IconButton(onPressed: (){
           Navigator.pushReplacement(context, MaterialPageRoute<void>(
           builder: (BuildContext context) => const InitChatbotScreen(),
@@ -109,6 +110,39 @@ class _ChatScreenState extends State<ChatScreen> {
                       : (state as SendMessageSuccess).messages;
                 } else if (state is ChatbotLoadingRes) {
                   messages = state.messages;
+                } else if(state is ChatFailure){
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.error_outline, color: Colors.redAccent, size: 50),
+                        const SizedBox(height: 10),
+                        Text(
+                          "Something went wrong!",
+                          style: GoogleFonts.dmSans(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.redAccent),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          state.error,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.dmSans(fontSize: 14, color: Colors.grey),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () => context.read<ChatCubit>().loadChatHistory(widget.sessionId),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorsManager.goldColorO1,
+                          ),
+                          child: Text("Retry",style: GoogleFonts.dmSans(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white)),
+
+                          ),
+                      ],
+                    ),
+                  );
                 }
                 if (_scrollController.hasClients) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {

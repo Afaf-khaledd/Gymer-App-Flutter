@@ -23,6 +23,10 @@ class ChatCreateSuccess extends ChatState {
   final ChatSessionModel newSession;
   ChatCreateSuccess(this.newSession);
 }
+class ChatCreateFailure extends ChatState {
+  final String error;
+  ChatCreateFailure(this.error);
+}
 
 class ChatHistoryLoaded extends ChatState {
   final List<MessageModel> messages;
