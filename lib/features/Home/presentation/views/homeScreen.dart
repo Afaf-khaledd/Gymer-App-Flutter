@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gymer/core/components/CustomBottomNavBar.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:gymer/core/utils/colors.dart';
 import 'package:gymer/features/Authentication/presentation/view%20model/AuthCubit/auth_cubit.dart';
-import 'package:gymer/features/Authentication/presentation/views/editProfileScreen.dart';
-import 'package:gymer/features/Boarding/presentation/views/OnBoardingPage.dart';
-import 'package:gymer/features/Chatbot/presentation/views/initChatbotScreen.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
+import '../../../../core/components/BottomNavHandler.dart';
+import '../../../../core/components/ImagePickerHelper.dart';
+import '../../../Boarding/presentation/views/OnBoardingPage.dart';
+import '../../../MachineRecognition/presentation/view model/MachineCubit/machine_cubit.dart';
+import '../../../MachineRecognition/presentation/views/targetMuscle.dart';
 
 
 class HomeScreen extends StatefulWidget {
-  // take userModel if null > get profile
   const HomeScreen({super.key});
 
   @override
@@ -16,108 +20,60 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final int _currentIndex = 0;
-
-  void _onItemTapped(int index) {
-    if (index == 2) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text("Add Button Clicked"),
-          content: Text("This can open a new screen."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("Close"),
-            ),
-          ],
-        ),
-      );
-      return;
-    }
-
-    Widget nextScreen;
-    switch (index) {
-      case 0:
-        nextScreen = const HomeScreen();
-        break;
-      case 1:
-        nextScreen = const InitChatbotScreen();
-        break;
-      case 3:
-        nextScreen = const Placeholder();
-        break;
-      case 4:
-        nextScreen = const EditProfileScreen();
-        break;
-      default:
-        return;
-    }
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => nextScreen),
-    );
-  }
+  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        toolbarHeight: 100,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (BuildContext context) => const EditProfileScreen(),
-                ),
-              );
-            },
-            icon: Icon(Icons.person_rounded,size: 35,)
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          toolbarHeight: 100,
+          actions: [
+            IconButton(
+              onPressed: () => showLogoutConfirmation(context),
+              icon: const Icon(Icons.logout_rounded, size: 30),
+            ),
+            const SizedBox(width: 10),
+          ],
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: Text("Add Button Clicked"),
-                    content: Text("This can open a new screen."),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          context.read<AuthCubit>().logout();
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => const OnBoardingPage()),
-                                (route) => false,);
-                        },
-                        child: Text("Logout"),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          context.read<AuthCubit>().logout();
-                          Navigator.pop(context);
-                        },
-                        child: Text("cancel"),
-                      ),
-                    ],
-                  ),
-                );
+        bottomNavigationBar: BottomNavHandler(
+          currentIndex: _currentIndex,
+          onImagePicked: (_) => ImagePickerHelper.pickImage(context, _handleImagePicked),
+        ),
+      );
+  }
+  void _handleImagePicked(String imageBase64) {
+    context.read<MachineCubit>().sendMachineImage(imageBase64);
+    Future.delayed(Duration(milliseconds: 300), () {
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const TargetMuscle()),
+        );
+      }
+    });
+  }
 
-              },
-              icon: Icon(Icons.logout_rounded,size: 30,)
-          ),
-          SizedBox(width: 10,),
-        ],
-      ),
-      body: Center(),
-      bottomNavigationBar: CustomBottomNavBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => _onItemTapped(index),
-      ),
+  void showLogoutConfirmation(BuildContext context) {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.confirm,
+      title: "Are you sure?",
+      barrierDismissible: false,
+      text: "Do you want to logout",
+      confirmBtnText: "Logout",
+      confirmBtnTextStyle: GoogleFonts.dmSans(fontWeight: FontWeight.w700,color: Colors.white,fontSize: 16),
+      cancelBtnText: "Cancel",
+      cancelBtnTextStyle: GoogleFonts.dmSans(fontWeight: FontWeight.w600,fontSize: 16,color: Colors.black54),
+      confirmBtnColor: ColorsManager.goldColorO1, // change to?
+      onConfirmBtnTap: () {
+        context.read<AuthCubit>().logout();
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const OnBoardingPage()),
+              (route) => false,
+        );
+      },
     );
   }
 }

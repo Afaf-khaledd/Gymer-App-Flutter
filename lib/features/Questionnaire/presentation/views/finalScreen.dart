@@ -41,9 +41,10 @@ class FinalScreen extends StatelessWidget {
             ),
             const Spacer(),
             CustomBlackButton(label: 'Let’s Go', onPressed: () {
-              Navigator.pushReplacement(context, MaterialPageRoute<void>(
-                builder: (BuildContext context) => const HomeScreen(),
-              ),
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    (route) => false,
               );
             }),
           ],

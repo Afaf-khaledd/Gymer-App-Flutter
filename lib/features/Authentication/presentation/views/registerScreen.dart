@@ -125,7 +125,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: passwordController,
                       keyboardType: TextInputType.text,
                       obscureText: true,
-                      hintText: '*********',
+                      hintText: '***',
                       validator: Validators.validatePassword,
                     ),
                     const SizedBox(height: 15),
@@ -134,7 +134,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: confirmPasswordController,
                       keyboardType: TextInputType.text,
                       obscureText: true,
-                      hintText: '*********',
+                      hintText: '***',
                       validator: (value) =>
                           Validators.validateConfirmPassword(value, passwordController.text),
                     ),

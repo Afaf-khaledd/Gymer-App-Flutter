@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/utils/colors.dart';
 import 'package:gymer/features/Chatbot/presentation/view%20model/chatCubit/chat_cubit.dart';
 import 'package:gymer/features/Splash/presentation/views/SplashScreen.dart';
 
 import 'core/helpers/seviceLocator.dart';
 import 'features/Authentication/presentation/view model/AuthCubit/auth_cubit.dart';
+import 'features/MachineRecognition/presentation/view model/MachineCubit/machine_cubit.dart';
 import 'features/Questionnaire/presentation/view model/questionnaireCubit/questionnaire_cubit.dart';
 
 void main() {
@@ -43,6 +45,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<ChatCubit>(
           create: (_) => getIt<ChatCubit>(),
         ),
+        BlocProvider<MachineCubit>(
+          create: (_) => getIt<MachineCubit>(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -54,7 +59,16 @@ class MyApp extends StatelessWidget {
               selectionColor: ColorsManager.goldColorO60,
               selectionHandleColor: ColorsManager.goldColorO60,
             ),
-            primaryColor: ColorsManager.blackColor),
+            primaryColor: ColorsManager.blackColor,
+            textTheme: GoogleFonts.dmSansTextTheme().copyWith(
+              bodyLarge: GoogleFonts.dmSans(fontWeight: FontWeight.w400,color: Colors.black),
+              bodyMedium: GoogleFonts.dmSans(fontWeight: FontWeight.w400,color: Colors.black),
+              bodySmall: GoogleFonts.dmSans(fontWeight: FontWeight.w400,color: Colors.black),
+              titleLarge: GoogleFonts.dmSans(fontWeight: FontWeight.w400,color: Colors.black),
+              titleMedium: GoogleFonts.dmSans(fontWeight: FontWeight.w400,color: Colors.black),
+              titleSmall: GoogleFonts.dmSans(fontWeight: FontWeight.w400,color: Colors.black),
+            ),
+        ),
         home: const SplashScreen(),
         builder: EasyLoading.init(),
       ),

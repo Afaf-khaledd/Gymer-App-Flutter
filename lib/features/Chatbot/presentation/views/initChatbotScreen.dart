@@ -4,10 +4,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/utils/assets.dart';
 import 'package:gymer/core/utils/colors.dart';
-
-import '../../../../core/components/CustomBottomNavBar.dart';
-import '../../../Authentication/presentation/views/editProfileScreen.dart';
-import '../../../Home/presentation/views/homeScreen.dart';
+import '../../../../core/components/BottomNavHandler.dart';
+import '../../../../core/components/ImagePickerHelper.dart';
+import '../../../MachineRecognition/presentation/view model/MachineCubit/machine_cubit.dart';
+import '../../../MachineRecognition/presentation/views/targetMuscle.dart';
 import '../../data/models/chatSessionModel.dart';
 import '../view model/chatCubit/chat_cubit.dart';
 import 'chatScreen.dart';
@@ -36,26 +36,6 @@ class _InitChatbotScreenState extends State<InitChatbotScreen> {
     context.read<ChatCubit>().loadLastSessions();
   }
 
-  void _onItemTapped(int index) {
-    Widget nextScreen;
-    switch (index) {
-      case 0:
-        nextScreen = const HomeScreen();
-        break;
-      case 1:
-        nextScreen = InitChatbotScreen();
-        break;
-      case 3:
-        nextScreen = const Placeholder();
-        break;
-      case 4:
-        nextScreen = const EditProfileScreen();
-        break;
-      default:
-        return;
-    }
-    Navigator.push(context, MaterialPageRoute(builder: (context) => nextScreen));
-  }
 
   void _createNewSession() {
     context.read<ChatCubit>().createChatSession();
@@ -248,10 +228,21 @@ class _InitChatbotScreenState extends State<InitChatbotScreen> {
           );
         },
       ),
-      bottomNavigationBar: CustomBottomNavBar(
+      bottomNavigationBar: BottomNavHandler(
         currentIndex: _currentIndex,
-        onTap: _onItemTapped,
+        onImagePicked: (_) => ImagePickerHelper.pickImage(context, _handleImagePicked),
       ),
     );
+  }
+  void _handleImagePicked(String imageBase64) {
+    context.read<MachineCubit>().sendMachineImage(imageBase64);
+    Future.delayed(Duration(milliseconds: 300), () {
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const TargetMuscle()),
+        );
+      }
+    });
   }
 }

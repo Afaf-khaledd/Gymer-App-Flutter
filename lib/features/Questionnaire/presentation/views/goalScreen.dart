@@ -11,9 +11,20 @@ import '../view model/questionnaireCubit/questionnaire_cubit.dart';
 import 'heightScreen.dart';
 import 'onboardingQ.dart';
 
-class GoalScreen extends StatelessWidget {
+class GoalScreen extends StatefulWidget {
   const GoalScreen({super.key});
 
+  @override
+  State<GoalScreen> createState() => _GoalScreenState();
+}
+
+class _GoalScreenState extends State<GoalScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<QuestionnaireCubit>().initializeQuestionnaire();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -6,10 +6,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/utils/colors.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../../core/components/BottomNavHandler.dart';
 import '../../../../core/components/CustomTextFormField.dart';
+import '../../../../core/components/ImagePickerHelper.dart';
 import '../../../../core/components/customBlackButton.dart';
 import '../../../../core/helpers/validators.dart';
 import '../../../../core/utils/assets.dart';
+import '../../../MachineRecognition/presentation/view model/MachineCubit/machine_cubit.dart';
+import '../../../MachineRecognition/presentation/views/targetMuscle.dart';
 import '../../data/models/userModel.dart';
 import '../view model/AuthCubit/auth_cubit.dart';
 
@@ -21,6 +25,7 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
+  int _currentIndex = 4;
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController emailController;
@@ -51,7 +56,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     profileUrl = user.profileUrl!;
   }
 
-  Future<void> _pickImage() async {
+  /*Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile == null) return;
 
@@ -89,8 +94,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       });
       context.read<AuthCubit>().updateProfileImage(_profileImage!);
     }
-  }
+  }*/
 
+  Future<void> _pickAndCropImage() async {
+    File? pickedImage = await ImagePickerHelper.pickAndCropImage(context);
+    if (pickedImage != null) {
+      setState(() {
+        _profileImage = pickedImage;
+      });
+      context.read<AuthCubit>().updateProfileImage(_profileImage!);
+    }
+  }
   @override
   void dispose() {
     emailController.dispose();
@@ -159,11 +173,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "Edit Profile",
             style: GoogleFonts.poppins(fontWeight: FontWeight.w700, fontSize: 20),
           ),
-          toolbarHeight: 100,
-          leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(Icons.arrow_back_ios_rounded),
-          ),
+          toolbarHeight: 90,
+
         ),
         body: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
@@ -175,7 +186,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             return SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 26.0, vertical: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 26.0, vertical: 0),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -197,7 +208,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               bottom: 0,
                               right: 0,
                               child: GestureDetector(
-                                onTap: _pickImage,
+                                onTap: _pickAndCropImage,
                                 child: Container(
                                   padding: const EdgeInsets.all(6),
                                   decoration: const BoxDecoration(
@@ -261,6 +272,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             );
           },
         ),
+        bottomNavigationBar: BottomNavHandler(
+          currentIndex: _currentIndex,
+          onImagePicked: (_) => ImagePickerHelper.pickImage(context, _handleImagePicked),
+        ),
       ),
     );
   }
@@ -268,5 +283,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget _buildLabel(String text) {
     return Text("  $text",
         style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w400, fontSize: 18));
+  }
+  void _handleImagePicked(String imageBase64) {
+    context.read<MachineCubit>().sendMachineImage(imageBase64);
+    Future.delayed(Duration(milliseconds: 300), () {
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const TargetMuscle()),
+        );
+      }
+    });
   }
 }

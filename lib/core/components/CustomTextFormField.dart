@@ -39,8 +39,13 @@ class CustomTextFormField extends StatelessWidget {
       obscuringCharacter: '*',
       keyboardType: keyboardType,
       decoration: InputDecoration(
+        errorStyle: GoogleFonts.poppins(
+          fontWeight: FontWeight.w300,
+          fontSize: 12,
+          color: Colors.red,
+        ),
         hintText: hintText,
-        hintStyle: TextStyle(color: hintTextColor),
+        hintStyle: GoogleFonts.poppins(color: hintTextColor),
         filled: true,
         fillColor: fillColor,
         contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),

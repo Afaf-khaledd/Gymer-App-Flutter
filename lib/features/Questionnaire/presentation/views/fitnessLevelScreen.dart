@@ -102,15 +102,6 @@ class FitnessLevelScreen extends StatelessWidget {
 
                       final newState = questionnaireCubit.state;
                       if (newState is QuestionnaireSubmitted) {
-                        Fluttertoast.showToast(
-                          msg: "Questionnaire submitted successfully.",
-                          toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.BOTTOM,
-                          backgroundColor: Colors.green,
-                          textColor: Colors.white,
-                          fontSize: 16.0,
-                        );
-
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => const FinalScreen()),

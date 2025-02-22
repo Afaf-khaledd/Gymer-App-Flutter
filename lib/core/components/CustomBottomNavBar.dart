@@ -16,7 +16,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   final List<TabItem> items = [
     TabItem(icon: Icons.home_outlined),
     TabItem(icon: Icons.message_outlined),
-    TabItem(icon: Icons.add, title: ""),
+    TabItem(icon: Icons.camera_alt_outlined, title: ""),
     TabItem(icon: Icons.analytics_outlined),
     TabItem(icon: Icons.person_outline),
   ];
@@ -24,7 +24,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 13.0,horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 25.0,horizontal: 16),
       child: BottomBarCreative(
         items: items,
         backgroundColor: Colors.white,
@@ -41,7 +41,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
           background: ColorsManager.goldColorO1,
         ),
         paddingVertical: 50,
-        bottom: 10,
+        bottom: 1,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),

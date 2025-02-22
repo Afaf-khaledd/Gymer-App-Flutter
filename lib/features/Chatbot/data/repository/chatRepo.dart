@@ -61,11 +61,13 @@ class ChatRepository {
           ],
         );
       } else {
+        print(_handleError(response.data));
         throw Exception(_handleError(response.data));
       }
     } on DioException catch (dioError) {
       throw Exception(_handleError(dioError));
     } catch (e) {
+      print(e.toString());
       throw Exception("Unexpected error: $e");
     }
   }
@@ -88,9 +90,9 @@ class ChatRepository {
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data['data'];
-        print('--------------------------------');
+/*        print('--------------------------------');
         print("res: ${data}");
-        print('--------------------------------');
+        print('--------------------------------');*/
         return ResponseModel.fromJson(data);
       } else {
         throw Exception(_handleError(response.data));
