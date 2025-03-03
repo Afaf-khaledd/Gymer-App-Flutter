@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/utils/colors.dart';
 import 'package:gymer/features/Chatbot/presentation/view%20model/chatCubit/chat_cubit.dart';
+import 'package:gymer/features/Favorite/presentation/viewModel/favoriteCubit/favorite_cubit.dart';
 import 'package:gymer/features/Splash/presentation/views/SplashScreen.dart';
 
 import 'core/helpers/seviceLocator.dart';
@@ -47,6 +48,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<MachineCubit>(
           create: (_) => getIt<MachineCubit>(),
+        ),
+        BlocProvider<FavoriteCubit>(
+          create: (_) => getIt<FavoriteCubit>(),
         ),
       ],
       child: MaterialApp(

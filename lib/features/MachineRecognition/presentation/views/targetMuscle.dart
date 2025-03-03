@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gymer/features/Favorite/presentation/viewModel/favoriteCubit/favorite_cubit.dart';
 import 'package:gymer/features/MachineRecognition/presentation/view%20model/MachineCubit/machine_cubit.dart';
 import '../../../../core/utils/colors.dart';
 import 'machineVideo.dart';
@@ -52,7 +53,6 @@ class _TargetMuscleState extends State<TargetMuscle> {
                   ),
                 ),
               ] else if (state is MultiMachineSuccess) ...[
-                // Machine Name
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6,horizontal: 35),
                   child: Text(
@@ -61,7 +61,7 @@ class _TargetMuscleState extends State<TargetMuscle> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                // List of Machine Forms
+                // forms >> navigate
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0,vertical: 11),
@@ -110,6 +110,7 @@ class _TargetMuscleState extends State<TargetMuscle> {
                     ),
                   ),
                 ),
+
               ] else if (state is SingleMachineSuccess) ...[
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 20),
@@ -119,7 +120,7 @@ class _TargetMuscleState extends State<TargetMuscle> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                // Videos
+                // single form videos
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
                   child: Column(
@@ -139,57 +140,87 @@ class _TargetMuscleState extends State<TargetMuscle> {
                             ),
                           ),
                         );
-                      }).toList(),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.favorite_border_rounded,
-                            size: 40,
-                          ),
-                        ),
+                      }),
+                      BlocBuilder<FavoriteCubit, FavoriteState>(
+                        builder: (context, favState) {
+                          return Align(
+                            alignment: Alignment.centerRight,
+                            child: AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 300),
+                              transitionBuilder: (child, animation) {
+                                return ScaleTransition(scale: animation, child: child);
+                              },
+                              child: (favState is FavoriteLoading)
+                                  ? Icon(
+                                Icons.favorite_rounded,
+                                key: const ValueKey("loading"),
+                                size: 40,
+                                color: ColorsManager.goldColorO1,
+                              )
+                                  : IconButton(
+                                key: const ValueKey("normal"),
+                                onPressed: () {
+                                  if (favState is FavoriteStatusChecked && favState.isFavorite) {
+                                    context.read<FavoriteCubit>().removeFavorite(state.machineName);
+                                  } else {
+                                    context.read<FavoriteCubit>().addFavorite(state.machineName);
+                                  }
+                                },
+                                icon: Icon(
+                                  (favState is FavoriteStatusChecked && favState.isFavorite)
+                                      ? Icons.favorite_rounded
+                                      : Icons.favorite_border_rounded,
+                                  size: 40,
+                                  color: ColorsManager.goldColorO1,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
                 ),
-               //
+
+               // error
               ] else ...[
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade300),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.warning_amber_rounded,
-                        size: 40,
-                        color: Colors.orangeAccent,
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        "No machine data available",
-                        style: GoogleFonts.poppins(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
+                Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey.shade300),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: const Offset(0, 3),
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.warning_amber_rounded,
+                          size: 40,
+                          color: Colors.orangeAccent,
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          "No machine data available",
+                          style: GoogleFonts.poppins(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],

@@ -82,4 +82,18 @@ class ApiService {
       throw Exception("Unknown API error occurred.");
     }
   }
+  Future<Response> delete(String endpoint,
+      {dynamic data, Map<String, String>? headers}) async {
+    try {
+      return await dio.delete(
+        endpoint,
+        data: data,
+        options: Options(headers: headers),
+      );
+    } on DioException catch (dioError) {
+      throw dioError;
+    } catch (e) {
+      throw Exception("Unknown API error occurred.");
+    }
+  }
 }
