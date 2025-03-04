@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(width: 10),
             IconButton(
               onPressed: () => {
-                Navigator.push(context, MaterialPageRoute<void>(
+                Navigator.pushReplacement(context, MaterialPageRoute<void>(
     builder: (BuildContext context) => const FavoriteScreen(),),)},
               icon: const Icon(Icons.favorite_rounded, size: 30),
             ),
