@@ -142,34 +142,39 @@ class _TargetMuscleState extends State<TargetMuscle> {
                         );
                       }),
                       BlocBuilder<FavoriteCubit, FavoriteState>(
+
+                        buildWhen: (previous, current) => current is FavoriteStatusChecked,
                         builder: (context, favState) {
+                          context.read<FavoriteCubit>().checkIfFavorite(state.machineName);
                           return Align(
                             alignment: Alignment.centerRight,
                             child: AnimatedSwitcher(
                               duration: const Duration(milliseconds: 300),
                               transitionBuilder: (child, animation) {
-                                return ScaleTransition(scale: animation, child: child);
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: ScaleTransition(scale: animation, child: child),
+                                );
                               },
-                              child: (favState is FavoriteLoading)
-                                  ? Icon(
-                                Icons.favorite_rounded,
-                                key: const ValueKey("loading"),
-                                size: 40,
-                                color: ColorsManager.goldColorO1,
+                              child: (favState is FavoriteStatusChecked && favState.isFavorite)
+                                  ? IconButton(
+                                key: const ValueKey("filled_heart"),
+                                onPressed: () {
+                                  context.read<FavoriteCubit>().toggleFavorite(state.machineName);
+                                },
+                                icon: const Icon(
+                                  Icons.favorite_rounded,
+                                  size: 40,
+                                  color: ColorsManager.goldColorO1,
+                                ),
                               )
                                   : IconButton(
-                                key: const ValueKey("normal"),
+                                key: const ValueKey("border_heart"),
                                 onPressed: () {
-                                  if (favState is FavoriteStatusChecked && favState.isFavorite) {
-                                    context.read<FavoriteCubit>().removeFavorite(state.machineName);
-                                  } else {
-                                    context.read<FavoriteCubit>().addFavorite(state.machineName);
-                                  }
+                                  context.read<FavoriteCubit>().toggleFavorite(state.machineName);
                                 },
-                                icon: Icon(
-                                  (favState is FavoriteStatusChecked && favState.isFavorite)
-                                      ? Icons.favorite_rounded
-                                      : Icons.favorite_border_rounded,
+                                icon: const Icon(
+                                  Icons.favorite_border_rounded,
                                   size: 40,
                                   color: ColorsManager.goldColorO1,
                                 ),

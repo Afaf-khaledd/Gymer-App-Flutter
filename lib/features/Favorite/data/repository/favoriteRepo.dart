@@ -5,7 +5,6 @@ import 'package:gymer/features/Favorite/data/models/favoriteModel.dart';
 
 import '../../../../core/helpers/apiService.dart';
 import '../../../../core/helpers/local_storage.dart';
-import '../../../MachineRecognition/data/models/machineModel.dart';
 
 class FavoriteRepository{
   final ApiService apiService;
@@ -59,40 +58,12 @@ class FavoriteRepository{
     }
   }
 
-  Future<MachineModel> getFavoriteVideo(String machineName)async{
-    try {
-      String? token = await LocalStorage.getToken();
-      if (token == null) throw Exception("No token found");
-      log(token);
-      final response = await apiService.get(
-        "/favourite/retrieve/video",
-        data:{
-          'machineName': machineName,
-        },
-        headers: {"Authorization": "Bearer $token"},
-      );
-
-      if (response.statusCode == 200) {
-        log('success retrieve video');
-        log(MachineModel.fromJson(response.data['data']).toString());
-        return MachineModel.fromJson(response.data['data']);
-      } else {
-        log('failed to retrieve video');
-        throw Exception(_handleError(response.data));
-      }
-    } on DioException catch (dioError) {
-      throw Exception(_handleError(dioError));
-    } catch (e) {
-      throw Exception("Unexpected error: $e");
-    }
-  }
-
   Future<bool> isFavorite(String machineName) async {
     try {
       final favoriteModel = await getFavorite();
-      bool isFav = favoriteModel.favouriteMachines.contains(machineName);
-      log("item in fav: $isFav");
-      return favoriteModel.favouriteMachines.contains(machineName);
+      bool isFav = favoriteModel.favouriteMachines.any((machine) => machine.machineName == machineName);
+      log("Item in favorites: $isFav");
+      return isFav;
     } catch (e) {
       log("Error checking favorite status: $e");
       return false;

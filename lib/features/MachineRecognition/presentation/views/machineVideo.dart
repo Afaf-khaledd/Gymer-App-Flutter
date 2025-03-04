@@ -36,6 +36,7 @@ class _MachineVideoState extends State<MachineVideo> {
           leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
+                context.read<FavoriteCubit>().fetchFavorites();
               },
               icon: const Icon(Icons.arrow_back_ios_rounded)),
         ),
@@ -74,32 +75,35 @@ class _MachineVideoState extends State<MachineVideo> {
                 children: [
                   const Spacer(),
                   BlocBuilder<FavoriteCubit, FavoriteState>(
-                    builder: (context, state) {
+                    buildWhen: (previous, current) => current is FavoriteStatusChecked,
+                    builder: (context, favState) {
                       return AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 200),
+                        duration: const Duration(milliseconds: 300),
                         transitionBuilder: (child, animation) {
-                          return ScaleTransition(scale: animation, child: child);
+                          return FadeTransition(
+                            opacity: animation,
+                            child: ScaleTransition(scale: animation, child: child),
+                          );
                         },
-                        child: state is FavoriteLoading
-                            ? Icon(
-                          Icons.favorite_rounded,
-                          key: const ValueKey("loading"),
-                          size: 43,
-                          color: ColorsManager.goldColorO1,
+                        child: (favState is FavoriteStatusChecked && favState.isFavorite)
+                            ? IconButton(
+                          key: const ValueKey("filled_heart"),
+                          onPressed: () {
+                            context.read<FavoriteCubit>().toggleFavorite(widget.machineName);
+                          },
+                          icon: const Icon(
+                            Icons.favorite_rounded,
+                            size: 40,
+                            color: ColorsManager.goldColorO1,
+                          ),
                         )
                             : IconButton(
-                          key: const ValueKey("normal"),
+                          key: const ValueKey("border_heart"),
                           onPressed: () {
-                            if (state is FavoriteStatusChecked && state.isFavorite) {
-                              context.read<FavoriteCubit>().removeFavorite(widget.machineName);
-                            } else {
-                              context.read<FavoriteCubit>().addFavorite(widget.machineName);
-                            }
+                            context.read<FavoriteCubit>().toggleFavorite(widget.machineName);
                           },
-                          icon: Icon(
-                            (state is FavoriteStatusChecked && state.isFavorite)
-                                ? Icons.favorite_rounded
-                                : Icons.favorite_border_rounded,
+                          icon: const Icon(
+                            Icons.favorite_border_rounded,
                             size: 40,
                             color: ColorsManager.goldColorO1,
                           ),

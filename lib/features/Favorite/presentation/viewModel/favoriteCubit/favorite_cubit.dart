@@ -14,7 +14,7 @@ class FavoriteCubit extends Cubit<FavoriteState> {
   FavoriteCubit(this.favoriteRepository) : super(FavoriteInitial());
 
   Future<void> fetchFavorites() async {
-    emit(FavoriteLoading());
+    //emit(FavoriteLoading());
     try {
       final favorites = await favoriteRepository.getFavorite();
       emit(FavoriteLoaded(favorites));
@@ -33,12 +33,33 @@ class FavoriteCubit extends Cubit<FavoriteState> {
     }
   }
 
-  Future<void> addFavorite(String machineName) async {
+  Future<void> toggleFavorite(String machineName) async {
+    //emit(FavoriteLoading());
+
+    try {
+      final isFav = await favoriteRepository.isFavorite(machineName);
+
+      if (isFav) {
+        await favoriteRepository.removeFromFavorite(machineName);
+        log("Removed from favorites: $machineName");
+      } else {
+        await favoriteRepository.addToFavorite(machineName);
+        log("Added to favorites: $machineName");
+      }
+      final updatedFav = await favoriteRepository.isFavorite(machineName);
+      emit(FavoriteStatusChecked(updatedFav));
+      emit(FavoriteLoaded(await favoriteRepository.getFavorite()));
+    } catch (e) {
+      emit(FavoriteError(e.toString()));
+    }
+  }
+/*Future<void> addFavorite(String machineName) async {
     emit(FavoriteLoading());
     try {
       await favoriteRepository.addToFavorite(machineName);
       emit(FavoriteItemAdded());
-      await checkIfFavorite(machineName); //+fetch again
+      await checkIfFavorite(machineName);
+      await fetchFavorites();
     } catch (e) {
       emit(FavoriteError(e.toString()));
     }
@@ -49,9 +70,10 @@ class FavoriteCubit extends Cubit<FavoriteState> {
     try {
       await favoriteRepository.removeFromFavorite(machineName);
       emit(FavoriteItemRemoved());
-      await checkIfFavorite(machineName); //+fetch again
+      await checkIfFavorite(machineName);
+      await fetchFavorites();
     } catch (e) {
       emit(FavoriteError(e.toString()));
     }
-  }
+  }*/
 }
