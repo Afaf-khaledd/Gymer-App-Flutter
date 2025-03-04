@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../data/models/favMachineModel.dart';
 import '../../../data/models/favoriteModel.dart';
 import '../../../data/repository/favoriteRepo.dart';
 
@@ -11,48 +12,48 @@ part 'favorite_state.dart';
 class FavoriteCubit extends Cubit<FavoriteState> {
   final FavoriteRepository favoriteRepository;
 
+  List<FavoriteMachineModel> _favorites = [];
+
   FavoriteCubit(this.favoriteRepository) : super(FavoriteInitial());
 
   Future<void> fetchFavorites() async {
-    //emit(FavoriteLoading());
     try {
       final favorites = await favoriteRepository.getFavorite();
       emit(FavoriteLoaded(favorites));
+      _favorites = favorites.favouriteMachines;
     } catch (e) {
       emit(FavoriteError(e.toString()));
     }
   }
 
   Future<void> checkIfFavorite(String machineName) async {
-    try {
-      final isFav = await favoriteRepository.isFavorite(machineName);
-      log("Is Favorite: $isFav");
-      emit(FavoriteStatusChecked(isFav));
-    } catch (e) {
-      emit(FavoriteError(e.toString()));
-    }
+    bool isFav = _favorites.any((machine) => machine.machineName == machineName);
+    emit(FavoriteStatusChecked(isFav));
   }
 
   Future<void> toggleFavorite(String machineName) async {
-    //emit(FavoriteLoading());
-
     try {
-      final isFav = await favoriteRepository.isFavorite(machineName);
+      final isFav = _favorites.any((machine) => machine.machineName == machineName);
 
       if (isFav) {
         await favoriteRepository.removeFromFavorite(machineName);
+        _favorites.removeWhere((machine) => machine.machineName == machineName);
         log("Removed from favorites: $machineName");
       } else {
         await favoriteRepository.addToFavorite(machineName);
         log("Added to favorites: $machineName");
+
+        final updatedFavorites = await favoriteRepository.getFavorite();
+        _favorites = updatedFavorites.favouriteMachines;
       }
-      final updatedFav = await favoriteRepository.isFavorite(machineName);
-      emit(FavoriteStatusChecked(updatedFav));
-      emit(FavoriteLoaded(await favoriteRepository.getFavorite()));
+
+      emit(FavoriteStatusChecked(!isFav));
+      emit(FavoriteLoaded(FavoriteModel(favouriteMachines: List.from(_favorites))));
     } catch (e) {
       emit(FavoriteError(e.toString()));
     }
   }
+}
 /*Future<void> addFavorite(String machineName) async {
     emit(FavoriteLoading());
     try {
@@ -76,4 +77,3 @@ class FavoriteCubit extends Cubit<FavoriteState> {
       emit(FavoriteError(e.toString()));
     }
   }*/
-}

@@ -20,7 +20,7 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
-  final int _currentIndex = 0; //-1 ??
+  final int _currentIndex = -1;
 
   @override
   void initState() {
