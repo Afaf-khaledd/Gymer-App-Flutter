@@ -24,4 +24,6 @@ class AssetsManager {
   static const String consistencyImage = '${basePath}vecteezy_3d-sporty-male-character-performing-decline-push-up-exercise_30775086 1.png';
 
   static const String chatbotIcon = '${basePath}chatbotnobg.png';
+  static const String arrowIcon = '${basePath}arrow.png';
+  static const String favEmptyImage = '${basePath}favEmpty.png';
 }

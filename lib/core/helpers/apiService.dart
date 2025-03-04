@@ -36,10 +36,11 @@ class ApiService {
     }
   }
 
-  Future<Response> get(String endpoint, {Map<String, String>? headers}) async {
+  Future<Response> get(String endpoint, {Map<String, dynamic>? data, Map<String, String>? headers}) async {
     try {
       return await dio.get(
         endpoint,
+        data: data,
         options: Options(headers: headers),
       );
     } on DioException catch (dioError) {

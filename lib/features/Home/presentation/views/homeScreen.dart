@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/utils/colors.dart';
 import 'package:gymer/features/Authentication/presentation/view%20model/AuthCubit/auth_cubit.dart';
+import 'package:gymer/features/Favorite/presentation/view/favoriteScreen.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import '../../../../core/components/BottomNavHandler.dart';
@@ -34,6 +35,12 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: const Icon(Icons.logout_rounded, size: 30),
             ),
             const SizedBox(width: 10),
+            IconButton(
+              onPressed: () => {
+                Navigator.push(context, MaterialPageRoute<void>(
+    builder: (BuildContext context) => const FavoriteScreen(),),)},
+              icon: const Icon(Icons.favorite_rounded, size: 30),
+            ),
           ],
         ),
         bottomNavigationBar: BottomNavHandler(
