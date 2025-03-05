@@ -6,6 +6,7 @@ import 'package:gymer/core/components/CustomTextFormField.dart';
 import 'package:gymer/core/components/customBlackButton.dart';
 import 'package:gymer/core/helpers/validators.dart';
 import 'package:gymer/core/utils/colors.dart';
+import 'package:gymer/features/Authentication/presentation/views/CustomFormText.dart';
 import '../../../Questionnaire/presentation/views/goalScreen.dart';
 import '../../../Questionnaire/presentation/views/onboardingQ.dart';
 import '../view model/AuthCubit/auth_cubit.dart';
@@ -104,37 +105,37 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     const SizedBox(height: 80),
-                    _buildLabel("Full Name"),
+                    CustomFormText(text:"Full Name"),
                     CustomTextFormField(
                       controller: fullNameController,
                       keyboardType: TextInputType.text,
-                      hintText: 'Enter Your Name',
+                      hintText: 'Full Name',
                       validator: Validators.validateFullName,
                     ),
                     const SizedBox(height: 15),
-                    _buildLabel("Email"),
+                    CustomFormText(text:"Email Address"),
                     CustomTextFormField(
                       controller: emailController,
                       keyboardType: TextInputType.emailAddress,
-                      hintText: 'example@example.com',
+                      hintText: 'Email Address',
                       validator: Validators.validateEmail,
                     ),
                     const SizedBox(height: 15),
-                    _buildLabel("Password"),
+                    CustomFormText(text:"Password"),
                     CustomTextFormField(
                       controller: passwordController,
                       keyboardType: TextInputType.text,
                       obscureText: true,
-                      hintText: '***',
+                      hintText: 'Password',
                       validator: Validators.validatePassword,
                     ),
                     const SizedBox(height: 15),
-                    _buildLabel("Confirm Password"),
+                    CustomFormText(text: "Confirm Password"),
                     CustomTextFormField(
                       controller: confirmPasswordController,
                       keyboardType: TextInputType.text,
                       obscureText: true,
-                      hintText: '***',
+                      hintText: 'Confirm Password',
                       validator: (value) =>
                           Validators.validateConfirmPassword(value, passwordController.text),
                     ),
@@ -183,13 +184,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           );
         },
       ),
-    );
-  }
-
-  Widget _buildLabel(String text) {
-    return Text(
-      "  $text",
-      style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w400, fontSize: 18),
     );
   }
 }

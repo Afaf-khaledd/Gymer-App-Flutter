@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 import '../../../../core/helpers/apiService.dart';
+import '../../../../core/helpers/error_handler.dart';
 import '../../../../core/helpers/local_storage.dart';
 import '../models/userModel.dart';
 
@@ -10,29 +11,6 @@ class AuthenticationRepository {
   final ApiService apiService;
 
   AuthenticationRepository({required this.apiService});
-
-  String _handleError(dynamic error) {
-    try {
-      if (error is DioException) {
-        if (error.response != null &&
-            error.response?.data is Map<String, dynamic>) {
-          final errorData = error.response?.data;
-          if (errorData != null && errorData.containsKey("message")) {
-            return errorData["message"];
-          }
-        }
-        return "Server error: ${error.response?.statusMessage ?? 'Unknown error'}";
-      } else if (error is Map<String, dynamic> &&
-          error.containsKey("message")) {
-        return error["message"];
-      } else if (error is String) {
-        return error;
-      }
-    } catch (e) {
-      return "Error parsing response. Please try again.";
-    }
-    return "An unexpected error occurred. Please try again.";
-  }
 
   Future<UserModel?> login(
       Map<String, String> credentials, String password) async {
@@ -51,12 +29,10 @@ class AuthenticationRepository {
         final user = await getProfile();
         return user;
       } else {
-        throw Exception(_handleError(response.data));
+        throw Exception(ErrorHandler.handleError(response.data));
       }
-    } on DioException catch (dioError) {
-      throw Exception(_handleError(dioError));
-    } catch (e) {
-      throw Exception("Unexpected error: $e");
+    } catch (error) {
+      throw Exception(ErrorHandler.handleError(error));
     }
   }
 
@@ -93,12 +69,10 @@ class AuthenticationRepository {
 
         return user;
       } else {
-        throw Exception(_handleError(response.data));
+        throw Exception(ErrorHandler.handleError(response.data));
       }
-    } on DioException catch (dioError) {
-      throw Exception(_handleError(dioError));
-    } catch (e) {
-      throw Exception("Unexpected error: $e");
+    } catch (error) {
+      throw Exception(ErrorHandler.handleError(error));
     }
   }
 
@@ -189,12 +163,10 @@ class AuthenticationRepository {
               "Check your email for reset instructions"
         };
       } else {
-        throw Exception(_handleError(response.data));
+        throw Exception(ErrorHandler.handleError(response.data));
       }
-    } on DioException catch (dioError) {
-      throw Exception(_handleError(dioError));
-    } catch (e) {
-      throw Exception("Unexpected error: $e");
+    } catch (error) {
+      throw Exception(ErrorHandler.handleError(error));
     }
   }
 
@@ -214,8 +186,8 @@ class AuthenticationRepository {
       } else {
         throw Exception(response.data['message'] ?? "Failed to reset password");
       }
-    } catch (e) {
-      throw Exception("Unexpected error: $e");
+    } catch (error) {
+      throw Exception(ErrorHandler.handleError(error));
     }
   }
 

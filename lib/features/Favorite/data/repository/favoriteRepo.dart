@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:gymer/features/Favorite/data/models/favoriteModel.dart';
 
 import '../../../../core/helpers/apiService.dart';
+import '../../../../core/helpers/error_handler.dart';
 import '../../../../core/helpers/local_storage.dart';
 
 class FavoriteRepository{
@@ -24,10 +25,10 @@ class FavoriteRepository{
         return FavoriteModel.fromJson(response.data['data']);
       } else {
         log('Failed to retrieve');
-        throw Exception('Failed to retrieve');
+        throw Exception(ErrorHandler.handleError(response.data));
       }
     } catch (error) {
-      throw Exception('Failed to retrieve');
+      throw Exception(ErrorHandler.handleError(error));
     }
   }
 
@@ -60,10 +61,10 @@ class FavoriteRepository{
         log('item added successfully');
       } else {
         log('issue in add item!');
-        throw Exception('Failed to retrieve');
+        throw Exception(ErrorHandler.handleError(response.data));
       }
     } catch (error) {
-       throw Exception('Failed to retrieve');
+      throw Exception(ErrorHandler.handleError(error));
     }
   }
 
@@ -84,10 +85,10 @@ class FavoriteRepository{
         log('item deleted successfully');
       } else {
         log('issue in delete item!');
-        throw Exception('Failed to retrieve');
+        throw Exception(ErrorHandler.handleError(response.data));
       }
     } catch (error) {
-      throw Exception('Failed to retrieve');
+      throw Exception(ErrorHandler.handleError(error));
     }
   }
 }

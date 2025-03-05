@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
           create: (_) => getIt<MachineCubit>(),
         ),
         BlocProvider<FavoriteCubit>(
-          create: (_) => getIt<FavoriteCubit>(),
+          create: (_) => getIt<FavoriteCubit>()..fetchFavorites(),
         ),
         BlocProvider<HomeCubit>(
           create: (_) => getIt<HomeCubit>()..fetchData(),
