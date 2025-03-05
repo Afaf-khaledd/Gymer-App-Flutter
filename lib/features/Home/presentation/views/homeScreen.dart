@@ -346,35 +346,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
-    // return Container(
-    //   width: 160,
-    //   padding: const EdgeInsets.all(12),
-    //   decoration: BoxDecoration(
-    //     color: Colors.grey[500],
-    //     borderRadius: BorderRadius.circular(16),
-    //   ),
-    //   child: Column(
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     crossAxisAlignment: CrossAxisAlignment.start,
-    //     children: [
-    //       Text(
-    //         title,
-    //         style: GoogleFonts.poppins(
-    //             fontWeight: FontWeight.w700,
-    //             fontSize: 17,
-    //             color: Colors.white,
-    //             height: 1.5),
-    //       ),
-    //       const SizedBox(height: 8),
-    //       Expanded(
-    //         child: Image.asset(
-    //           imagePath,
-    //           fit: BoxFit.contain,
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 
   Widget workoutItem() {
