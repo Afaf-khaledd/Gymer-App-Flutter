@@ -35,4 +35,5 @@ class AssetsManager {
   static const String chatbotIcon = '${basePath}chatbotnobg.png';
   static const String arrowIcon = '${basePath}arrow.png';
   static const String favEmptyImage = '${basePath}favEmpty.png';
+  static const String cameraHomeImage = '${basePath}pngwing.com 1.png';
 }

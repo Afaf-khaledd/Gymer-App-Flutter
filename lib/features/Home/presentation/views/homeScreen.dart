@@ -5,15 +5,21 @@ import 'package:gymer/core/utils/assets.dart';
 import 'package:gymer/core/utils/colors.dart';
 import 'package:gymer/features/Authentication/presentation/view%20model/AuthCubit/auth_cubit.dart';
 import 'package:gymer/features/Favorite/presentation/view/favoriteScreen.dart';
-import 'package:gymer/features/Home/presentation/viewModel/homeCubit/home_cubit.dart';
-import 'package:gymer/features/Home/presentation/viewModel/homeCubit/home_state.dart';
+import 'package:gymer/features/Home/presentation/views/CustomListTile.dart';
+import 'package:gymer/features/Home/presentation/views/workoutItem.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../core/components/BottomNavHandler.dart';
 import '../../../../core/components/ImagePickerHelper.dart';
 import '../../../Boarding/presentation/views/OnBoardingPage.dart';
+import '../../../Chatbot/presentation/views/customGoldButton.dart';
+import '../../../Favorite/presentation/viewModel/favoriteCubit/favorite_cubit.dart';
 import '../../../MachineRecognition/presentation/view model/MachineCubit/machine_cubit.dart';
 import '../../../MachineRecognition/presentation/views/targetMuscle.dart';
+import 'buildShimmerBox.dart';
+import 'favouriteMachineItem.dart';
+import 'goldBorderContainer.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,137 +29,223 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _currentIndex = 0;
+  final int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<AuthCubit>().getProfile();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(80),
-          child: BlocBuilder<HomeCubit, HomeState>(
-            builder: (context, state) {
-              if (state is HomeLoaded) {
-                return AppBar(
-                    backgroundColor: ColorsManager.BGColor,
+          preferredSize: const Size.fromHeight(100),
+          child: SafeArea(
+            child: BlocBuilder<AuthCubit, AuthState>(
+              builder: (context, state) {
+                if (state is ProfileRetrieved) {
+                  return AppBar(
+                    backgroundColor: Color.fromRGBO(255, 255, 255, 1.208),
                     elevation: 0,
+                    toolbarHeight: 100,
+                    automaticallyImplyLeading: false,
                     title: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CircleAvatar(
-                          radius: 24,
+                          radius: 30,
                           backgroundImage: state.user.profileUrl != null
                               ? NetworkImage(state.user.profileUrl!)
-                              : AssetImage(AssetsManager.defaultProfileImage)
-                                  as ImageProvider,
+                              : AssetImage(AssetsManager.defaultProfileImage) as ImageProvider,
                         ),
-                        const SizedBox(width: 12),
-                        SizedBox(
-                          height: 50,
+                        const SizedBox(width: 14),
+                        Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text('Welcome,',
-                                  style: GoogleFonts.leagueSpartan(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 25,
-                                      height: 0.92,
-                                      color: ColorsManager.blackColor)),
-                              Text(state.user.userName,
-                                  style: GoogleFonts.leagueSpartan(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 25,
-                                      height: 0.92,
-                                      color: ColorsManager.blackColor)),
+                              Text(
+                                'Welcome,',
+                                style: GoogleFonts.leagueSpartan(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 25,
+                                  height: 0.92,
+                                  color: ColorsManager.blackColor,
+                                ),
+                              ),
+                              Text(
+                                state.user.fullName,
+                                style: GoogleFonts.leagueSpartan(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 25,
+                                  height: 0.92,
+                                  color: ColorsManager.blackColor,
+                                ),
+                              ),
                             ],
                           ),
-                        )
+                        ),
                       ],
-                    ));
-              } else if (state is HomeLoading) {
-                return const Center(child: CircularProgressIndicator());
-              } else {
-                return const Center(child: Text("Failed to load user data"));
-              }
-            },
-          )),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
+                    ),
+                    actions: [
+                      IconButton(
+                        onPressed: () => showLogoutConfirmation(context),
+                        icon: const Icon(Icons.logout_rounded, size: 30),
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                  );
+                } else if (state is AuthInitial) {
+                  return AppBar(
+                    backgroundColor: Color.fromRGBO(255, 255, 255, 1.208),
+                    elevation: 0,
+                    toolbarHeight: 100,
+                    automaticallyImplyLeading: false,
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.grey[300],
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              BuildShimmerBox(width: 100, height: 20),
+                              const SizedBox(height: 8),
+                              BuildShimmerBox(width: 150, height: 20),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              },
+            ),
+          ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Image.asset(
-                      AssetsManager.workoutPlan,
-                      width: 24,
-                      height: 24,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      "Today's Workout Plan",
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 17,
-                          height: 1.5,
-                          color: Colors.black),
-                    ),
-                  ],
-                ),
+                CustomListTile(text: "Today's Workout Plan", imagePath: AssetsManager.workoutPlan,),
+
                 const SizedBox(height: 12),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 8,
-                        spreadRadius: 2,
+
+                GoldBorderContainer(
+                  /*child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Image.asset(AssetsManager.chatbotIcon,height: 90,width: 90,),
+                      Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                " Ask ",
+                                style: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 20,
+                                  height: 1.2,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              ShaderMask(
+                                shaderCallback: (bounds) => const LinearGradient(
+                                  colors: [ColorsManager.goldColorO1, Color.fromRGBO(3, 19, 20, 1)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ).createShader(bounds),
+                                child: Text(
+                                  "GymTron",
+                                  style: GoogleFonts.dmSans(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            "to create your\n workout plan",
+                            style: GoogleFonts.dmSans(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 17,
+                              height: 1.2,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 20,),
+                          SizedBox(
+                            height: 44,
+                            width: 150,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: ColorsManager.goldColorO1,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                elevation: 5,
+                                shadowColor: const Color.fromRGBO(3, 19, 20, 1),
+                              ),
+                              onPressed: (){},
+                              child: Text(
+                                'Go',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10,),
+                        ],
                       ),
                     ],
-                  ),
+                  ),*/
                   child: Row(
                     children: [
                       Expanded(
                         child: SizedBox(
-                          height: 140,
+                          height: 170,
                           child: SingleChildScrollView(
                             child: Column(
-                              children:
-                                  List.generate(3, (index) => workoutItem()),
+                              children: List.generate(3, (index) => WorkoutItem()),
                             ),
                           ),
                         ),
                       ),
                       Image.asset(
                         AssetsManager.avatarGym,
-                        width: 90,
-                        height: 90,
+                        width: 120,
+                        height: 120,
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
+            SizedBox(height: 20,),
+            GoldBorderContainer(
+              padding: const EdgeInsets.all(19),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -170,102 +262,194 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        "Ask GymTron",
-                        style: GoogleFonts.dmSans(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 20,
-                          height: 1.2,
-                          color: Colors.black,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            " Ask ",
+                            style: GoogleFonts.dmSans(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 20,
+                              height: 1.2,
+                              color: Colors.black,
+                            ),
+                          ),
+                          ShaderMask(
+                            shaderCallback: (bounds) => const LinearGradient(
+                              colors: [ColorsManager.goldColorO1, Color.fromRGBO(3, 19, 20, 1)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ).createShader(bounds),
+                            child: Text(
+                              "GymTron",
+                              style: GoogleFonts.dmSans(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                   Image.asset(
                     AssetsManager.chatbotIcon,
-                    width: 40,
-                    height: 40,
+                    width: 50,
+                    height: 50,
                   ),
                 ],
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Column(
+            SizedBox(height: 20,),
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.favorite, color: Colors.red, size: 24),
-                        const SizedBox(width: 8),
-                        Text(
-                          "Favourite Machines",
-                          style: GoogleFonts.poppins(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 17,
-                              height: 1.5,
-                              color: Colors.black),
-                        ),
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const FavoriteScreen(),
-                          ),
-                        );
-                      },
+
+                CustomListTile(
+                  text: "Favourite Machines",
+                  icon: Icons.favorite,
+                  trailing: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const FavoriteScreen()),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 3.0),
                       child: Text(
-                        "view all >",
+                        "View All >",
                         style: GoogleFonts.dmSans(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                            height: 1,
-                            color: Colors.grey[600]),
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                          height: 1,
+                          color: Colors.grey[600],
+                        ),
                       ),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  height: 140,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      favouriteMachineItem(
-                        "Bench Press",
-                        AssetsManager.benchPress,
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Placeholder(),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      favouriteMachineItem(
-                        "Chest Press",
-                        AssetsManager.chestPress,
-                        () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Placeholder(),
-                          ),
-                        ),
-                      ),
-                    ],
                   ),
                 ),
+                const SizedBox(height: 12),
+
+                BlocBuilder<FavoriteCubit, FavoriteState>(
+                  builder: (context, state) {
+                    if (state is FavoriteLoading) {
+                      return SizedBox(
+                        height: 135,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 3,
+                          separatorBuilder: (context, index) => const SizedBox(width: 15),
+                          itemBuilder: (context, index) {
+                            return Shimmer.fromColors(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                              child: Container(
+                                width: 120,
+                                height: 135,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    }
+
+                    if (state is FavoriteError) {
+                      return Center(
+                        child: Text(
+                          "Error loading favorites",
+                          style: GoogleFonts.poppins(color: Colors.red),
+                        ),
+                      );
+                    }
+
+                    if (state is FavoriteLoaded && state.favoriteModel.favouriteMachines.isNotEmpty) {
+                      return SizedBox(
+                        height: 135,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 5,
+                          separatorBuilder: (context, index) => const SizedBox(width: 15),
+                          itemBuilder: (context, index) {
+                            final machine = state.favoriteModel.favouriteMachines[index]; // updated!
+                            return FavouriteMachineItem(
+                              title: machine,
+                              imagePath: machine,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const Placeholder(), // navigate to video!
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      );
+                    }
+
+                    return GoldBorderContainer(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            children: [
+                              Text(
+                                "Snap. Learn. Save\nOur Faves!",
+                                style: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 17,
+                                  height: 1.2,
+                                  color: Colors.black,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                              const SizedBox(height: 20),
+                              SizedBox(
+                                height: 44,
+                                width: 150,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: ColorsManager.goldColorO1,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    elevation: 5,
+                                    shadowColor: const Color.fromRGBO(3, 19, 20, 1),
+                                  ),
+                                  onPressed: () {},
+                                  child: Text(
+                                    'Go',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                            ],
+                          ),
+                          Image.asset(
+                            AssetsManager.cameraHomeImage,
+                            height: 130,
+                            width: 130,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ],
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavHandler(
         currentIndex: _currentIndex,
@@ -309,83 +493,6 @@ class _HomeScreenState extends State<HomeScreen> {
           (route) => false,
         );
       },
-    );
-  }
-
-  Widget favouriteMachineItem(
-      String title, String imagePath, VoidCallback onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 160,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.grey[500],
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: GoogleFonts.poppins(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 17,
-                  height: 1.5,
-                  color: Colors.white),
-            ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: Image.asset(
-                imagePath,
-                fit: BoxFit.contain,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget workoutItem() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 6,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.orange,
-              borderRadius: BorderRadius.circular(3),
-            ),
-          ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Chest Press",
-                style: GoogleFonts.leagueSpartan(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20,
-                    height: 0.92,
-                    color: Colors.black),
-              ),
-              Text(
-                "3 Sets Of 8-12 Reps\n30-60 Seconds Rest",
-                style: GoogleFonts.leagueSpartan(
-                    fontWeight: FontWeight.w300,
-                    fontSize: 17,
-                    height: 0.92,
-                    color: Colors.black),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

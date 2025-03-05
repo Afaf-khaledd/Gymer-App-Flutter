@@ -34,7 +34,7 @@ class HomeRepository {
     return "An unexpected error occurred. Please try again.";
   }
 
-  Future<UserModel?> getProfile() async {
+  Future<UserModel> getProfile() async {
     try {
       String? token = await LocalStorage.getToken();
       if (token == null) throw Exception("No token found");

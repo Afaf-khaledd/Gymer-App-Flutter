@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gymer/features/Authentication/data/models/userModel.dart';
 import 'package:gymer/features/Favorite/data/models/favoriteModel.dart';
@@ -7,19 +9,16 @@ import 'package:gymer/features/Home/presentation/viewModel/homeCubit/home_state.
 class HomeCubit extends Cubit<HomeState> {
   final HomeRepository homeRepository;
 
-  HomeCubit({required this.homeRepository}) : super(HomeInitial());
+  HomeCubit(this.homeRepository) : super(HomeInitial());
 
   void fetchData() async {
     try {
       emit(HomeLoading());
-      final UserModel? user = await homeRepository.getProfile();
+      final UserModel user = await homeRepository.getProfile();
+      log(user.token);
       final FavoriteModel favourites = await homeRepository.getFavorite();
-      if (user != null) {
-        emit(HomeLoaded(user: user, favourites: [favourites]));
-      } else {
-        emit(HomeError(message: "Couldn't retrieve user data"));
-      }
-    } catch (e) {
+      emit(HomeLoaded(user: user, favourites: [favourites]));
+        } catch (e) {
       emit(HomeError(message: e.toString()));
     }
   }

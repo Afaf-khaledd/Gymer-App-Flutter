@@ -9,6 +9,7 @@ import 'package:gymer/features/Splash/presentation/views/SplashScreen.dart';
 
 import 'core/helpers/seviceLocator.dart';
 import 'features/Authentication/presentation/view model/AuthCubit/auth_cubit.dart';
+import 'features/Home/presentation/viewModel/homeCubit/home_cubit.dart';
 import 'features/MachineRecognition/presentation/view model/MachineCubit/machine_cubit.dart';
 import 'features/Questionnaire/presentation/view model/questionnaireCubit/questionnaire_cubit.dart';
 
@@ -51,6 +52,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<FavoriteCubit>(
           create: (_) => getIt<FavoriteCubit>(),
+        ),
+        BlocProvider<HomeCubit>(
+          create: (_) => getIt<HomeCubit>()..fetchData(),
         ),
       ],
       child: MaterialApp(
