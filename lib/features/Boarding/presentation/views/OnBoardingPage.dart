@@ -5,6 +5,8 @@ import 'package:gymer/core/utils/assets.dart';
 import 'package:gymer/core/utils/colors.dart';
 import 'package:gymer/features/Authentication/presentation/views/loginScreen.dart';
 
+import '../../data/models/onboardingModel.dart';
+
 class OnBoardingPage extends StatefulWidget {
   const OnBoardingPage({super.key});
 
@@ -108,12 +110,3 @@ Widget buildPageIndicator(bool isActive) {
   );
 }
 
-class OnboardingContent {
-  final String image;
-  final String title;
-
-  OnboardingContent({
-    required this.image,
-    required this.title,
-  });
-}

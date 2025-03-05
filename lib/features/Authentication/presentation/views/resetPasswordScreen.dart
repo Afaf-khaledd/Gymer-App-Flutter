@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/components/CustomTextFormField.dart';
 import 'package:gymer/core/helpers/validators.dart';
 import 'package:gymer/features/Authentication/presentation/view%20model/AuthCubit/auth_cubit.dart';
 import '../../../../core/components/customBlackButton.dart';
-import 'loginScreen.dart'; // Import the login screen for navigation
+import 'CustomFormText.dart';
+import 'loginScreen.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   final String email;
@@ -72,10 +74,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           builder: (context) => const LoginScreen()),
                     );
                   } else if (state is AuthError) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content: Text(state.message),
-                          backgroundColor: Colors.red),
+                    Fluttertoast.showToast(
+                      msg: state.message,
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
                     );
                   }
                 },
@@ -88,28 +93,20 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       children: [
                         //const Spacer(),
                         SizedBox(height: 90),
-                        Text(
-                          "  Password",
-                          style: GoogleFonts.leagueSpartan(
-                              fontWeight: FontWeight.w500, fontSize: 18),
-                        ),
+                        CustomFormText(text:"Password"),
                         CustomTextFormField(
                           controller: passwordController,
                           keyboardType: TextInputType.text,
-                          hintText: '**********',
+                          hintText: 'Password',
                           obscureText: true,
                           validator: Validators.validatePassword,
                         ),
                         const SizedBox(height: 20),
-                        Text(
-                          "  Confirm Password",
-                          style: GoogleFonts.leagueSpartan(
-                              fontWeight: FontWeight.w500, fontSize: 18),
-                        ),
+                        CustomFormText(text:"Confirm Password"),
                         CustomTextFormField(
                           controller: confirmPasswordController,
                           keyboardType: TextInputType.text,
-                          hintText: '**********',
+                          hintText: 'Confirm Password',
                           obscureText: true,
                           validator: (value) =>
                               Validators.validateConfirmPassword(
@@ -117,7 +114,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         ),
                         SizedBox(height: screenHeight * 0.2),
                         state is AuthLoading
-                            ? const Center(child: CircularProgressIndicator())
+                            ? const Center(child: CircularProgressIndicator(color: Colors.white,))
                             : CustomBlackButton(
                                 label: 'Reset', onPressed: _submitForm),
                         SizedBox(height: screenHeight * 0.1),

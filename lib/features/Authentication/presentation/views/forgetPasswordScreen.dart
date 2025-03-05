@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/components/CustomTextFormField.dart';
 import 'package:gymer/core/components/customBlackButton.dart';
 import 'package:gymer/core/helpers/validators.dart';
 import 'package:gymer/features/Authentication/presentation/view%20model/AuthCubit/auth_cubit.dart';
 import 'package:gymer/features/Authentication/presentation/views/resetPasswordScreen.dart';
+
+import 'CustomFormText.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -69,8 +72,13 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                             builder: (context) => ResetPasswordScreen(
                                 email: emailController.text)));
                   } else if (state is AuthError) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(state.message)),
+                    Fluttertoast.showToast(
+                      msg: state.message,
+                      toastLength: Toast.LENGTH_LONG,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
                     );
                   }
                 },
@@ -85,20 +93,16 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                         SizedBox(
                           height: 150,
                         ),
-                        Text(
-                          "  Enter Your Email Address",
-                          style: GoogleFonts.leagueSpartan(
-                              fontWeight: FontWeight.w500, fontSize: 18),
-                        ),
+                        CustomFormText(text:"Enter Your Email Address"),
                         CustomTextFormField(
                           controller: emailController,
                           keyboardType: TextInputType.emailAddress,
-                          hintText: 'example@example.com',
+                          hintText: 'Email Address',
                           validator: Validators.validateEmail,
                         ),
                         SizedBox(height: screenHeight * 0.2),
                         state is AuthLoading
-                            ? const Center(child: CircularProgressIndicator())
+                            ? const Center(child: CircularProgressIndicator(color: Colors.white,))
                             : CustomBlackButton(
                                 label: 'Next', onPressed: _submitForm),
                         SizedBox(height: screenHeight * 0.1),

@@ -12,6 +12,7 @@ import 'package:gymer/features/Authentication/presentation/view%20model/AuthCubi
 import 'package:gymer/features/Home/presentation/views/homeScreen.dart';
 import '../../../../core/components/CustomTextFormField.dart';
 import '../../../../core/helpers/validators.dart';
+import 'CustomFormText.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,7 +31,6 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       rememberMe = value;
     });
-    // shared preference set value
   }
 
   @override
@@ -110,22 +110,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    Text("  Username or Email",
-                        style: GoogleFonts.leagueSpartan(fontSize: 18)),
+                    CustomFormText(text:"Username or Email Address"),
                     CustomTextFormField(
                       controller: inputController,
                       keyboardType: TextInputType.emailAddress,
-                      hintText: 'example@example.com',
+                      hintText: 'Username or Email',
                       validator: Validators.validateEmailOrUsername,
                     ),
                     const SizedBox(height: 15),
-                    Text("  Password",
-                        style: GoogleFonts.leagueSpartan(fontSize: 18)),
+                    CustomFormText(text:"Password"),
                     CustomTextFormField(
                       controller: passwordController,
                       keyboardType: TextInputType.text,
                       obscureText: true,
-                      hintText: '*********',
+                      hintText: 'Password',
                       validator: Validators.validatePassword,
                     ),
                     const SizedBox(height: 15),

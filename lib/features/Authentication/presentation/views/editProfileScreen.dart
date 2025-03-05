@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/utils/colors.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../../../core/components/BottomNavHandler.dart';
 import '../../../../core/components/CustomTextFormField.dart';
 import '../../../../core/components/ImagePickerHelper.dart';
@@ -16,6 +14,7 @@ import '../../../MachineRecognition/presentation/view model/MachineCubit/machine
 import '../../../MachineRecognition/presentation/views/targetMuscle.dart';
 import '../../data/models/userModel.dart';
 import '../view model/AuthCubit/auth_cubit.dart';
+import 'CustomFormText.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -25,7 +24,7 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  int _currentIndex = 4;
+  final int _currentIndex = 4;
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController emailController;
@@ -35,7 +34,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late String profileUrl;
 
   File? _profileImage;
-  final ImagePicker _picker = ImagePicker();
+  //final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -227,31 +226,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      _buildLabel("Full Name"),
+                      CustomFormText(text:"Full Name"),
                       CustomTextFormField(
                         controller: fullNameController,
                         keyboardType: TextInputType.text,
-                        hintText: 'Enter Your Full Name',
+                        hintText: 'Full Name',
                         validator: Validators.validateFullName,
                       ),
                       const SizedBox(height: 15),
-                      _buildLabel("User Name"),
+                      CustomFormText(text:"Username"),
                       CustomTextFormField(
                         controller: userNameController,
                         keyboardType: TextInputType.text,
-                        hintText: 'Enter Your Username',
+                        hintText: 'Username',
                         validator: Validators.validateUserName,
                       ),
                       const SizedBox(height: 15),
-                      _buildLabel("Email"),
+                      CustomFormText(text:"Email Address"),
                       CustomTextFormField(
                         controller: emailController,
                         keyboardType: TextInputType.emailAddress,
-                        hintText: 'example@example.com',
+                        hintText: 'Email Address',
                         validator: Validators.validateEmail,
                       ),
                       const SizedBox(height: 15),
-                      _buildLabel("Weight"),
+                      CustomFormText(text:"Weight"),
                       CustomTextFormField(
                         controller: weightController,
                         keyboardType: TextInputType.number,
@@ -278,11 +277,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
       ),
     );
-  }
-
-  Widget _buildLabel(String text) {
-    return Text("  $text",
-        style: GoogleFonts.leagueSpartan(fontWeight: FontWeight.w400, fontSize: 18));
   }
   void _handleImagePicked(String imageBase64) {
     context.read<MachineCubit>().sendMachineImage(imageBase64);
