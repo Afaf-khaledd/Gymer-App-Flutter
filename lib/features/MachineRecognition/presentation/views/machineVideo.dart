@@ -1,4 +1,5 @@
 
+
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -53,23 +54,23 @@ class _MachineVideoState extends State<MachineVideo> {
                       fontWeight: FontWeight.w700, fontSize: 40),
                 ),
               ),
-              const SizedBox(height: 40),
-              for (var videoUrl in widget.machineVideo)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: ColorsManager.goldColorO1, width: 1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(videoUrl, fit: BoxFit.cover),
-                    ),
+            ),
+            const SizedBox(height: 40),
+            for (var videoUrl in widget.machineVideo)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                        color: ColorsManager.goldColorO1, width: 1),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(videoUrl, fit: BoxFit.cover),
                   ),
                 ),
-
+              ),
               const SizedBox(height: 10),
               Row(
                 children: [
@@ -108,14 +109,26 @@ class _MachineVideoState extends State<MachineVideo> {
                             color: ColorsManager.goldColorO1,
                           ),
                         ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
+                      )
+                          : IconButton(
+                        key: const ValueKey("border_heart"),
+                        onPressed: () {
+                          context.read<FavoriteCubit>().toggleFavorite(widget.machineName);
+                        },
+                        icon: const Icon(
+                          Icons.favorite_border_rounded,
+                          size: 40,
+                          color: ColorsManager.goldColorO1,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ],
         ),
+      ),
     );
   }
 }

@@ -11,6 +11,8 @@ import 'package:gymer/features/MachineRecognition/data/repository/machineRepo.da
 import '../../features/Authentication/data/repository/authRepo.dart';
 import '../../features/Authentication/presentation/view model/AuthCubit/auth_cubit.dart';
 import '../../features/Favorite/presentation/viewModel/favoriteCubit/favorite_cubit.dart';
+import '../../features/Home/data/repository/homeRepo.dart';
+import '../../features/Home/presentation/viewModel/homeCubit/home_cubit.dart';
 import '../../features/MachineRecognition/presentation/view model/MachineCubit/machine_cubit.dart';
 import '../../features/Questionnaire/data/repository/questionnaireRepo.dart';
 import '../../features/Questionnaire/presentation/view model/questionnaireCubit/questionnaire_cubit.dart';
@@ -37,5 +39,9 @@ void setupServiceLocator() {
   //fav
   getIt.registerLazySingleton<FavoriteRepository>(() => FavoriteRepository(apiService: apiService));
   getIt.registerFactory<FavoriteCubit>(() => FavoriteCubit(getIt<FavoriteRepository>()));
+
+  //Home
+  getIt.registerLazySingleton<HomeRepository>(() => HomeRepository(apiService: apiService));
+  getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<HomeRepository>()));
 
 }

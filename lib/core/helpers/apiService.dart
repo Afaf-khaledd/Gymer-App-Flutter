@@ -12,7 +12,7 @@ class ApiService {
     dio = Dio(
       BaseOptions(
         //baseUrl: "http://10.0.2.2:3000/api/",
-        baseUrl: "http://192.168.1.9:3000/api/",
+         baseUrl: "http://192.168.1.9:3000/api/",
         //connectTimeout: Duration(seconds: 30),
         //receiveTimeout: Duration(seconds: 30),
         headers: {
@@ -36,7 +36,8 @@ class ApiService {
     }
   }
 
-  Future<Response> get(String endpoint, {Map<String, dynamic>? data, Map<String, String>? headers}) async {
+  Future<Response> get(String endpoint,
+      {Map<String, dynamic>? data, Map<String, String>? headers}) async {
     try {
       return await dio.get(
         endpoint,
@@ -83,6 +84,7 @@ class ApiService {
       throw Exception("Unknown API error occurred.");
     }
   }
+
   Future<Response> delete(String endpoint,
       {dynamic data, Map<String, String>? headers}) async {
     try {

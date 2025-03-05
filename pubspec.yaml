@@ -46,6 +46,7 @@ dependencies:
   dio:
   shimmer:
   equatable:
+  shimmer:
   fluttertoast:
   quickalert:
   flutter_easyloading: ^3.0.5
