@@ -56,22 +56,28 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData.light().copyWith(
-            scaffoldBackgroundColor: ColorsManager.BGColor,
-            focusColor: ColorsManager.blackColor,
-            textSelectionTheme: TextSelectionThemeData(
-              cursorColor: ColorsManager.goldColorO60,
-              selectionColor: ColorsManager.goldColorO60,
-              selectionHandleColor: ColorsManager.goldColorO60,
-            ),
-            primaryColor: ColorsManager.blackColor,
-            textTheme: GoogleFonts.dmSansTextTheme().copyWith(
-              bodyLarge: GoogleFonts.dmSans(fontWeight: FontWeight.w400,color: Colors.black),
-              bodyMedium: GoogleFonts.dmSans(fontWeight: FontWeight.w400,color: Colors.black),
-              bodySmall: GoogleFonts.dmSans(fontWeight: FontWeight.w400,color: Colors.black),
-              titleLarge: GoogleFonts.dmSans(fontWeight: FontWeight.w400,color: Colors.black),
-              titleMedium: GoogleFonts.dmSans(fontWeight: FontWeight.w400,color: Colors.black),
-              titleSmall: GoogleFonts.dmSans(fontWeight: FontWeight.w400,color: Colors.black),
-            ),
+          scaffoldBackgroundColor: ColorsManager.BGColor,
+          focusColor: ColorsManager.blackColor,
+          textSelectionTheme: TextSelectionThemeData(
+            cursorColor: ColorsManager.goldColorO60,
+            selectionColor: ColorsManager.goldColorO60,
+            selectionHandleColor: ColorsManager.goldColorO60,
+          ),
+          primaryColor: ColorsManager.blackColor,
+          textTheme: GoogleFonts.dmSansTextTheme().copyWith(
+            bodyLarge: GoogleFonts.dmSans(
+                fontWeight: FontWeight.w400, color: Colors.black),
+            bodyMedium: GoogleFonts.dmSans(
+                fontWeight: FontWeight.w400, color: Colors.black),
+            bodySmall: GoogleFonts.dmSans(
+                fontWeight: FontWeight.w400, color: Colors.black),
+            titleLarge: GoogleFonts.dmSans(
+                fontWeight: FontWeight.w400, color: Colors.black),
+            titleMedium: GoogleFonts.dmSans(
+                fontWeight: FontWeight.w400, color: Colors.black),
+            titleSmall: GoogleFonts.dmSans(
+                fontWeight: FontWeight.w400, color: Colors.black),
+          ),
         ),
         home: const SplashScreen(),
         builder: EasyLoading.init(),
