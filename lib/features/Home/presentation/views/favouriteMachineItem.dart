@@ -44,7 +44,7 @@ class FavouriteMachineItem extends StatelessWidget {
               SizedBox(
                 width: 90,
                 height: 90,
-                child: Image.asset(
+                child: Image.network(
                   imagePath,
                   fit: BoxFit.cover,
                 ),

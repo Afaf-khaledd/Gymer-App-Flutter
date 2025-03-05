@@ -7,6 +7,7 @@ import 'package:gymer/features/Authentication/presentation/view%20model/AuthCubi
 import 'package:gymer/features/Favorite/presentation/view/favoriteScreen.dart';
 import 'package:gymer/features/Home/presentation/views/CustomListTile.dart';
 import 'package:gymer/features/Home/presentation/views/workoutItem.dart';
+import 'package:gymer/features/MachineRecognition/presentation/views/machineVideo.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shimmer/shimmer.dart';
@@ -35,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     context.read<AuthCubit>().getProfile();
+    context.read<FavoriteCubit>().fetchFavorites();
   }
 
   @override
@@ -144,10 +146,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // workout plan!
                 CustomListTile(text: "Today's Workout Plan", imagePath: AssetsManager.workoutPlan,),
-
                 const SizedBox(height: 12),
-
                 GoldBorderContainer(
                   /*child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -243,6 +244,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
+
             SizedBox(height: 20,),
             GoldBorderContainer(
               padding: const EdgeInsets.all(19),
@@ -301,6 +303,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 20,),
+            // fav
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -372,18 +375,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 135,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
-                          itemCount: 5,
+                          itemCount: 4, // less than 5!
                           separatorBuilder: (context, index) => const SizedBox(width: 15),
                           itemBuilder: (context, index) {
-                            final machine = state.favoriteModel.favouriteMachines[index]; // updated!
+                            final machine = state.favoriteModel.favouriteMachines[index];
                             return FavouriteMachineItem(
-                              title: machine,
-                              imagePath: machine,
+                              title: machine.machineName,
+                              imagePath: machine.machineImage,
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const Placeholder(), // navigate to video!
+                                    builder: (context) => MachineVideo(machineName: machine.machineName, machineVideo: machine.machineVideos), // navigate to video!
                                   ),
                                 );
                               },

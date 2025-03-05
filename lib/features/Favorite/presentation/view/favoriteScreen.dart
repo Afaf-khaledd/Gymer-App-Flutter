@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gymer/core/utils/colors.dart';
 import 'package:gymer/features/Favorite/presentation/view/favCard.dart';
 import 'package:gymer/features/Home/presentation/views/homeScreen.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/components/BottomNavHandler.dart';
 import '../../../../core/components/ImagePickerHelper.dart';
 import '../../../MachineRecognition/presentation/view model/MachineCubit/machine_cubit.dart';
 import '../../../MachineRecognition/presentation/views/targetMuscle.dart';
+import '../viewModel/favoriteCubit/favorite_cubit.dart';
+import 'emptyFav.dart';
 
 class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
@@ -17,7 +21,14 @@ class FavoriteScreen extends StatefulWidget {
 }
 
 class _FavoriteScreenState extends State<FavoriteScreen> {
-  final int _currentIndex = 0; //-1 ??
+  final int _currentIndex = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<FavoriteCubit>().fetchFavorites();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,13 +43,100 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         title: Text('Favorites',style: GoogleFonts.dmSans(fontWeight: FontWeight.w700,fontSize: 26),),
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: 3,
-        itemBuilder: (context, index) {
-          return FavCard(machineName: 'Machine Name', machineVideo: [],);
-        },
-      ),
-      //EmptyFav(),
+      body: BlocBuilder<FavoriteCubit, FavoriteState>(
+    builder: (context, state) {
+      if (state is FavoriteLoading) {
+        return ListView.builder(
+            itemCount: 3,
+            itemBuilder: (context,index){
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              );
+            }
+        );
+      }
+      if (state is FavoriteError) {
+        return Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.error_outline_rounded,
+                  color: Colors.redAccent,
+                  size: 60,
+                ),
+                const SizedBox(height: 16),
+
+                Text(
+                  "Oops! Something went wrong.",
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 8),
+
+                Text(
+                  state.message,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 20),
+
+                ElevatedButton.icon(
+                  onPressed: () {
+                    context.read<FavoriteCubit>().fetchFavorites();
+                  },
+                  icon: const Icon(Icons.refresh_rounded, size: 22,color: Colors.white,),
+                  label: const Text("Retry"),
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: ColorsManager.goldColorO1,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+      if (state is FavoriteLoaded && state.favoriteModel.favouriteMachines.isEmpty) {
+        return EmptyFav();
+      }
+      if (state is FavoriteLoaded) {
+        return ListView.builder(
+          itemCount: state.favoriteModel.favouriteMachines.length,
+          itemBuilder: (context, index) {
+            final machine = state.favoriteModel.favouriteMachines[index];
+            return FavCard(machine: machine);
+          },
+        );
+      }
+      return const SizedBox();
+    },
+    ),
       bottomNavigationBar: BottomNavHandler(
         currentIndex: _currentIndex,
         onImagePicked: (_) => ImagePickerHelper.pickImage(context, _handleImagePicked),

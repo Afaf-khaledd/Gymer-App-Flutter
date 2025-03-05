@@ -1,15 +1,20 @@
+import 'favMachineModel.dart';
+
 class FavoriteModel {
-  final List<String> favouriteMachines;
+  final List<FavoriteMachineModel> favouriteMachines;
 
   FavoriteModel({required this.favouriteMachines});
 
   factory FavoriteModel.fromJson(Map<String, dynamic> json) {
     return FavoriteModel(
-      favouriteMachines: List<String>.from(json['favouriteMachines'] ?? []),
+      favouriteMachines: (json['favouriteMachines'] as List<dynamic>?)
+          ?.map((item) => FavoriteMachineModel.fromJson(item as Map<String, dynamic>))
+          .toList() ?? [],
     );
   }
+
   @override
   String toString() {
-    return 'Favourite Machines: ${favouriteMachines.join(', ')}';
+    return 'Favourite Machines: ${favouriteMachines.map((m) => m.machineName).join(', ')}';
   }
 }
