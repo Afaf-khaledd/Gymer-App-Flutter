@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
           create: (_) => getIt<MachineCubit>(),
         ),
         BlocProvider<FavoriteCubit>(
-          create: (_) => getIt<FavoriteCubit>(),
+          create: (_) => getIt<FavoriteCubit>()..fetchFavorites(),
         ),
       ],
       child: MaterialApp(

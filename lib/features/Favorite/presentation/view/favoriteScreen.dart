@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/utils/colors.dart';
 import 'package:gymer/features/Favorite/presentation/view/favCard.dart';
 import 'package:gymer/features/Home/presentation/views/homeScreen.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/components/BottomNavHandler.dart';
 import '../../../../core/components/ImagePickerHelper.dart';
@@ -45,7 +46,25 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       body: BlocBuilder<FavoriteCubit, FavoriteState>(
     builder: (context, state) {
       if (state is FavoriteLoading) {
-        //return const Center(child: CircularProgressIndicator(color: ColorsManager.goldColorO1,));
+        return ListView.builder(
+            itemCount: 3,
+            itemBuilder: (context,index){
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+                child: Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              );
+            }
+        );
       }
       if (state is FavoriteError) {
         return Center(
