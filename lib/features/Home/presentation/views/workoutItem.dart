@@ -4,7 +4,19 @@ import 'package:google_fonts/google_fonts.dart';
 class WorkoutItem extends StatelessWidget {
   final String title;
   final String description;
-  const WorkoutItem({super.key, required this.title, required this.description});
+  final int index;
+
+  const WorkoutItem(
+      {super.key,
+      required this.title,
+      required this.description,
+      required this.index});
+
+  static const List<Color> colors = [
+    Color.fromRGBO(242, 141, 119, 1),
+    Color.fromRGBO(49, 180, 126, 1),
+    Color.fromRGBO(215, 179, 101, 1),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +29,7 @@ class WorkoutItem extends StatelessWidget {
             width: 3,
             height: 19,
             decoration: BoxDecoration(
-              color: Colors.orange,
+              color: colors[index % colors.length],
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -37,7 +49,7 @@ class WorkoutItem extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: 110,
+                width: 125,
                 child: Text(
                   description,
                   style: GoogleFonts.leagueSpartan(

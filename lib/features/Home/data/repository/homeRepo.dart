@@ -8,7 +8,6 @@ class HomeRepository {
 
   HomeRepository({required this.apiService});
 
-
   Future<Map<String, String>> getWorkoutPlan() async {
     try {
       String? token = await LocalStorage.getToken();
@@ -23,12 +22,14 @@ class HomeRepository {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> workoutData = response.data['data']['workout'];
+        final Map<String, dynamic> workoutData =
+            response.data['data']['workout'] ?? {};
 
         if (workoutData.isEmpty) {
           return {};
         }
-        return workoutData.map((key, value) => MapEntry(key.toString(), value.toString()));
+        return workoutData
+            .map((key, value) => MapEntry(key.toString(), value.toString()));
       } else {
         throw Exception(ErrorHandler.handleError(response.data));
       }
