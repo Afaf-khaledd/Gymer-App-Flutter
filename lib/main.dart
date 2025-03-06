@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
           create: (_) => getIt<AuthCubit>(),
         ),
         BlocProvider<QuestionnaireCubit>(
-          create: (_) => getIt<QuestionnaireCubit>()..initializeQuestionnaire(),
+          create: (_) => getIt<QuestionnaireCubit>(),
         ),
         BlocProvider<ChatCubit>(
           create: (_) => getIt<ChatCubit>(),
@@ -51,10 +51,10 @@ class MyApp extends StatelessWidget {
           create: (_) => getIt<MachineCubit>(),
         ),
         BlocProvider<FavoriteCubit>(
-          create: (_) => getIt<FavoriteCubit>()..fetchFavorites(),
+          create: (_) => getIt<FavoriteCubit>(),
         ),
         BlocProvider<HomeCubit>(
-          create: (_) => getIt<HomeCubit>()..fetchWorkoutPlan(),
+          create: (_) => getIt<HomeCubit>(),
         ),
       ],
       child: MaterialApp(

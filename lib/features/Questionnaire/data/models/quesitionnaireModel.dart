@@ -8,6 +8,7 @@ class QuestionnaireModel {
   final String? maingoal;
   final String? duration;
   final List<String>? workoutDays;
+  final List<String>? injuries;
   final String? fittnesslevel;
 
   QuestionnaireModel({
@@ -20,6 +21,7 @@ class QuestionnaireModel {
     this.maingoal,
     this.duration,
     this.workoutDays,
+    this.injuries,
     this.fittnesslevel,
   });
 
@@ -34,6 +36,7 @@ class QuestionnaireModel {
       "maingoal": maingoal,
       "duration": duration,
       "workoutDays": workoutDays,
+      "injuries": injuries,
       "fittnesslevel": fittnesslevel,
     };
   }
@@ -47,6 +50,7 @@ class QuestionnaireModel {
     String? maingoal,
     String? duration,
     List<String>? workoutDays,
+    List<String>? injuries,
     String? fittnesslevel,
   }) {
     return QuestionnaireModel(
@@ -59,6 +63,7 @@ class QuestionnaireModel {
       maingoal: maingoal ?? this.maingoal,
       duration: duration ?? this.duration,
       workoutDays: workoutDays ?? this.workoutDays,
+      injuries: injuries ?? this.injuries,
       fittnesslevel: fittnesslevel ?? this.fittnesslevel,
     );
   }

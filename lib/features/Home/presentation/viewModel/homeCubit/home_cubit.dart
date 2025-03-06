@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gymer/features/Home/data/repository/homeRepo.dart';
@@ -15,13 +14,22 @@ class HomeCubit extends Cubit<HomeState> {
 
       final workout = await homeRepository.getWorkoutPlan();
 
-      log(workout.toString());
-
       if (workout.isEmpty) {
-      log("empty!");
         emit(HomeEmpty());
       } else {
         emit(HomeLoaded(workout: workout));
+      }
+    } catch (e) {
+      emit(HomeError(message: e.toString()));
+    }
+  }
+  void checkWorkoutPlan() async {
+    try {
+      final workoutExist = await homeRepository.checkWorkoutPlan();
+      if (workoutExist) {
+      fetchWorkoutPlan();
+      } else {
+        emit(HomeInitial());
       }
     } catch (e) {
       emit(HomeError(message: e.toString()));

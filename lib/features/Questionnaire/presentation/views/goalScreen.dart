@@ -29,6 +29,7 @@ class _GoalScreenState extends State<GoalScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: SvgPicture.asset(AssetsManager.firstState),
         toolbarHeight: 100,
         backgroundColor: Colors.transparent,

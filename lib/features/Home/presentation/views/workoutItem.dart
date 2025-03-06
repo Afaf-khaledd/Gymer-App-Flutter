@@ -49,7 +49,7 @@ class WorkoutItem extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: 125,
+                width: 110,
                 child: Text(
                   description,
                   style: GoogleFonts.leagueSpartan(

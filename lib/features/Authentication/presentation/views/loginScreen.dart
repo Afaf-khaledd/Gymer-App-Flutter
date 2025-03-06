@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,11 +67,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
-          /*if (state is AuthLoading) {
-            EasyLoading.show(status: 'Loading...');
-          } else {
-            EasyLoading.dismiss();
-          }*/
           if (state is AuthAuthenticated) {
             Navigator.pushReplacement(
               context,
@@ -78,6 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             );
           } else if (state is AuthError) {
+            log(state.message);
             Fluttertoast.showToast(
               msg: state.message,
               toastLength: Toast.LENGTH_LONG,

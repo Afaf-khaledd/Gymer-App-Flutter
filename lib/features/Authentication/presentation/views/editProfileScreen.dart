@@ -145,7 +145,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             msg: state.message,
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.yellow,
             textColor: Colors.white,
             fontSize: 16.0,
           );
@@ -166,7 +166,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Color.fromRGBO(255, 255, 255, 1.208),
           centerTitle: true,
           title: Text(
             "Edit Profile",
@@ -212,7 +212,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
             return SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 26.0, vertical: 0),
+                padding: const EdgeInsets.symmetric(horizontal: 26.0, vertical: 10),
                 child: Form(
                   key: _formKey,
                   child: Column(

@@ -16,7 +16,10 @@ class FavouriteMachineItem extends StatelessWidget {
 
   static const List<Color> colors = [
     Color.fromRGBO(3, 19, 20, 0.33),
-    Color.fromRGBO(76, 137, 141, 0.66)
+    Color.fromRGBO(76, 137, 141, 0.66),
+    Color.fromRGBO(178, 171, 53, 0.75),
+    Color.fromRGBO(203, 105, 84, 0.8),
+    Color.fromRGBO(60, 140, 78, 0.7),
   ];
   @override
   Widget build(BuildContext context) {

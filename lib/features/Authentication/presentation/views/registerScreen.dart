@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -51,7 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1.208),
         toolbarHeight: 100,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
@@ -60,25 +62,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
-          /*if (state is AuthLoading) {
-            EasyLoading.show(status: 'Loading...');
-          } else {
-            EasyLoading.dismiss();
-          }*/
           if (state is AuthAuthenticated) {
-            Navigator.pushReplacement(
+            Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                builder: (context) => const OnboardingQ(
-                  label: 'Goal',
-                  number: '1',
-                  rightPadding: 0,
-                  labelSize: 50,
-                  nextScreen: GoalScreen(),
-                ),
-              ),
+              MaterialPageRoute(builder: (context) => const OnboardingQ(
+                label: 'Goal',
+                number: '1',
+                rightPadding: 0,
+                labelSize: 50,
+                nextScreen: GoalScreen(),
+              ),),
+                  (route) => false,
             );
           } else if (state is AuthError) {
+            log(state.message);
             Fluttertoast.showToast(
               msg: state.message,
               toastLength: Toast.LENGTH_SHORT,

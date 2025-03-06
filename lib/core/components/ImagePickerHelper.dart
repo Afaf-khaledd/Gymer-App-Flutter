@@ -69,13 +69,13 @@ class ImagePickerHelper {
         sourcePath: pickedFile.path,
         aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
         compressQuality: 90,
-        maxWidth: 700,
+        maxWidth: 800,
         maxHeight: 700,
         uiSettings: [
           AndroidUiSettings(
-            toolbarTitle: 'Cropper',
-            toolbarColor: Colors.black87,//ColorsManager.goldColorO60,
-            toolbarWidgetColor: Colors.white,
+            toolbarTitle: 'Crop Image',
+            toolbarColor: Colors.black87, // App bar color
+            toolbarWidgetColor: Colors.white, // Icon & text color
             activeControlsWidgetColor: ColorsManager.goldColorO1,
             hideBottomControls: false,
             lockAspectRatio: false,
@@ -85,10 +85,15 @@ class ImagePickerHelper {
               CropAspectRatioPreset.ratio3x2,
               CropAspectRatioPreset.ratio4x3,
             ],
+            cropFrameStrokeWidth: 2, // Ensure better visibility
+            statusBarColor: Colors.black87, // SafeArea fix
+            backgroundColor: Colors.black, // Prevent UI blending issues
           ),
           IOSUiSettings(
-              title: 'Crop your image',
-              aspectRatioLockEnabled: false
+            title: 'Crop your image',
+            aspectRatioLockEnabled: false,
+            rotateButtonsHidden: false,
+            rotateClockwiseButtonHidden: false,
           ),
         ],
       );

@@ -36,5 +36,6 @@ class AssetsManager {
   static const String chatbotIcon = '${basePath}chatbotnobg.png';
   static const String arrowIcon = '${basePath}arrow.png';
   static const String favEmptyImage = '${basePath}favEmpty.png';
+  static const String restDayImage = '${basePath}vecteezy_3d-sportsman-character-resting-against-a-transparent-wall_24999824.png';
   static const String cameraHomeImage = '${basePath}pngwing.com 1.png';
 }

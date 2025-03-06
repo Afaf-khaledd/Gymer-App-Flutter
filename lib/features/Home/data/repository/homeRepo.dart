@@ -7,6 +7,31 @@ class HomeRepository {
   final ApiService apiService;
 
   HomeRepository({required this.apiService});
+  Future<bool> checkWorkoutPlan() async {
+    try {
+      String? token = await LocalStorage.getToken();
+      if (token == null) throw Exception("No token found");
+
+      final response = await apiService.get(
+        "/profile/retrieve/workoutplan",
+        headers: {"Authorization": "Bearer $token"},
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> workoutData =
+            response.data['data']['workout'] ?? {};
+
+        if (workoutData.isEmpty) {
+          return false;
+        }
+        return true;
+      } else {
+        throw Exception(ErrorHandler.handleError(response.data));
+      }
+    } catch (error) {
+      throw Exception(ErrorHandler.handleError(error));
+    }
+  }
 
   Future<Map<String, String>> getWorkoutPlan() async {
     try {

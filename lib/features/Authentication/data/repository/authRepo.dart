@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -43,6 +44,10 @@ class AuthenticationRepository {
     required String password,
   }) async {
     try {
+      log(fullName);
+      log(userName);
+      log(email);
+      log(password);
       final response = await apiService.post("/authentication/signup", data: {
         'fullName': fullName,
         'userName': userName,
@@ -71,8 +76,8 @@ class AuthenticationRepository {
       } else {
         throw Exception(ErrorHandler.handleError(response.data));
       }
-    } catch (error) {
-      throw Exception(ErrorHandler.handleError(error));
+    }catch (e) {
+      throw Exception("Unexpected error: $e");
     }
   }
 

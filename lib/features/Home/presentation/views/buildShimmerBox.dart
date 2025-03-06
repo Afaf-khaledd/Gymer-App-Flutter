@@ -4,19 +4,26 @@ import 'package:shimmer/shimmer.dart';
 class BuildShimmerBox extends StatelessWidget {
   final double width;
   final double height;
-  const BuildShimmerBox({super.key, required this.width, required this.height});
+  final BorderRadiusGeometry borderRadius;
+
+  const BuildShimmerBox({
+    super.key,
+    required this.width,
+    required this.height,
+    this.borderRadius = const BorderRadius.all(Radius.circular(4)),
+  });
 
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Colors.grey[300]!,
-      highlightColor: Colors.grey[100]!,
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
       child: Container(
         width: width,
         height: height,
         decoration: BoxDecoration(
-          color: Colors.grey[300],
-          borderRadius: BorderRadius.circular(4),
+          color: Colors.grey.shade300,
+          borderRadius: borderRadius,
         ),
       ),
     );

@@ -20,11 +20,8 @@ class FavoriteRepository{
       );
 
       if (response.statusCode == 200) {
-        log('success retrieve');
-        log(FavoriteModel.fromJson(response.data['data']).toString());
         return FavoriteModel.fromJson(response.data['data']);
       } else {
-        log('Failed to retrieve');
         throw Exception(ErrorHandler.handleError(response.data));
       }
     } catch (error) {
@@ -36,7 +33,6 @@ class FavoriteRepository{
     try {
       final favoriteModel = await getFavorite();
       bool isFav = favoriteModel.favouriteMachines.any((machine) => machine.machineName == machineName);
-      log("Item in favorites: $isFav");
       return isFav;
     } catch (e) {
       log("Error checking favorite status: $e");
@@ -58,9 +54,7 @@ class FavoriteRepository{
       );
 
       if (response.statusCode == 200) {
-        log('item added successfully');
       } else {
-        log('issue in add item!');
         throw Exception(ErrorHandler.handleError(response.data));
       }
     } catch (error) {
@@ -82,9 +76,7 @@ class FavoriteRepository{
       );
 
       if (response.statusCode == 200) {
-        log('item deleted successfully');
       } else {
-        log('issue in delete item!');
         throw Exception(ErrorHandler.handleError(response.data));
       }
     } catch (error) {

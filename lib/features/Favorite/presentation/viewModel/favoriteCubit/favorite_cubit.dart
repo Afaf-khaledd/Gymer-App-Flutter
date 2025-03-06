@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -39,10 +37,8 @@ class FavoriteCubit extends Cubit<FavoriteState> {
       if (isFav) {
         await favoriteRepository.removeFromFavorite(machineName);
         _favorites.removeWhere((machine) => machine.machineName == machineName);
-        log("Removed from favorites: $machineName");
       } else {
         await favoriteRepository.addToFavorite(machineName);
-        log("Added to favorites: $machineName");
 
         final updatedFavorites = await favoriteRepository.getFavorite();
         _favorites = updatedFavorites.favouriteMachines;
@@ -55,26 +51,3 @@ class FavoriteCubit extends Cubit<FavoriteState> {
     }
   }
 }
-/*Future<void> addFavorite(String machineName) async {
-    emit(FavoriteLoading());
-    try {
-      await favoriteRepository.addToFavorite(machineName);
-      emit(FavoriteItemAdded());
-      await checkIfFavorite(machineName);
-      await fetchFavorites();
-    } catch (e) {
-      emit(FavoriteError(e.toString()));
-    }
-  }
-
-  Future<void> removeFavorite(String machineName) async {
-    emit(FavoriteLoading());
-    try {
-      await favoriteRepository.removeFromFavorite(machineName);
-      emit(FavoriteItemRemoved());
-      await checkIfFavorite(machineName);
-      await fetchFavorites();
-    } catch (e) {
-      emit(FavoriteError(e.toString()));
-    }
-  }*/

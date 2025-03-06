@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gymer/features/Questionnaire/presentation/views/workoutDays.dart';
+import 'package:gymer/features/Questionnaire/presentation/views/injuriesScreen.dart';
 
 import '../../../../core/components/customBlackButton.dart';
 import '../../../../core/utils/assets.dart';
@@ -108,7 +108,7 @@ class _AgeScreenState extends State<AgeScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (BuildContext context) => WorkoutDaysScreen(),
+                        builder: (BuildContext context) => InjuriesScreen(),
                       ),
                     );
                   }

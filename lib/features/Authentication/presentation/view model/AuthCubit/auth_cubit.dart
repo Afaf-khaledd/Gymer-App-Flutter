@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../core/helpers/local_storage.dart';
@@ -41,6 +42,7 @@ class AuthCubit extends Cubit<AuthState> {
       );
       emit(AuthAuthenticated(user));
     } catch (e) {
+      log(e.toString());
       emit(AuthError(e.toString()));
     }
   }

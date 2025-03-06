@@ -24,6 +24,7 @@ class QuestionnaireCubit extends Cubit<QuestionnaireState> {
       maingoal: null,
       duration: null,
       workoutDays: [],
+      injuries: [],
       fittnesslevel: null,
     );
     emit(QuestionnaireLoaded(questionnaire: questionnaire, currentStep: currentStep));
@@ -42,7 +43,25 @@ class QuestionnaireCubit extends Cubit<QuestionnaireState> {
     questionnaire = questionnaire.copyWith(workoutDays: updatedDays);
     emit(QuestionnaireLoaded(questionnaire: questionnaire, currentStep: currentStep));
   }
+  void toggleInjure(String injure) {
+    if (state is! QuestionnaireLoaded) return;
 
+    List<String> updatedInjuries = List.from(questionnaire.injuries ?? []);
+
+    if (injure == "No injuries") {
+      updatedInjuries = ["No injuries"];
+    } else {
+      if (updatedInjuries.contains(injure)) {
+        updatedInjuries.remove(injure);
+      } else {
+        updatedInjuries.add(injure);
+        updatedInjuries.remove("No injuries");
+      }
+    }
+
+    questionnaire = questionnaire.copyWith(injuries: updatedInjuries);
+    emit(QuestionnaireLoaded(questionnaire: questionnaire, currentStep: currentStep));
+  }
 
   void updateAnswer(String key, dynamic value) {
     if (state is! QuestionnaireLoaded) return;
@@ -78,6 +97,7 @@ class QuestionnaireCubit extends Cubit<QuestionnaireState> {
       maingoal: questionnaire.maingoal,
       duration: questionnaire.duration,
       workoutDays: questionnaire.workoutDays?.isEmpty ?? true ? [] : questionnaire.workoutDays,
+      injuries: questionnaire.injuries?.isEmpty ?? true ? [] : questionnaire.injuries,
       fittnesslevel: questionnaire.fittnesslevel,
     );
 
