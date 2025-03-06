@@ -1,6 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:gymer/features/Authentication/data/models/userModel.dart';
-import 'package:gymer/features/Favorite/data/models/favoriteModel.dart';
 
 abstract class HomeState extends Equatable {
   const HomeState();
@@ -13,14 +11,15 @@ class HomeInitial extends HomeState {}
 
 class HomeLoading extends HomeState {}
 
-class HomeLoaded extends HomeState {
-  final UserModel user;
-  final List<FavoriteModel> favourites;
+class HomeEmpty extends HomeState {}
 
-  const HomeLoaded({required this.user, required this.favourites});
+class HomeLoaded extends HomeState {
+  final Map<String,String> workout;
+
+  const HomeLoaded({required this.workout});
 
   @override
-  List<Object?> get props => [user, favourites];
+  List<Object?> get props => [workout];
 }
 
 class HomeError extends HomeState {

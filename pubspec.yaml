@@ -44,8 +44,8 @@ dependencies:
   get_it:
   flutter_bloc:
   dio:
-  shimmer:
   equatable:
+  intl:
   shimmer:
   fluttertoast:
   quickalert:

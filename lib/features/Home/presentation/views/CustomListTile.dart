@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gymer/core/utils/colors.dart';
 
 class CustomListTile extends StatelessWidget {
   final String text;
@@ -14,7 +15,7 @@ class CustomListTile extends StatelessWidget {
     required this.text,
     this.imagePath,
     this.icon,
-    this.iconColor = Colors.red,
+    this.iconColor = ColorsManager.goldColorO1,
     this.iconSize = 28.0,
     this.trailing,
   });

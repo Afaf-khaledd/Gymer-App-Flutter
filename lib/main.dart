@@ -54,7 +54,7 @@ class MyApp extends StatelessWidget {
           create: (_) => getIt<FavoriteCubit>()..fetchFavorites(),
         ),
         BlocProvider<HomeCubit>(
-          create: (_) => getIt<HomeCubit>()..fetchData(),
+          create: (_) => getIt<HomeCubit>()..fetchWorkoutPlan(),
         ),
       ],
       child: MaterialApp(

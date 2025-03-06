@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gymer/core/utils/colors.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../core/components/BottomNavHandler.dart';
 import '../../../../core/components/CustomTextFormField.dart';
 import '../../../../core/components/ImagePickerHelper.dart';
@@ -178,7 +178,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         body: BlocBuilder<AuthCubit, AuthState>(
           builder: (context, state) {
             if (state is AuthInitial || state is ProfileImageLoading) {
-              return const Center(child: CircularProgressIndicator(color: ColorsManager.goldColorO1));
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 26.0, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: CircleAvatar(
+                          radius: 70,
+                          backgroundColor: Colors.grey[300],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    _buildShimmerField(),
+                    const SizedBox(height: 15),
+                    _buildShimmerField(),
+                    const SizedBox(height: 15),
+                    _buildShimmerField(),
+                    const SizedBox(height: 15),
+                    _buildShimmerField(),
+                    const SizedBox(height: 30),
+                    _buildShimmerButton(),
+                  ],
+                ),
+              );
             } else  if (state is ProfileRetrieved) {
               _initializeControllers(state.user);
             }
@@ -259,7 +286,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       const SizedBox(height: 30),
                       state is ProfileLoading
-                          ? const Center(child: CircularProgressIndicator(color: ColorsManager.goldColorO1,))
+                          ? _buildShimmerButton()
                           : CustomBlackButton(
                         label: 'Edit',
                         onPressed: _updateProfile,
@@ -278,6 +305,35 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
   }
+  Widget _buildShimmerField() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        height: 50,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
+  }
+  Widget _buildShimmerButton() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        height: 50,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
+  }
+
   void _handleImagePicked(String imageBase64) {
     context.read<MachineCubit>().sendMachineImage(imageBase64);
     Future.delayed(Duration(milliseconds: 300), () {
