@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,7 +18,7 @@ class _MachineVideoState extends State<MachineVideo> {
   @override
   void initState() {
     super.initState();
-    log(widget.machineName);
+    //log(widget.machineName);
     context.read<FavoriteCubit>().checkIfFavorite(widget.machineName);
   }
 

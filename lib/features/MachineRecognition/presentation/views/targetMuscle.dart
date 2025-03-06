@@ -16,6 +16,22 @@ class TargetMuscle extends StatefulWidget {
 
 class _TargetMuscleState extends State<TargetMuscle> {
   @override
+  void initState() {
+    super.initState();
+    // Fetch favorites and then check if the current machine is a favorite
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<FavoriteCubit>().fetchFavorites().then((_) {
+        final machineState = context.read<MachineCubit>().state;
+        if (machineState is SingleMachineSuccess) {
+          context.read<FavoriteCubit>().checkIfFavorite(machineState.machineName);
+        } else if (machineState is MultiMachineSuccess) {
+          context.read<FavoriteCubit>().checkIfFavorite(machineState.machineName);
+        }
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<MachineCubit, MachineState>(
       listener: (context, state) {
@@ -36,7 +52,10 @@ class _TargetMuscleState extends State<TargetMuscle> {
             backgroundColor: Colors.transparent,
             toolbarHeight: 90,
             leading: IconButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () {
+                Navigator.pop(context);
+                context.read<FavoriteCubit>().fetchFavorites();
+              },
               icon: const Icon(Icons.arrow_back_ios_rounded),
             ),
           ),
@@ -44,27 +63,28 @@ class _TargetMuscleState extends State<TargetMuscle> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (state is MachinesLoading) ...[
-                Container(
-                  color: Colors.black.withOpacity(0.3),
-                  child: const Center(
-                    child: CircularProgressIndicator(
-                      color: ColorsManager.goldColorO1,
+                Expanded(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.3),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: ColorsManager.goldColorO1,
+                      ),
                     ),
                   ),
                 ),
               ] else if (state is MultiMachineSuccess) ...[
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6,horizontal: 35),
+                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 35),
                   child: Text(
                     state.machineName,
                     style: GoogleFonts.dmSans(fontSize: 40, fontWeight: FontWeight.w700),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                // forms >> navigate
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0,vertical: 11),
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 11),
                     child: ListView.builder(
                       itemCount: state.machineForms.length,
                       itemBuilder: (context, index) {
@@ -90,19 +110,17 @@ class _TargetMuscleState extends State<TargetMuscle> {
                               side: const BorderSide(color: ColorsManager.goldColorO1, width: 0.5),
                             ),
                             shadowColor: Colors.black.withOpacity(0.2),
-                            child: SizedBox(
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                title: Text(
-                                  form.machineForm,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
-                                  ),
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                              title: Text(
+                                form.machineForm,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
                                 ),
-                                trailing: const Icon(Icons.arrow_forward_ios, color: ColorsManager.goldColorO1, size: 18),
                               ),
+                              trailing: const Icon(Icons.arrow_forward_ios, color: ColorsManager.goldColorO1, size: 18),
                             ),
                           ),
                         );
@@ -110,17 +128,15 @@ class _TargetMuscleState extends State<TargetMuscle> {
                     ),
                   ),
                 ),
-
               ] else if (state is SingleMachineSuccess) ...[
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 20),
+                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                   child: Text(
                     state.machineName,
                     style: GoogleFonts.dmSans(fontSize: 40, fontWeight: FontWeight.w700),
                     textAlign: TextAlign.center,
                   ),
                 ),
-                // single form videos
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
                   child: Column(
@@ -140,12 +156,10 @@ class _TargetMuscleState extends State<TargetMuscle> {
                             ),
                           ),
                         );
-                      }),
+                      }).toList(),
                       BlocBuilder<FavoriteCubit, FavoriteState>(
-
                         buildWhen: (previous, current) => current is FavoriteStatusChecked,
                         builder: (context, favState) {
-                          context.read<FavoriteCubit>().checkIfFavorite(state.machineName);
                           return Align(
                             alignment: Alignment.centerRight,
                             child: AnimatedSwitcher(
@@ -186,8 +200,6 @@ class _TargetMuscleState extends State<TargetMuscle> {
                     ],
                   ),
                 ),
-
-                // error
               ] else ...[
                 Center(
                   child: Container(

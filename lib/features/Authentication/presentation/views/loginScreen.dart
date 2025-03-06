@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1.208),
         toolbarHeight: 100,
         leading: IconButton(
           onPressed: () {
@@ -68,11 +68,10 @@ class _LoginScreenState extends State<LoginScreen> {
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
           if (state is AuthAuthenticated) {
-            Navigator.pushReplacement(
+            Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute<void>(
-                builder: (BuildContext context) => const HomeScreen(),
-              ),
+              MaterialPageRoute(builder: (context) => const HomeScreen(),),
+                  (route) => false,
             );
           } else if (state is AuthError) {
             log(state.message);
