@@ -29,7 +29,7 @@ class HomeCubit extends Cubit<HomeState> {
       if (workoutExist) {
       fetchWorkoutPlan();
       } else {
-        emit(HomeInitial());
+        emit(HomeInitiall());
       }
     } catch (e) {
       emit(HomeError(message: e.toString()));

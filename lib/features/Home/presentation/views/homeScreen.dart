@@ -306,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 }
 
                 // workout plan not generated yet!!
-                else if( state is HomeInitial){
+                else if( state is HomeInitiall){
                   return InitialHomeWidget();
                 }
                 return const SizedBox();

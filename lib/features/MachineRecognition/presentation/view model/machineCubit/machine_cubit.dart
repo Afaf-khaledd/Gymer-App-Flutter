@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 
 import '../../../data/models/machineForm.dart';
@@ -27,6 +29,7 @@ class MachineCubit extends Cubit<MachineState> {
         ));
       }
     } catch (e) {
+      log(e.toString());
       emit(MachineFailure(e.toString()));
     }
   }

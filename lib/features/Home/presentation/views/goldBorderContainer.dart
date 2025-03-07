@@ -8,7 +8,7 @@ class GoldBorderContainer extends StatelessWidget {
 
   const GoldBorderContainer({
     super.key,
-    required this.child, this.padding=const EdgeInsets.symmetric(horizontal: 16,vertical: 23),
+    required this.child, this.padding=const EdgeInsets.symmetric(horizontal: 16,vertical: 18),
   });
 
   @override

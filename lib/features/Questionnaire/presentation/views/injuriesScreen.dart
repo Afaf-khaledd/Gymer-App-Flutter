@@ -22,7 +22,7 @@ class InjuriesScreen extends StatelessWidget {
     'Leg': '🦵🏻',
     'Calf': '🦵🏻',
     'Hip': '🦵🏻',
-    'Glutes': '',
+    'Glutes': '🤫',
   };
   @override
   Widget build(BuildContext context) {

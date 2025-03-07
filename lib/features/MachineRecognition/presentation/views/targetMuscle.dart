@@ -73,7 +73,8 @@ class _TargetMuscleState extends State<TargetMuscle> {
                     ),
                   ),
                 ),
-              ] else if (state is MultiMachineSuccess) ...[
+              ]
+              else if (state is MultiMachineSuccess) ...[
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 35),
                   child: Text(
@@ -128,7 +129,8 @@ class _TargetMuscleState extends State<TargetMuscle> {
                     ),
                   ),
                 ),
-              ] else if (state is SingleMachineSuccess) ...[
+              ]
+              else if (state is SingleMachineSuccess) ...[
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
                   child: Text(
@@ -200,7 +202,8 @@ class _TargetMuscleState extends State<TargetMuscle> {
                     ],
                   ),
                 ),
-              ] else ...[
+              ]
+              else ...[
                 Center(
                   child: Container(
                     padding: const EdgeInsets.all(20),
