@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymer/features/Analysis/presentation/views/analysisScreen.dart';
 import 'package:gymer/features/Chatbot/presentation/views/initChatbotScreen.dart';
 import 'package:gymer/features/Authentication/presentation/views/editProfileScreen.dart';
 import 'package:gymer/core/components/CustomBottomNavBar.dart';
@@ -26,7 +27,7 @@ class BottomNavHandler extends StatelessWidget {
         nextScreen = const InitChatbotScreen();
         break;
       case 3:
-        nextScreen = const Placeholder();
+        nextScreen = const AnalysisScreen();
         break;
       case 4:
         nextScreen = const EditProfileScreen();

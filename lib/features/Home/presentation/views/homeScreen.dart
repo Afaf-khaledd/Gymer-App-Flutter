@@ -173,16 +173,43 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Center(
                     child: Column(
                       children: [
+                        SizedBox(height: 100,),
                         Text(
-                          "Failed to load workout plan",
-                          style: GoogleFonts.poppins(color: Colors.red),
+                          "Failed to load workout plan.",
+                          style: GoogleFonts.poppins(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 10),
-                        ElevatedButton(
+                        const SizedBox(height: 8),
+
+                        Text(
+                          state.message,
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton.icon(
                           onPressed: () {
                             context.read<HomeCubit>().fetchWorkoutPlan();
                           },
-                          child: const Text("Retry"),
+                          icon: const Icon(Icons.refresh_rounded, size: 22, color: Colors.white),
+                          label: Text("Retry",style: GoogleFonts.poppins(
+                            color: Colors.white,),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: ColorsManager.goldColorO1,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          ),
                         ),
                       ],
                     ),
