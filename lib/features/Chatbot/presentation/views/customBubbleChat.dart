@@ -59,7 +59,7 @@ class _CustomBubbleChatState extends State<CustomBubbleChat> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: widget.msg.role == MessageRole.user
-                      ? Text(
+                      ? SelectableText(
                     widget.msg.message,
                     style: GoogleFonts.dmSans(
                       fontWeight: FontWeight.w500,
