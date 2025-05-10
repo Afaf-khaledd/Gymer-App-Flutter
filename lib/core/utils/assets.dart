@@ -39,4 +39,7 @@ class AssetsManager {
   static const String restDayImage = '${basePath}vecteezy_3d-sportsman-character-resting-against-a-transparent-wall_24999824.png';
   static const String cameraHomeImage = '${basePath}pngwing.com 1.png';
   static const String launcherIcon = '${basePath}launcher.png';
+  static const String listIcon = '${basePath}image 29.png';
+  static const String leftArrowIcon = '${basePath}image 8.png';
+  static const String completeImage = '${basePath}image 30.png';
 }

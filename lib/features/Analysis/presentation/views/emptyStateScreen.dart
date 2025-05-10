@@ -5,10 +5,9 @@ import '../../../../core/components/customGoldButton.dart';
 import '../../../../core/utils/assets.dart';
 import '../../../Chatbot/presentation/views/initChatbotScreen.dart';
 import 'barChartWidget.dart';
-import 'lineChartWidget.dart';
 
-class EmptyState extends StatelessWidget {
-  const EmptyState({super.key});
+class EmptyStateScreen extends StatelessWidget {
+  const EmptyStateScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +16,7 @@ class EmptyState extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: 30,),
+          SizedBox(height: 70,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -28,6 +27,7 @@ class EmptyState extends StatelessWidget {
               ),
               CustomGoldButton(
                 label: 'Go',
+                fontSize: 18,
                 onPressed: (){
                 Navigator.pushReplacement(context, MaterialPageRoute<void>(
                 builder: (BuildContext context) => const InitChatbotScreen(),));},
@@ -36,13 +36,9 @@ class EmptyState extends StatelessWidget {
           ),
           SizedBox(height: 30,),
           Text(" Ask GymTron\ncreate your workout plan",style: GoogleFonts.dmSans(fontWeight: FontWeight.w700,fontSize: 20,),textAlign: TextAlign.center,),
+          SizedBox(height: 70,),
           Expanded(
-            child: PageView(
-              children: [
-                BarChartWidget(isEmpty: true,),
-                LineChartWidget(),
-              ],
-            ),
+            child: BarChartWidget(isEmpty: true,)
           ),
         ],
       ),

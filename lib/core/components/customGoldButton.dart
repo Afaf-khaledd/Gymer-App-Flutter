@@ -6,8 +6,9 @@ import '../utils/colors.dart';
 class CustomGoldButton extends StatelessWidget {
   final String label;
   final double width;
+  final double fontSize;
   final VoidCallback onPressed;
-  const CustomGoldButton({super.key, required this.label, required this.onPressed, required this.width});
+  const CustomGoldButton({super.key, required this.label, required this.onPressed, required this.width, required this.fontSize});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +29,9 @@ class CustomGoldButton extends StatelessWidget {
           onPressed: onPressed,
           child: Text(
             label,
+            textAlign: TextAlign.center,
             style: GoogleFonts.poppins(
-              fontSize: 18,
+              fontSize: fontSize,
               fontWeight: FontWeight.w600,
               color: Colors.white,
             ),

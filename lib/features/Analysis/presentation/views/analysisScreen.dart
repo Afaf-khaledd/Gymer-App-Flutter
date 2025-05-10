@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/features/Analysis/presentation/views/emptyStateScreen.dart';
+import 'package:gymer/features/Analysis/presentation/views/normalStateScreen.dart';
 
 import '../../../../core/components/BottomNavHandler.dart';
 import '../../../../core/components/ImagePickerHelper.dart';
 import '../../../MachineRecognition/presentation/view model/MachineCubit/machine_cubit.dart';
 import '../../../MachineRecognition/presentation/views/targetMuscle.dart';
+import 'finishStateScreen.dart';
 
 
 class AnalysisScreen extends StatefulWidget {
@@ -27,13 +29,15 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
         ImagePickerHelper.pickImage(context, _handleImagePicked),
         ),
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(255, 255, 255, 1.208),
+          backgroundColor: Colors.transparent,
           toolbarHeight: 100,
           title: Text('Activity',style: GoogleFonts.dmSans(fontWeight: FontWeight.w700,fontSize: 26),),
         ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0,vertical: 11),
-        child: EmptyState(),
+        //child: EmptyStateScreen(),
+        child: NormalStateScreen(),
+        //child: FinishStateScreen(),
       ),
     );
   }

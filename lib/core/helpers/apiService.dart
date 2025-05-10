@@ -12,7 +12,7 @@ class ApiService {
     dio = Dio(
       BaseOptions(
         //baseUrl: "http://10.0.2.2:3000/api/",
-        baseUrl: "http://192.168.1.9:3000/api/",
+        baseUrl: "http://192.168.1.12:3000/api/",
         //connectTimeout: Duration(seconds: 30),
         //receiveTimeout: Duration(seconds: 30),
         headers: {
