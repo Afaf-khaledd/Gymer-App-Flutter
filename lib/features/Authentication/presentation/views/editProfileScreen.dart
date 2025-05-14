@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gymer/core/utils/colors.dart';
+import 'package:gymer/features/Questionnaire/presentation/views/activityLevelScreen.dart';
+import 'package:gymer/features/Questionnaire/presentation/views/fitnessLevelScreen.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../core/components/BottomNavHandler.dart';
 import '../../../../core/components/CustomTextFormField.dart';
@@ -14,6 +17,7 @@ import '../../../MachineRecognition/presentation/view model/MachineCubit/machine
 import '../../../MachineRecognition/presentation/views/targetMuscle.dart';
 import '../../data/models/userModel.dart';
 import '../view model/AuthCubit/auth_cubit.dart';
+import 'CustomDropdownFormField.dart';
 import 'CustomFormText.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -30,18 +34,48 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController emailController;
   late TextEditingController userNameController;
   late TextEditingController weightController;
+  late TextEditingController goalWeightController;
+  late TextEditingController ageController;
+  late TextEditingController heightController;
   late TextEditingController fullNameController;
   late String profileUrl;
+  String? selectedActivityLevel;
+  String? selectedFitnessGoal;
+  String? selectedGender;
+  String? selectedWorkoutDuration;
+  String? selectedFitnessLevel;
+  List<String> selectedWorkoutDays = [];
+  List<String> selectedInjuries = [];
+
 
   File? _profileImage;
   //final ImagePicker _picker = ImagePicker();
+  final List<String> fitnessGoals = [
+    "Lose Weight",
+    "Gain Weight",
+    "Muscle Gain",
+    "Endurance",
+  ];
 
+  final List<String> workoutDurations = [
+    "About 15 Min",
+    "About 30 Min",
+    "About 1 Hour",
+    "More Than 1 Hour",
+  ];
+  final List<String> workoutDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  final List<String> injuriesList = [
+    "No injuries", "Shoulder", "Arm", "Chest", "Back", "Breathing", "Leg", "Calf", "Hip", "Glutes"
+  ];
   @override
   void initState() {
     super.initState();
     emailController = TextEditingController();
     userNameController = TextEditingController();
     weightController = TextEditingController();
+    goalWeightController = TextEditingController();
+    ageController = TextEditingController();
+    heightController = TextEditingController();
     fullNameController = TextEditingController();
 
     context.read<AuthCubit>().getProfile();
@@ -51,6 +85,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     emailController.text = user.email;
     userNameController.text = user.userName;
     weightController.text = user.currentWeight.toString();
+    goalWeightController.text = user.currentWeight.toString();
+    heightController.text = "150";
+    ageController.text = "22";
     fullNameController.text = user.fullName;
     profileUrl = user.profileUrl!;
   }
@@ -109,6 +146,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     emailController.dispose();
     userNameController.dispose();
     weightController.dispose();
+    goalWeightController.dispose();
+    heightController.dispose();
+    ageController.dispose();
     fullNameController.dispose();
     super.dispose();
   }
@@ -253,6 +293,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
+                      CustomFormText(text:"General Information"),
+                      const SizedBox(height: 15),
                       CustomFormText(text:"Full Name"),
                       CustomTextFormField(
                         controller: fullNameController,
@@ -276,13 +318,176 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         hintText: 'Email Address',
                         validator: Validators.validateEmail,
                       ),
+                      SizedBox(height: 20,),
+                      CustomFormText(text:"Fitness Information"),
                       const SizedBox(height: 15),
-                      CustomFormText(text:"Weight"),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomFormText(text: "Age"),
+                                CustomTextFormField(
+                                  controller: ageController,
+                                  keyboardType: TextInputType.number,
+                                  hintText: 'Enter age',
+                                  validator: Validators.validateNotEmpty,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 7,),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomFormText(text: "Gender"),
+                                CustomDropdownFormField<String>(
+                                  hintText: 'Select Gender',
+                                  value: selectedGender,
+                                  items: ['Male', 'Female'],
+                                  onChanged: (value) => setState(() => selectedGender = value),
+                                  validator: (value) => value == null ? 'Please select a gender' : null,
+                                ),
+
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 15,),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomFormText(text: "Current Weight (kg)"),
+                                CustomTextFormField(
+                                  controller: weightController,
+                                  keyboardType: TextInputType.number,
+                                  hintText: 'ex. 50kg',
+                                  validator: Validators.validateNotEmpty,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 7,),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomFormText(text: "Goal Weight (kg)"),
+                                CustomTextFormField(
+                                  controller: goalWeightController,
+                                  keyboardType: TextInputType.number,
+                                  hintText: 'ex. 90kg',
+                                  validator: Validators.validateNotEmpty,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 15),
+                      CustomFormText(text:"Height (cm)"),
                       CustomTextFormField(
-                        controller: weightController,
+                        controller: heightController,
                         keyboardType: TextInputType.number,
-                        hintText: 'ex. 50kg',
+                        hintText: 'ex. 150cm',
                         validator: Validators.validateNotEmpty,
+                      ),
+                      const SizedBox(height: 15),
+                      CustomFormText(text: "Activity Level"),
+                      CustomDropdownFormField<String>(
+                        hintText: 'Select Activity Level',
+                        value: selectedActivityLevel,
+                        items: ActivityLevelScreen.activity_level,
+                        onChanged: (value) => setState(() => selectedActivityLevel = value),
+                        validator: (value) => value == null ? 'Please select a Activity Level' : null,
+                      ),
+                      const SizedBox(height: 15),
+                      CustomFormText(text: "Fitness Goal"),
+                      CustomDropdownFormField<String>(
+                        hintText: 'Select Goal',
+                        value: selectedFitnessGoal,
+                        items: fitnessGoals,
+                        onChanged: (value) => setState(() => selectedFitnessGoal = value),
+                        validator: (value) => value == null ? 'Please select a goal' : null,
+                      ),
+                      const SizedBox(height: 15),
+                      CustomFormText(text:"Workout Duration"),
+                      CustomDropdownFormField<String>(
+                        hintText: 'Select Workout Duration',
+                        value: selectedWorkoutDuration,
+                        items: workoutDurations,
+                        onChanged: (value) => setState(() => selectedWorkoutDuration = value),
+                        validator: (value) => value == null ? 'Please select a workout duration' : null,
+                      ),
+                      const SizedBox(height: 15),
+                      CustomFormText(text:"Available Workout Days"),
+                      Wrap(
+                        spacing: 8.0,
+                        children: workoutDays.map((day) {
+                          final isSelected = selectedWorkoutDays.contains(day);
+                          return FilterChip(
+                            label: Text(day),
+                            selected: isSelected,
+                            selectedColor: ColorsManager.goldColorO60.withOpacity(0.4),
+                            backgroundColor: Colors.white70,
+                            onSelected: (selected) {
+                              setState(() {
+                                isSelected
+                                    ? selectedWorkoutDays.remove(day)
+                                    : selectedWorkoutDays.add(day);
+                              });
+                            },
+                          );
+                        }).toList(),
+                      ),
+                      const SizedBox(height: 15),
+                      CustomFormText(text:"Fitness Level"),
+                      CustomDropdownFormField<String>(
+                        hintText: 'Select Fitness Level',
+                        value: selectedFitnessLevel,
+                        items: FitnessLevelScreen.fitness_level,
+                        onChanged: (value) => setState(() => selectedFitnessLevel = value),
+                        validator: (value) => value == null ? 'Please select a fitness level' : null,
+                      ),
+                      const SizedBox(height: 15),
+                      CustomFormText(text:"Injuries (if any)"),
+                      Wrap(
+                        spacing: 8.0,
+                        children: injuriesList.map((injury) {
+                          final isSelected = selectedInjuries.contains(injury);
+                          return FilterChip(
+                            label: Text(injury),
+                            selected: isSelected,
+                            selectedColor: ColorsManager.goldColorO60.withOpacity(0.4),
+                            backgroundColor: Colors.white70,
+                            onSelected: (selected) {
+                              setState(() {
+                                if (injury == "No injuries") {
+                                  if (selected) {
+                                    selectedInjuries = ["No injuries"];
+                                  } else {
+                                    selectedInjuries.remove("No injuries");
+                                  }
+                                } else {
+                                  selectedInjuries.remove("No injuries");
+                                  if (isSelected) {
+                                    selectedInjuries.remove(injury);
+                                  } else {
+                                    selectedInjuries.add(injury);
+                                  }
+                                }
+                              });
+                            },
+                          );
+                        }).toList(),
                       ),
                       const SizedBox(height: 30),
                       state is ProfileLoading

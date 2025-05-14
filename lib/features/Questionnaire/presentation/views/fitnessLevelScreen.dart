@@ -69,7 +69,7 @@ class FitnessLevelScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Text(_labels[index], style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w700)),
+                Text(fitness_level[index], style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 5),
                 Text(
                   _descriptions[index],
@@ -83,7 +83,7 @@ class FitnessLevelScreen extends StatelessWidget {
                   max: 2,
                   divisions: 2,
                   onChanged: (value) {
-                    context.read<QuestionnaireCubit>().updateAnswer("fittnesslevel", _labels[value.round()]);
+                    context.read<QuestionnaireCubit>().updateAnswer("fittnesslevel", fitness_level[value.round()]);
                   },
                   minLabel: 'Beginner',
                   maxLabel: 'Advanced',
@@ -95,7 +95,7 @@ class FitnessLevelScreen extends StatelessWidget {
                     final questionnaireCubit = context.read<QuestionnaireCubit>();
                     final state = questionnaireCubit.state;
                     if (state is QuestionnaireLoaded && state.questionnaire.fittnesslevel == null) {
-                      questionnaireCubit.updateAnswer("fittnesslevel", _labels[0]);
+                      questionnaireCubit.updateAnswer("fittnesslevel", fitness_level[0]);
                     }
                     try {
                       await questionnaireCubit.submitQuestionnaire();
@@ -136,7 +136,7 @@ class FitnessLevelScreen extends StatelessWidget {
     );
   }
 
-  static final List<String> _labels = [
+  static const List<String> fitness_level = [
     "Beginner",
     "Intermediate",
     "Advanced",
@@ -155,6 +155,6 @@ class FitnessLevelScreen extends StatelessWidget {
   ];
 
   double _getFitnessLevelIndex(String? level) {
-    return _labels.indexOf(level ?? "Beginner").toDouble();
+    return fitness_level.indexOf(level ?? "Beginner").toDouble();
   }
 }

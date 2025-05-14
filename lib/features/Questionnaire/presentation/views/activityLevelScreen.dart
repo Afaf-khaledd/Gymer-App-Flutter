@@ -68,7 +68,7 @@ class ActivityLevelScreen extends StatelessWidget {
                 const Spacer(),
                 Image.asset(_images[index], height: screenHeight * 0.18),
                 const SizedBox(height: 20),
-                Text(_labels[index], style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w700)),
+                Text(activity_level[index], style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w700)),
                 const SizedBox(height: 5),
                 Text(
                   _descriptions[index],
@@ -82,7 +82,7 @@ class ActivityLevelScreen extends StatelessWidget {
                   max: 3,
                   divisions: 3,
                   onChanged: (value) {
-                    context.read<QuestionnaireCubit>().updateAnswer("activityLevel", _labels[value.round()]);
+                    context.read<QuestionnaireCubit>().updateAnswer("activityLevel", activity_level[value.round()]);
                   },
                   minLabel: 'Not Active',
                   maxLabel: 'Very Active',
@@ -94,7 +94,7 @@ class ActivityLevelScreen extends StatelessWidget {
                     final questionnaireCubit = context.read<QuestionnaireCubit>();
                     final state = questionnaireCubit.state;
                     if (state is QuestionnaireLoaded && state.questionnaire.activityLevel == null) {
-                      questionnaireCubit.updateAnswer("activityLevel", _labels[0]);
+                      questionnaireCubit.updateAnswer("activityLevel", activity_level[0]);
                     }
                     context.read<QuestionnaireCubit>().goToNextStep();
                     Navigator.push(context, MaterialPageRoute(builder: (context) => const FitnessLevelScreen()));
@@ -108,7 +108,7 @@ class ActivityLevelScreen extends StatelessWidget {
     );
   }
 
-  static final List<String> _labels = [
+  static const List<String> activity_level = [
     "Sedentary",
     "Lightly Active",
     "Moderately Active",
@@ -130,6 +130,6 @@ class ActivityLevelScreen extends StatelessWidget {
   ];
 
   double _getActivityLevelIndex(String? level) {
-    return _labels.indexOf(level ?? "Sedentary").toDouble();
+    return activity_level.indexOf(level ?? "Sedentary").toDouble();
   }
 }
