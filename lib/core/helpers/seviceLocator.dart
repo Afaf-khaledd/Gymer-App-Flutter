@@ -1,5 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:gymer/core/helpers/apiService.dart';
+import 'package:gymer/features/Analysis/data/repository/analysisRepo.dart';
+import 'package:gymer/features/Analysis/presentation/view%20model/progressCubit/progress_cubit.dart';
 import 'package:gymer/features/Chatbot/data/repository/chatRepo.dart';
 import 'package:gymer/features/Chatbot/presentation/view%20model/chatCubit/chat_cubit.dart';
 import 'package:gymer/features/Favorite/data/repository/favoriteRepo.dart';
@@ -8,6 +10,7 @@ import 'package:gymer/features/Favorite/data/repository/favoriteRepo.dart';
 
 import 'package:gymer/features/MachineRecognition/data/repository/machineRepo.dart';
 
+import '../../features/Analysis/presentation/view model/checklistCubit/checklist_cubit.dart';
 import '../../features/Authentication/data/repository/authRepo.dart';
 import '../../features/Authentication/presentation/view model/AuthCubit/auth_cubit.dart';
 import '../../features/Favorite/presentation/viewModel/favoriteCubit/favorite_cubit.dart';
@@ -43,5 +46,11 @@ void setupServiceLocator() {
   //Home
   getIt.registerLazySingleton<HomeRepository>(() => HomeRepository(apiService: apiService));
   getIt.registerFactory<HomeCubit>(() => HomeCubit(getIt<HomeRepository>()));
+
+  //Progress
+  getIt.registerLazySingleton<AnalysisRepository>(() => AnalysisRepository(apiService: apiService));
+  getIt.registerFactory<ProgressCubit>(() => ProgressCubit(getIt<AnalysisRepository>()));
+
+  getIt.registerFactory<ChecklistCubit>(() => ChecklistCubit());
 
 }

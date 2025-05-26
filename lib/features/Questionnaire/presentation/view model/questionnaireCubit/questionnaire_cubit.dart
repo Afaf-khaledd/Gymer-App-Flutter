@@ -105,7 +105,7 @@ class QuestionnaireCubit extends Cubit<QuestionnaireState> {
   }
 
   Future<void> submitQuestionnaire() async {
-    emit(QuestionnaireLoading());
+    //emit(QuestionnaireLoading());
 
     print("Submitting questionnaire: ${questionnaire.toJson()}");
 

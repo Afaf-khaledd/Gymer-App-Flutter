@@ -9,8 +9,8 @@ class MessageModel {
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
-      message: json['message'],
-      role: json['role'] == 'User' ? MessageRole.user : MessageRole.bot,
+      message: json['content'],
+      role: json['role'] == 'user' ? MessageRole.user : MessageRole.bot,
       video: json['machineVideo'] != null && json['machineVideo'].isNotEmpty
           ? List<String>.from(json['machineVideo'])
           : null,
@@ -18,6 +18,6 @@ class MessageModel {
   }
   @override
   String toString() {
-    return 'Message{role: ${role == MessageRole.user ? "User" : "Chatbot"}, message: $message}';
+    return 'Message{role: ${role == MessageRole.user ? "user" : "assistant"}, message: $message}';
   }
 }

@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/utils/colors.dart';
+import 'package:gymer/features/Analysis/presentation/view%20model/progressCubit/progress_cubit.dart';
 import 'package:gymer/features/Chatbot/presentation/view%20model/chatCubit/chat_cubit.dart';
 import 'package:gymer/features/Favorite/presentation/viewModel/favoriteCubit/favorite_cubit.dart';
 import 'package:gymer/features/Splash/presentation/views/SplashScreen.dart';
 
 import 'core/helpers/seviceLocator.dart';
+import 'features/Analysis/presentation/view model/checklistCubit/checklist_cubit.dart';
 import 'features/Authentication/presentation/view model/AuthCubit/auth_cubit.dart';
 import 'features/Home/presentation/viewModel/homeCubit/home_cubit.dart';
 import 'features/MachineRecognition/presentation/view model/MachineCubit/machine_cubit.dart';
@@ -45,7 +47,7 @@ class MyApp extends StatelessWidget {
           create: (_) => getIt<QuestionnaireCubit>()..initializeQuestionnaire(),
         ),
         BlocProvider<ChatCubit>(
-          create: (_) => getIt<ChatCubit>(),
+          create: (_) => getIt<ChatCubit>()..loadLastSessions(),
         ),
         BlocProvider<MachineCubit>(
           create: (_) => getIt<MachineCubit>(),
@@ -55,6 +57,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<HomeCubit>(
           create: (_) => getIt<HomeCubit>(),
+        ),
+        BlocProvider<ProgressCubit>(
+          create: (_) => getIt<ProgressCubit>(),
+        ),
+        BlocProvider<ChecklistCubit>(
+          create: (_) => getIt<ChecklistCubit>(),
         ),
       ],
       child: MaterialApp(

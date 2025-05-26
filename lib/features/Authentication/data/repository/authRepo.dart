@@ -94,6 +94,7 @@ class AuthenticationRepository {
       if (response.statusCode == 200) {
         final profileData = response.data['data']['profileInfo'];
         print(profileData);
+        log("1");
         return UserModel.fromJson(profileData, token);
       } else {
         throw Exception(

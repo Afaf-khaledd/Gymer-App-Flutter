@@ -42,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<AuthCubit>().getProfile();
     context.read<FavoriteCubit>().fetchFavorites();
     context.read<HomeCubit>().checkWorkoutPlan();
+    //LocalStorage.cleanupOldChecklists();
   }
 
   @override
@@ -227,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Padding(
                               padding: const EdgeInsets.only(right: 100),
                               child: SizedBox(
-                                height: 180,
+                                height: 150, //180?
                                 child: SingleChildScrollView(
                                   child: Column(
                                     crossAxisAlignment:

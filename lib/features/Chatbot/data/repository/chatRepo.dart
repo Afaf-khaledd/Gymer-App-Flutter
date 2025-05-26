@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:gymer/features/Chatbot/data/models/messageModel.dart';
 import 'package:gymer/features/Chatbot/data/models/responseModel.dart';
 import '../../../../core/helpers/apiService.dart';
@@ -89,6 +91,7 @@ class ChatRepository {
 
         final sessions = sessionsData.map((session) {
           final chatSession = ChatSessionModel.fromJson(session);
+          log(chatSession.toString());
           return chatSession;
         }).toList();
 

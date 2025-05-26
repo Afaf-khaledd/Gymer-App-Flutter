@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,7 +6,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/utils/colors.dart';
 import 'package:gymer/features/Questionnaire/presentation/views/activityLevelScreen.dart';
-import 'package:gymer/features/Questionnaire/presentation/views/fitnessLevelScreen.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../core/components/BottomNavHandler.dart';
 import '../../../../core/components/CustomTextFormField.dart';
@@ -31,6 +31,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final int _currentIndex = 4;
   final _formKey = GlobalKey<FormState>();
 
+  bool _initialized = false;  // flag to initialize only once per profile load
   late TextEditingController emailController;
   late TextEditingController userNameController;
   late TextEditingController weightController;
@@ -39,34 +40,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late TextEditingController heightController;
   late TextEditingController fullNameController;
   late String profileUrl;
-  String? selectedActivityLevel;
-  String? selectedFitnessGoal;
-  String? selectedGender;
-  String? selectedWorkoutDuration;
-  String? selectedFitnessLevel;
+  late String selectedActivityLevel;
+  late String selectedFitnessGoal;
+  late String selectedGender;
+  late String selectedWorkoutDuration;
+  late String selectedFitnessLevel;
   List<String> selectedWorkoutDays = [];
   List<String> selectedInjuries = [];
 
 
   File? _profileImage;
   //final ImagePicker _picker = ImagePicker();
-  final List<String> fitnessGoals = [
-    "Lose Weight",
-    "Gain Weight",
-    "Muscle Gain",
-    "Endurance",
-  ];
-
+  final List<String> fitnessGoals = ['Lose Weight', 'Gain Weight', 'Muscle Gain', 'Endurance'];
+  final List<String> fitness_level = ['Beginner', 'Intermediate', 'Advanced'];
   final List<String> workoutDurations = [
     "About 15 Min",
     "About 30 Min",
     "About 1 Hour",
     "More Than 1 Hour",
   ];
-  final List<String> workoutDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+  final List<String> workoutDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   final List<String> injuriesList = [
-    "No injuries", "Shoulder", "Arm", "Chest", "Back", "Breathing", "Leg", "Calf", "Hip", "Glutes"
-  ];
+    "No injuries", "Shoulder", "Arm", "Chest", "Back", "Breathing", "Leg", "Calf", "Hip", "Glutes"];
   @override
   void initState() {
     super.initState();
@@ -81,15 +77,34 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     context.read<AuthCubit>().getProfile();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    final authState = context.watch<AuthCubit>().state;
+
+    if (!_initialized && authState is ProfileRetrieved) {
+      _initializeControllers(authState.user);
+      _initialized = true;  // prevent resetting on every rebuild
+    }
+  }
+
   void _initializeControllers(UserModel user) {
     emailController.text = user.email;
     userNameController.text = user.userName;
     weightController.text = user.currentWeight.toString();
-    goalWeightController.text = user.currentWeight.toString();
-    heightController.text = "150";
-    ageController.text = "22";
+    goalWeightController.text = user.goalWeight.toString();
+    heightController.text = user.height.toString();
+    ageController.text = user.age.toString();
     fullNameController.text = user.fullName;
     profileUrl = user.profileUrl!;
+    selectedFitnessLevel = user.fittnesslevel.toString();
+    selectedActivityLevel = user.activityLevel.toString();
+    selectedGender = user.gender.toString();
+    selectedWorkoutDuration = user.duration.toString();
+    selectedFitnessGoal = user.maingoal.toString();
+    selectedWorkoutDays = user.workoutDays!;
+    selectedInjuries = user.injuries!;
   }
 
   /*Future<void> _pickImage() async {
@@ -154,12 +169,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   void _updateProfile() {
+    log("fitnessLevel:${selectedFitnessLevel}");
+    log("activityLevel:${selectedActivityLevel}");
+    log("gender:${selectedGender}");
+    log("workoutDuration:${selectedWorkoutDuration}");
+    log("fitnessGoal:${selectedFitnessGoal}");
     if (_formKey.currentState!.validate()) {
       final updatedData = {
         'fullName': fullNameController.text.trim(),
         'userName': userNameController.text.trim(),
         'email': emailController.text.trim(),
         'currentWeight': int.tryParse(weightController.text.trim()) ?? 0,
+        'goalWeight': int.tryParse(goalWeightController.text.trim()) ?? 0,
+        'height': int.tryParse(heightController.text.trim()) ?? 0,
+        'age': int.tryParse(ageController.text.trim()) ?? 0,
+        'workoutDays': selectedWorkoutDays,
+        'injuries': selectedInjuries,
+        'fittnesslevel': selectedFitnessLevel,
+        'activityLevel': selectedActivityLevel,
+        'gender': selectedGender,
+        'duration': selectedWorkoutDuration,
+        'maingoal': selectedFitnessGoal,
       };
 
       context.read<AuthCubit>().updateProfile(updatedData);
@@ -247,7 +277,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               );
             } else  if (state is ProfileRetrieved) {
-              _initializeControllers(state.user);
+              //_initializeControllers(state.user);
             }
 
             return SingleChildScrollView(
@@ -348,10 +378,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   hintText: 'Select Gender',
                                   value: selectedGender,
                                   items: ['Male', 'Female'],
-                                  onChanged: (value) => setState(() => selectedGender = value),
-                                  validator: (value) => value == null ? 'Please select a gender' : null,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedGender = value!;
+                                    });
+                                    print('Selected gender: $selectedGender');
+                                  },
+                                  validator: (value) =>
+                                  value == null ? 'Please select a gender' : null,
                                 ),
-
                               ],
                             ),
                           ),
@@ -406,7 +441,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         hintText: 'Select Activity Level',
                         value: selectedActivityLevel,
                         items: ActivityLevelScreen.activity_level,
-                        onChanged: (value) => setState(() => selectedActivityLevel = value),
+                        onChanged: (value) => setState(() => selectedActivityLevel = value!),
                         validator: (value) => value == null ? 'Please select a Activity Level' : null,
                       ),
                       const SizedBox(height: 15),
@@ -415,7 +450,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         hintText: 'Select Goal',
                         value: selectedFitnessGoal,
                         items: fitnessGoals,
-                        onChanged: (value) => setState(() => selectedFitnessGoal = value),
+                        onChanged: (value) => setState(() => selectedFitnessGoal = value!),
                         validator: (value) => value == null ? 'Please select a goal' : null,
                       ),
                       const SizedBox(height: 15),
@@ -424,7 +459,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         hintText: 'Select Workout Duration',
                         value: selectedWorkoutDuration,
                         items: workoutDurations,
-                        onChanged: (value) => setState(() => selectedWorkoutDuration = value),
+                        onChanged: (value) => setState(() => selectedWorkoutDuration = value!),
                         validator: (value) => value == null ? 'Please select a workout duration' : null,
                       ),
                       const SizedBox(height: 15),
@@ -453,8 +488,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       CustomDropdownFormField<String>(
                         hintText: 'Select Fitness Level',
                         value: selectedFitnessLevel,
-                        items: FitnessLevelScreen.fitness_level,
-                        onChanged: (value) => setState(() => selectedFitnessLevel = value),
+                        items: fitness_level,
+                        onChanged: (value) => setState(() => selectedFitnessLevel = value!),
                         validator: (value) => value == null ? 'Please select a fitness level' : null,
                       ),
                       const SizedBox(height: 15),

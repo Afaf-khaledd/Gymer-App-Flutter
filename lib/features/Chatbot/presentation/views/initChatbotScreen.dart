@@ -22,7 +22,7 @@ class InitChatbotScreen extends StatefulWidget {
 }
 
 class _InitChatbotScreenState extends State<InitChatbotScreen> {
-  int _currentIndex = 1;
+  final int _currentIndex = 1;
   late bool isFirst;
 
   @override

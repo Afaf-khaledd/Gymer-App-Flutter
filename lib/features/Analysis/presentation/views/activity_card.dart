@@ -4,10 +4,10 @@ import 'package:gymer/core/utils/colors.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 class ActivityCard extends StatelessWidget {
-  final int monthNumber;
-  final int points;
+  final String month;
+  final double points;
   final double percentage;
-  const ActivityCard({super.key, required this.monthNumber, required this.points, required this.percentage});
+  const ActivityCard({super.key, required this.month, required this.points, required this.percentage});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class ActivityCard extends StatelessWidget {
             children: [
               Icon(Icons.emoji_events_outlined, size: 20),
               SizedBox(width: 6),
-              Text("Month $monthNumber", style: GoogleFonts.dmSans(fontWeight: FontWeight.w700,fontSize: 22)),
+              Text(month, style: GoogleFonts.dmSans(fontWeight: FontWeight.w700,fontSize: 22)),
             ],
           ),
           const SizedBox(height: 8),
@@ -59,14 +59,6 @@ class ActivityCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8),
-                  Text(
-                    "This week points",
-                    style: GoogleFonts.dmSans(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                      color: Colors.black45,
-                    ),
-                  ),
                 ],
               ),
               Padding(
@@ -74,7 +66,7 @@ class ActivityCard extends StatelessWidget {
                 child: CircularPercentIndicator(
                   radius: 40.0,
                   lineWidth: 8.0,
-                  percent: percentage,
+                  percent: percentage/100,
                   center: RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
@@ -88,7 +80,7 @@ class ActivityCard extends StatelessWidget {
                           ),
                         ),
                         TextSpan(
-                          text: "${(percentage * 100).toInt()}%",
+                          text: "${(percentage).toInt()}%",
                           style: GoogleFonts.dmSans(
                             fontWeight: FontWeight.w400,
                             fontSize: 16,

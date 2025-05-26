@@ -27,7 +27,7 @@ class ApiService {
     try {
       return await dio.post(endpoint,
           data: data, options: Options(headers: headers));
-    } on DioException catch (dioError) {
+    } on DioException {
       rethrow;
     } catch (e) {
       //print("Unknown API Error: $e");

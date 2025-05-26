@@ -1,12 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/utils/assets.dart';
+import 'package:gymer/features/Authentication/presentation/views/editProfileScreen.dart';
 
 import '../../../../core/components/customGoldButton.dart';
+import '../../../Authentication/presentation/view model/AuthCubit/auth_cubit.dart';
 import 'goldBoxContainer.dart';
 
-class FinishContainer extends StatelessWidget {
+class FinishContainer extends StatefulWidget {
   const FinishContainer({super.key});
+
+  @override
+  State<FinishContainer> createState() => _FinishContainerState();
+}
+
+class _FinishContainerState extends State<FinishContainer> {
+  TextEditingController weightController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    weightController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +50,7 @@ class FinishContainer extends StatelessWidget {
               children: [
                 Expanded(
                   child: TextField(
+                    controller: weightController,
                     decoration: InputDecoration(
                       hintText: 'Enter weight',
                       hintStyle:GoogleFonts.poppins(fontWeight: FontWeight.w500, fontSize: 13,color: Colors.black54,),
@@ -53,7 +70,9 @@ class FinishContainer extends StatelessWidget {
                 Image.asset(AssetsManager.leftArrowIcon),
                 CustomGoldButton(
                   label: 'Submit &\nAsk GymTron',
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<AuthCubit>().updateProfile({'currentWeight': int.tryParse(weightController.text.trim()) ?? 0});
+                  },
                   width: 120, fontSize: 12,
                 )
               ],
@@ -71,7 +90,15 @@ class FinishContainer extends StatelessWidget {
                 Image.asset(AssetsManager.leftArrowIcon),
                 CustomGoldButton(
                   label: 'Edit Profile',
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) =>
+                        const EditProfileScreen(),
+                      ),
+                    );
+                  },
                   width: 120, fontSize: 12,
                 )
               ],

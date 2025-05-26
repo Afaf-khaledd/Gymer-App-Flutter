@@ -42,7 +42,7 @@ class HomeRepository {
       String dayName = DateFormat('EEEE').format(now);
 
       final response = await apiService.get(
-        "/profile/retrieve/workoutplan/$dayName",
+        "/profile/retrieve/workoutplan/$dayName", //$dayName
         headers: {"Authorization": "Bearer $token"},
       );
 
