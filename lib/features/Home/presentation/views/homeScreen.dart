@@ -14,6 +14,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../core/components/BottomNavHandler.dart';
 import '../../../../core/components/ImagePickerHelper.dart';
+import '../../../../core/helpers/local_storage.dart';
 import '../../../Boarding/presentation/views/OnBoardingPage.dart';
 import '../../../Favorite/presentation/viewModel/favoriteCubit/favorite_cubit.dart';
 import '../../../MachineRecognition/presentation/view model/MachineCubit/machine_cubit.dart';
@@ -42,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<AuthCubit>().getProfile();
     context.read<FavoriteCubit>().fetchFavorites();
     context.read<HomeCubit>().checkWorkoutPlan();
-    //LocalStorage.cleanupOldChecklists();
+    LocalStorage.cleanupOldChecklists();
   }
 
   @override
