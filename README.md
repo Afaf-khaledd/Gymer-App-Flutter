@@ -31,61 +31,64 @@
 ---
 
 ## 📁 Project Structure
+
+```plaintext
 lib/
 │
-├── core/ # Core utilities (helpers, utils, components)
-├── features/ # App features (analysis, auth, chatbot, favorite, home, machine recognition, questionnaire)
-│ ├── analysis/ #charts and progress tracking
-│ │ ├── data/
-│ │ │ ├── models/
-│ │ │ └── repository/
-│ │ └── presentation/
-│ │   ├── views/
-│ │   └── view model/
-│ ├── chatbot/ # ai chatbot
-│ │ ├── data/
-│ │ │ ├── models/
-│ │ │ └── repository/
-│ │ └── presentation/
-│ │   ├── views/
-│ │   └── view model/
-│ ├── favorite/
-│ │ ├── data/
-│ │ │ ├── models/
-│ │ │ └── repository/
-│ │ └── presentation/
-│ │   ├── views/
-│ │   └── view model/
-│ ├── home/ 
-│ │ ├── data/
-│ │ │ ├── models/
-│ │ │ └── repository/
-│ │ └── presentation/
-│ │   ├── views/
-│ │   └── view model/
-│ ├── machine_recognition/
-│ │ ├── data/
-│ │ │ ├── models/
-│ │ │ └── repository/
-│ │ └── presentation/
-│ │   ├── views/
-│ │   └── view model/
-│ ├── questionnaire/
-│ │ ├── data/
-│ │ │ ├── models/
-│ │ │ └── repository/
-│ │ └── presentation/
-│ │   ├── views/
-│ │   └── view model/
-│ └── auth/
-│ │ ├── data/
-│ │ │ ├── models/
-│ │ │ └── repository/
-│ │ └── presentation/
-│ │   ├── views/
-│ │   └── view model/
+├── core/                        # Core utilities (helpers, utils, components)
+├── features/                    # App features (analysis, auth, chatbot, favorite, home, machine recognition, questionnaire)
+│   ├── analysis/                # Charts and progress tracking
+│   │   ├── data/
+│   │   │   ├── models/
+│   │   │   └── repository/
+│   │   └── presentation/
+│   │       ├── views/
+│   │       └── view model/
+│   ├── chatbot/                 # AI chatbot
+│   │   ├── data/
+│   │   │   ├── models/
+│   │   │   └── repository/
+│   │   └── presentation/
+│   │       ├── views/
+│   │       └── view model/
+│   ├── favorite/
+│   │   ├── data/
+│   │   │   ├── models/
+│   │   │   └── repository/
+│   │   └── presentation/
+│   │       ├── views/
+│   │       └── view model/
+│   ├── home/
+│   │   ├── data/
+│   │   │   ├── models/
+│   │   │   └── repository/
+│   │   └── presentation/
+│   │       ├── views/
+│   │       └── view model/
+│   ├── machine_recognition/
+│   │   ├── data/
+│   │   │   ├── models/
+│   │   │   └── repository/
+│   │   └── presentation/
+│   │       ├── views/
+│   │       └── view model/
+│   ├── questionnaire/
+│   │   ├── data/
+│   │   │   ├── models/
+│   │   │   └── repository/
+│   │   └── presentation/
+│   │       ├── views/
+│   │       └── view model/
+│   └── auth/
+│       ├── data/
+│       │   ├── models/
+│       │   └── repository/
+│       └── presentation/
+│           ├── views/
+│           └── view model/
 │
-├── main.dart # App entry point
+└── main.dart                   # App entry point
+```
 
 ## How to Run
 
