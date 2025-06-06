@@ -15,9 +15,9 @@ class CustomBottomNavBar extends StatefulWidget {
 class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   final List<TabItem> items = [
     TabItem(icon: Icons.home_outlined),
-    TabItem(icon: Icons.message_outlined),
+    TabItem(icon: Icons.message_outlined, title: "",),
     TabItem(icon: Icons.camera_alt_outlined, title: ""),
-    TabItem(icon: Icons.analytics_outlined),
+    TabItem(icon: Icons.bar_chart_rounded, title: "",),
     TabItem(icon: Icons.person_outline),
   ];
 
