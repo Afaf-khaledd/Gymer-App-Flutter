@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:gymer/core/utils/colors.dart';
+import 'package:gymer/features/Achievements/presentation/view%20model/achievement_cubit.dart';
 import 'package:gymer/features/Analysis/presentation/view%20model/progressCubit/progress_cubit.dart';
 import 'package:gymer/features/Chatbot/presentation/view%20model/chatCubit/chat_cubit.dart';
 import 'package:gymer/features/Favorite/presentation/viewModel/favoriteCubit/favorite_cubit.dart';
@@ -64,6 +65,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<ChecklistCubit>(
           create: (_) => getIt<ChecklistCubit>(),
         ),
+        BlocProvider<AchievementCubit>(
+          create: (_) => getIt<AchievementCubit>(),
+        )
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

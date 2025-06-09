@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:gymer/core/utils/assets.dart';
+import 'package:gymer/features/Achievements/presentation/views/AchievementsScreen.dart';
 import 'package:gymer/features/Analysis/presentation/views/_buildError.dart';
 import 'package:gymer/features/Analysis/presentation/views/emptyStateScreen.dart';
 import 'package:gymer/features/Analysis/presentation/views/normalStateScreen.dart';
@@ -13,7 +15,6 @@ import '../view model/progressCubit/progress_cubit.dart';
 import '../view model/progressCubit/progress_state.dart';
 import '_buildShimmer.dart';
 import 'finishStateScreen.dart';
-
 
 class AnalysisScreen extends StatefulWidget {
   const AnalysisScreen({super.key});
@@ -34,16 +35,36 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: BottomNavHandler(
+      bottomNavigationBar: BottomNavHandler(
         currentIndex: _currentIndex,
         onImagePicked: (_) =>
-        ImagePickerHelper.pickImage(context, _handleImagePicked),
+            ImagePickerHelper.pickImage(context, _handleImagePicked),
+      ),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        toolbarHeight: 100,
+        title: Text(
+          'Activity',
+          style: GoogleFonts.dmSans(fontWeight: FontWeight.w700, fontSize: 26),
         ),
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          toolbarHeight: 100,
-          title: Text('Activity',style: GoogleFonts.dmSans(fontWeight: FontWeight.w700,fontSize: 26),),
-        ),
+        actions: [
+          IconButton(
+            icon: Image.asset(
+              AssetsManager.cupImage,
+              width: 47,
+              height: 47,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const AchievementsScreen()),
+              );
+            },
+          ),
+          const SizedBox(width: 16),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 11),
         child: BlocBuilder<ProgressCubit, ProgressState>(
