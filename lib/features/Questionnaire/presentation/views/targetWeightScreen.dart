@@ -11,6 +11,7 @@ import '../../../../core/utils/colors.dart';
 import '../view model/questionnaireCubit/questionnaire_cubit.dart';
 import 'WeightToggleButton.dart';
 import 'finalScreen.dart';
+import 'onboardingQ.dart';
 
 class TargetWeightScreen extends StatelessWidget {
   const TargetWeightScreen({super.key});
@@ -174,7 +175,13 @@ class TargetWeightScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (BuildContext context) => GenderScreen(),
+                            builder: (BuildContext context) => OnboardingQ(
+                              label: 'About You',
+                              number: '3',
+                              rightPadding: 20,
+                              labelSize: 50,
+                              nextScreen: GenderScreen(),
+                            ),
                           ),
                         );
                       },

@@ -9,16 +9,18 @@ class FinishStateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(height: 10,),
-          ActivityCard(month: data.month,percentage: data.lastPercentage,points: data.points,),
-          SizedBox(height: 40,),
-          FinishContainer(),
-        ],
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: 10,),
+            ActivityCard(month: data.month,percentage: data.lastPercentage,points: data.points,),
+            SizedBox(height: 40,),
+            FinishContainer(),
+          ],
+        ),
       ),
     );
   }

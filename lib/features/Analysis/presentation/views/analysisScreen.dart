@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,6 +8,7 @@ import 'package:gymer/features/Achievements/presentation/views/AchievementsScree
 import 'package:gymer/features/Analysis/presentation/views/_buildError.dart';
 import 'package:gymer/features/Analysis/presentation/views/emptyStateScreen.dart';
 import 'package:gymer/features/Analysis/presentation/views/normalStateScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/components/BottomNavHandler.dart';
 import '../../../../core/components/ImagePickerHelper.dart';
@@ -29,7 +32,23 @@ class _AnalysisScreenState extends State<AnalysisScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<ProgressCubit>().getProgress(count: 0);
+    _loadChecklistAndInitProgress();
+  }
+
+  Future<void> _loadChecklistAndInitProgress() async {
+    final prefs = await SharedPreferences.getInstance();
+    final now = DateTime.now();
+    final todayKey = 'checklist_${now.year}_${now.month}_${now.day}';
+
+    final storedChecklist = prefs.getStringList(todayKey) ?? [];
+
+    // Count how many items are checked
+    final checkedCount = storedChecklist.length;
+
+    if (mounted) {
+      context.read<ProgressCubit>().getProgress(count: checkedCount);
+      log("checkedCount:$checkedCount");
+    }
   }
 
   @override
