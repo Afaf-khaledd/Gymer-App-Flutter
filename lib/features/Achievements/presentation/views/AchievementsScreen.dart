@@ -140,22 +140,33 @@ class _AchivementsScreenState extends State<AchievementsScreen> {
                                     fontSize: 18,
                                     color: ColorsManager.blackColor),
                               ),
-                              Text(
-                                '${state.achievement.pointsToNextLevel} to ${_getAchievementName(state.achievement.achievementsLevel + 1)}',
-                                style: GoogleFonts.dmSans(
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14,
-                                    color: ColorsManager.goldColorO1),
-                              )
+                              if (level < 3)
+                                Text(
+                                  '${state.achievement.pointsToNextLevel} to ${_getAchievementName(state.achievement.achievementsLevel + 1)}',
+                                  style: GoogleFonts.dmSans(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                      color: ColorsManager.goldColorO1),
+                                )
+                              else
+                                Text(
+                                  'Max Level Achieved',
+                                  style: GoogleFonts.dmSans(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                      color: ColorsManager.goldColorO1),
+                                ),
                             ],
                           ),
                           const SizedBox(height: 12),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(20),
                             child: LinearProgressIndicator(
-                              value: state.achievement.points /
-                                  (state.achievement.points +
-                                      state.achievement.pointsToNextLevel),
+                              value: level < 3
+                                  ? state.achievement.points /
+                                      (state.achievement.points +
+                                          state.achievement.pointsToNextLevel!)
+                                  : 1,
                               minHeight: 12,
                               backgroundColor: Colors.grey.shade300,
                               valueColor: AlwaysStoppedAnimation<Color>(
@@ -257,49 +268,75 @@ class _AchivementsScreenState extends State<AchievementsScreen> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                          color: const Color.fromRGBO(244, 229, 198, 0.23),
-                          borderRadius: BorderRadius.circular(16)),
-                      child: Row(
-                        children: [
-                          Image.asset(
-                            _getAchievementImage(
-                                state.achievement.achievementsLevel + 1),
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.contain,
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  _getAchievementName(
-                                      state.achievement.achievementsLevel + 1),
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                      color: ColorsManager.blackColor),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  '"Every step forward is progress, \nno matter how small."',
-                                  style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 12,
-                                      fontStyle: FontStyle.italic,
-                                      color: ColorsManager.blackColor),
-                                )
-                              ],
+                    if (level < 3)
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                            color: const Color.fromRGBO(244, 229, 198, 0.23),
+                            borderRadius: BorderRadius.circular(16)),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              _getAchievementImage(
+                                  state.achievement.achievementsLevel + 1),
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.contain,
                             ),
-                          )
-                        ],
-                      ),
-                    )
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _getAchievementName(
+                                        state.achievement.achievementsLevel +
+                                            1),
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 14,
+                                        color: ColorsManager.blackColor),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    '"Every step forward is progress, \nno matter how small."',
+                                    style: GoogleFonts.poppins(
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 12,
+                                        fontStyle: FontStyle.italic,
+                                        color: ColorsManager.blackColor),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    else
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(244, 229, 198, 0.23),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.emoji_emotions_rounded,
+                                color: ColorsManager.goldColorO1, size: 50),
+                            const SizedBox(width: 16),
+                            Expanded(
+                                child: Text(
+                              "You've unlocked all achievements!",
+                              style: GoogleFonts.dmSans(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                  color: ColorsManager.blackColor),
+                            ))
+                          ],
+                        ),
+                      )
                   ],
                 );
               } else if (state is AchievementError) {

@@ -1,7 +1,7 @@
 class Achievement {
   final int points;
   final int achievementsLevel;
-  final int pointsToNextLevel;
+  final int? pointsToNextLevel;
 
   Achievement({
     required this.points,
